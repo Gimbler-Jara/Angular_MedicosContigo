@@ -1,0 +1,33 @@
+<section class="banner-preventivos">
+    <div class="overlay">
+        <div class="contenido">
+            <h2>Packs Preventivos de Salud</h2>
+            <p>
+                Aquí encontraras packs enfocados a tus necesidades a un precio especial: Exámenes Médicos + Imágenes +
+                Consulta Médica y Seguimiento
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="planes-salud">
+    @for (plan of planes; track $index) {
+    <div class="card" appScrollReveal appScrollReveal>
+        <img [src]="plan.imagen" [alt]="plan.titulo" />
+        <h3>{{ plan.titulo }}</h3>
+        <div class="contenido">
+            <h4>Incluye:</h4>
+            <ul>
+                @for (servicio of plan.servicios; track $index) {
+                <li>🩺 {{ servicio }}</li>
+                }
+            </ul>
+        </div>
+
+        <div class="price">
+            <p class="precio">Todo a tan solo: <strong>{{ plan.precio }}</strong></p>
+            <a href="#" class="btn">🩵 Más Información</a>
+        </div>
+    </div>
+    }
+</section>

@@ -1,0 +1,315 @@
+.banner {
+  background-image: url("../../../assets/img/Portada-Web-Atencion-inmediata.jpg");
+  background-size: cover;
+  height: 600px;
+  width: 100%;
+  position: relative;
+}
+
+/* *============================ section ======================= */
+
+.servicios {
+  text-align: center;
+  padding: 50px 20px;
+  background-color: #f4f6f7;
+}
+
+.servicios h2 {
+  font-size: 2.5rem;
+  color: #122943;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.tarjetas-servicios {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 60px;
+  padding: 20px;
+}
+
+.tarjeta {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 4px 1px 10px -4px #09c9ce;
+  overflow: hidden;
+  width: 350px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.tarjeta:hover {
+  transform: translateY(-5px);
+  box-shadow: 4px 1px 10px 2px #09c9ce;
+}
+
+.tarjeta img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+.contenido {
+  padding: 20px;
+  text-align: center;
+}
+
+.contenido h3 {
+  font-size: 1.25rem;
+  color: #0c2940;
+  margin-bottom: 10px;
+}
+
+.contenido p {
+  font-size: 0.95rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.boton {
+  display: inline-block;
+  padding: 10px 25px;
+  background-color: #00c4cc;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.boton:hover {
+  background-color: #00a0a7;
+}
+
+/* *======================================================================= */
+
+.packs-preventivos {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: #f4f6f7;
+}
+
+.packs-preventivos h2 {
+  font-size: 2.5rem;
+  color: #122943;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.packs-preventivos .subtitulo {
+  font-size: 1.1rem;
+  color: #3d546b;
+  margin-bottom: 50px;
+}
+
+.tarjetas-packs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 1350px;
+  margin: 0 auto;
+  gap: 50px;
+  padding: 20px 0px;
+  /* background-color: red; */
+}
+
+.tarjeta {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  width: 350px;
+  box-shadow: 4px 1px 10px -4px #09c9ce;
+  opacity: 0;
+  transform: scale(0.4);
+  transition: transform 1.5s ease;
+}
+
+.tarjeta.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.tarjeta:hover {
+  transform: translateY(-6px);
+}
+
+.imagen {
+  position: relative;
+}
+
+.imagen img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+.contenido {
+  padding: 20px;
+  border-top: 1px solid #d6f2f3;
+}
+
+.contenido h3 {
+  font-size: 1.2rem;
+  color: #0c2940;
+  margin-bottom: 10px;
+}
+
+.contenido p {
+  font-size: 0.95rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.boton {
+  display: inline-block;
+  padding: 10px 25px;
+  background-color: #00c4cc;
+  color: white;
+  border-radius: 40px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.boton:hover {
+  background-color: #00a0a7;
+}
+
+.btn-mas-packs {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #0b3764;
+  color: #fff;
+  padding: 12px 24px;
+  margin-top: 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-mas-packs:hover {
+  background-color: #092b4e;
+  transform: translateY(-2px);
+}
+
+.flecha {
+  font-size: 1.4rem;
+}
+
+/* *============================================================ */
+.clinica-domicilio {
+  background: linear-gradient(90deg, #0b9bb4, #00c4cc);
+  color: white;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.clinica-domicilio h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+  letter-spacing: 0.5px;
+}
+
+.estadisticas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+}
+
+.estadisticas .item {
+  flex: 1 1 150px;
+  max-width: 200px;
+}
+
+.estadisticas h3 {
+  font-size: 2rem;
+  margin: 0;
+  font-weight: 700;
+}
+
+.estadisticas p {
+  font-size: 1rem;
+  margin: 8px 0 0;
+  font-weight: 400;
+}
+
+/* *============================================================= */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.74);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.popup-content {
+  position: relative;
+  background: white;
+  padding: 0;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.popup-content img {
+  width: 100%;
+  display: block;
+}
+
+.popup-close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: #333;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.btn-adquirir {
+  display: inline-block;
+  margin: 20px auto;
+  padding: 12px 24px;
+  background-color: #00cc66;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1rem;
+  border-radius: 25px;
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.btn-adquirir:hover {
+  background-color: #00a855;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

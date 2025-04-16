@@ -1,0 +1,168 @@
+.banner-preventivos {
+  width: 100%;
+  height: 400px;
+  background-image: url("../../../assets/img/packs-preventivos/Pulmones-Portada.jpg");
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+
+.banner-preventivos .overlay {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(0, 200, 215, 0.9),
+    rgba(0, 200, 215, 0.1)
+  );
+  display: flex;
+  align-items: center;
+  padding-left: 60px;
+}
+
+.banner-preventivos .contenido {
+  max-width: 800px;
+  margin-left: 20%;
+  margin-top: 5%;
+}
+
+.banner-preventivos h2 {
+  font-size: 3rem;
+  color: white;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.banner-preventivos p {
+  color: white;
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+/* *========================================================= */
+.kits-container {
+  max-width: 1550px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(335px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.kit-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0, 200, 255, 0.377);
+  padding: 1rem;
+  transition: transform 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: scale(0.4);
+  transition: transform 1.5s ease;
+}
+
+.kit-card.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.kit-card:hover {
+  transform: translateY(-5px);
+}
+
+.image-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.image-container img {
+  width: 100%;
+  height: 360;
+  display: block;
+}
+
+.badge {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: #002d72;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+}
+
+.descuento {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #f57c00;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  z-index: 2;
+}
+
+.kit-card h3 {
+  font-size: 1.1rem;
+  margin: 1rem 0 0.5rem;
+  text-align: center;
+  color: #004e66;
+}
+
+.incluye {
+  font-weight: bold;
+  color: #00bcd4;
+  margin: 0.5rem 0;
+}
+
+.kit-card ul {
+  padding-left: 1.2rem;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  list-style: disc;
+  width: 100%;
+}
+
+.kit-card ul li {
+  margin: 6px;
+  line-height: 20px;
+}
+
+.more-information {
+  margin-top: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  grid: 20px;
+}
+
+.domicilio {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0.8rem;
+}
+
+.btn {
+  background: #00c2cb;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: bold;
+  text-align: center;
+  transition: background 0.3s;
+}
+
+.btn:hover {
+  background: #009ea6;
+}

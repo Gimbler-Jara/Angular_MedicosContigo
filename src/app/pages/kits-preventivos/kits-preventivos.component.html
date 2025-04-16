@@ -1,0 +1,178 @@
+<section class="banner-preventivos">
+    <div class="overlay">
+        <div class="contenido">
+            <h2>Kits Preventivos de Salud</h2>
+            <p>
+                Aquí encontraras Kits enfocados a tus necesidades a un precio especial, <strong>todo el servicio en su
+                    Domicilio</strong>
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="kits-container">
+
+    @for (kit of kits; track $index) {
+    <div class="kit-card" appScrollReveal>
+        <div class="image-container">
+            @if (kit.descuento) {
+            <span class="descuento">{{ kit.descuento }}</span>
+            }
+            <img [src]="kit.imagen" [alt]="kit.titulo">
+            @if (kit.precio) {
+            <span class="badge">{{ kit.precio }}</span>
+            }
+        </div>
+
+        <h3>{{ kit.titulo }}</h3>
+
+        <div class="incluye">Incluye:</div>
+        <ul>
+            @for (item of kit.incluye; track $index) {
+            <li [innerHTML]="item"></li>
+            }
+        </ul>
+
+        <div class="more-information">
+            <p class="domicilio">🚑 Todo el Servicio es a Domicilio</p>
+            <a href="#" class="btn">Más Información</a>
+        </div>
+    </div>
+    }
+
+
+
+    <!-- <div class="kit-card">
+        <div class="image-container">
+            <span class="descuento">Kit 15% Dcto</span>
+            <img src="../../../assets/img/kits-preventivos/MAPA_v2-480x480.jpg" alt="MAPA Cardiológico">
+            <span class="badge">S/ 447</span>
+        </div>
+        <h3>MAPA Cardiológico</h3>
+        <div class="incluye">Incluye:</div>
+        <ul>
+            <li>Monitoreo de presión arterial por 24 horas</li>
+            <li>Confirmamos el diagnóstico de hipertensión con valores limítrofes o cambiantes</li>
+            <li>Se puede ajustar al tratamiento antihipertensivo</li>
+            <li>Reportamos fluctuaciones más importantes de la presión arterial a lo largo del día</li>
+        </ul>
+        <div class="more-information">
+            <p class="domicilio">🚑 Todo el Servicio es a Domicilio</p>
+            <a href="#" class="btn">Más Información</a>
+        </div>
+    </div>
+
+    <div class="kit-card">
+        <div class="image-container">
+            <span class="descuento">Kit 15% Dcto</span>
+            <img src="../../../assets/img/kits-preventivos/HOLTER_v2-480x480.jpg" alt="Holter Cardíaco">
+            <span class="badge">S/ 670</span>
+        </div>
+        <h3>Holter Cardíaco</h3>
+        <div class="incluye">Incluye:</div>
+        <ul>
+            <li>Monitorización electrocardiográfica (Holter)</li>
+            <li>Confirmamos el diagnostico de alteraciones y trastornos del funcionamiento del corazón</li>
+            <li> Interpretación Médica Digital</li>
+        </ul>
+        <div class="more-information">
+            <p class="domicilio">🚑 Todo el Servicio es a Domicilio</p>
+            <a href="#" class="btn">Más Información</a>
+        </div>
+    </div>
+
+    <div class="kit-card">
+        <div class="image-container">
+            <span class="descuento">Kit 15% Dcto</span>
+            <img src="../../../assets/img/kits-preventivos/EKGHOLTER_v2-480x480.jpg" alt="EKG + Holter">
+            <span class="badge">S/ 797</span>
+        </div>
+        <h3>EKG + Holter</h3>
+        <div class="incluye">Incluye:</div>
+        <ul>
+            <li>En este Kit te ofrecemos la Monitorización Electrocardiográfica (Holter) y el Electrocardiograma (EKG)</li>
+        </ul>
+        <div class="more-information">
+            <p class="domicilio">🚑 Todo el Servicio es a Domicilio</p>
+            <a href="#" class="btn">Más Información</a>
+        </div>
+    </div>
+
+    <div class="kit-card">
+        <div class="image-container">
+            <span class="descuento">Kit 15% Dcto</span>
+            <img src="../../../assets/img/kits-preventivos/EKGMAPA_v2-480x480.jpg" alt="EKG + MAPA">
+            <span class="badge">S/ 597</span>
+        </div>
+        <h3>EKG + MAPA</h3>
+        <div class="incluye">Incluye:</div>
+        <ul>
+            <li>En este Kit te ofrecemos Electrocardiograma (EKG) y Monitoreo Ambulatorio de Presión Arterial (MAPA)
+            </li>
+        </ul>
+        <div class="more-information">
+            <p class="domicilio">🚑 Todo el Servicio es a Domicilio</p>
+            <a href="#" class="btn">Más Información</a>
+        </div>
+    </div>
+
+    <div class="kit-card">
+        <div class="image-container">
+            <span class="descuento">Kit 15% Dcto</span>
+            <img src="../../../assets/img/kits-preventivos/Kits-Medico-1-480x480.jpg" alt="Equipo Médico Preventivo 1">
+        </div>
+        <h3>Equipo Médico Preventivo 1</h3>
+        <div class="incluye">Incluye:</div>
+        <ul>
+            <li>Tensiómetro digital</li>
+            <li>Pulsímetro</li>
+            <li>Termómetro</li>
+        </ul>
+        <div class="more-information">
+            <p class="domicilio">🚑 Todo el Servicio es a Domicilio</p>
+            <a href="#" class="btn">Más Información</a>
+        </div>
+    </div>
+
+    <div class="kit-card">
+        <div class="image-container">
+            <span class="descuento">Kit 15% Dcto</span>
+            <img src="../../../assets/img/kits-preventivos/Kits-Medico-2-480x480.jpg" alt="Equipo Médico Preventivo 2">
+        </div>
+        <h3>Equipo Médico Preventivo 2</h3>
+        <div class="incluye">Incluye:</div>
+        <ul>
+            <li>Balanza</li>
+            <li>Glucómetro</li>
+            <li>Pulsímetro</li>
+            <li>Tensiómetro digital</li>
+            <li>Termómetro</li>
+        </ul>
+        <div class="more-information">
+            <p class="domicilio">🚑 Todo el Servicio es a Domicilio</p>
+            <a href="#" class="btn">Más Información</a>
+        </div>
+    </div>
+
+    <div class="kit-card">
+        <div class="image-container">
+            <span class="descuento">Kit 15% Dcto</span>
+            <img src="../../../assets/img/kits-preventivos/Nino-480x480.jpg" alt="Niño Saludable">
+            <span class="badge">S/ 197</span>
+        </div>
+        <h3>Niño Saludable</h3>
+        <div class="incluye">Incluye:</div>
+        <ul>
+            <li>Hemograma Completo</li>
+            <li>Análisis de Orina Completo</li>
+            <li>Creatinina Sérica</li>
+            <li>Análisis TGO y TGP</li>
+            <li>Parasitológico Simple</li>
+            <li><strong>Atención Médica y Seguimiento del Paciente</strong></li>
+        </ul>
+        <div class="more-information">
+            <p class="domicilio">🚑 Todo el Servicio es a Domicilio</p>
+            <a href="#" class="btn">Más Información</a>
+        </div>
+    </div> -->
+</section>

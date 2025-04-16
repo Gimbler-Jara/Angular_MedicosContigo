@@ -1,0 +1,166 @@
+<div class="banner"></div>
+
+<!-- *========================================================== -->
+
+<section class="servicios">
+    <h2>Nuestros Servicios</h2>
+    <div class="tarjetas-servicios">
+
+        <div class="tarjeta" appScrollReveal>
+            <img src="../../../assets/img/service-home/Consulta-Programada.jpg" alt="Atención primaria">
+            <div class="contenido">
+                <h3>Atención Primaria y Urgencias</h3>
+                <p>Porque nuestros pacientes son primero, te brindamos atención personalizada y en tu hogar.</p>
+                <a href="#" class="boton">Ver Más</a>
+            </div>
+        </div>
+
+        <div class="tarjeta" appScrollReveal>
+            <img src="../../../assets/img/service-home/Analisis-Clinicos_v2.jpg" alt="Análisis de laboratorio">
+            <div class="contenido">
+                <h3>Análisis Laboratoriales</h3>
+                <p>Realizamos todo tipo de análisis clínico. Nuestras licenciadas en enfermería le realizarán la toma de
+                    la muestra desde la comodidad de tu hogar.</p>
+                <a href="#" class="boton">Ver Más</a>
+            </div>
+        </div>
+
+        <div class="tarjeta" appScrollReveal>
+            <img src="../../../assets/img/service-home/Servicio-de-Ambulancia_v2.jpg" alt="Servicio de Ambulancia">
+            <div class="contenido">
+                <h3>Servicio de Ambulancia</h3>
+                <p>Traslado asistido de pacientes, atención de emergencias y urgencias médicas las 24 horas.</p>
+                <a href="#" class="boton">Ver Más</a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- *========================================================== -->
+
+
+<section class="packs-preventivos">
+    <h2>Packs Preventivos</h2>
+    <p class="subtitulo">La mejor cura es la prevención temprana. Revisa estos packs preventivos, tu salud en buenas
+        manos.</p>
+
+    <div class="tarjetas-packs">
+
+        <div class="tarjeta" appScrollReveal>
+            <div class="imagen">
+                <img src="../../../assets/img/packspreventivos/Embarazo.jpg" alt="Gestante Saludable">
+            </div>
+            <div class="contenido">
+                <h3>Gestante Saludable</h3>
+                <p>Te presentamos el paquete de Exámenes Médicos enfocados a asegurar un Embarazo Saludable</p>
+                <a href="#" class="boton">Ver más</a>
+            </div>
+        </div>
+
+        <div class="tarjeta" appScrollReveal>
+            <div class="imagen">
+                <img src="../../../assets/img/packspreventivos/Mujer.jpg" alt="Mujer Saludable">
+            </div>
+            <div class="contenido">
+                <h3>Mujer Saludable</h3>
+                <p>Este paquete de Exámenes Médicos está enfocado a asegurar la salud de la mujer con un diagnostico a
+                    tiempo.</p>
+                <a href="#" class="boton">Ver más</a>
+            </div>
+        </div>
+
+        <div class="tarjeta" appScrollReveal>
+            <div class="imagen">
+                <img src="../../../assets/img/packspreventivos/Adulto.jpg" alt="Adulto Mayor">
+            </div>
+            <div class="contenido">
+                <h3>Adulto Mayor</h3>
+                <p>En este paquete de Exámenes Médicos incluimos análisis clínicos que un Adulto Mayor necesita.</p>
+                <a href="#" class="boton">Ver más</a>
+            </div>
+        </div>
+
+        <div class="tarjeta" appScrollReveal>
+            <div class="imagen">
+                <img src="../../../assets/img/packspreventivos/Corazon.jpg" alt="Corazón Saludable">
+            </div>
+            <div class="contenido">
+                <h3>Corazón Saludable</h3>
+                <p>Te presentamos la cominación perfecta de Exámenes médicos para mantener un corazón saludable.</p>
+                <a href="#" class="boton">Ver más</a>
+            </div>
+        </div>
+
+        <div class="tarjeta" appScrollReveal>
+            <div class="imagen">
+                <img src="../../../assets/img/packspreventivos/Pulmones.jpg" alt="Pulmones Saludables">
+            </div>
+            <div class="contenido">
+                <h3>Pulmones Saludables</h3>
+                <p>Te presentamos el paquete de Exámenes Médicos enfocados a asegurar un Embarazo Saludable</p>
+                <a href="#" class="boton">Ver más</a>
+            </div>
+        </div>
+
+        <div class="tarjeta" appScrollReveal>
+            <div class="imagen">
+                <img src="../../../assets/img/packspreventivos/Abdomen.jpg" alt="Abdomen Saludable">
+            </div>
+            <div class="contenido">
+                <h3>Abdomen Saludable</h3>
+                <p>Cuida de tu abdomen con la ayuda de los Exámenes Médicos que tenemos preparados para ti.</p>
+                <a href="#" class="boton">Ver más</a>
+            </div>
+        </div>
+    </div>
+
+    <a href="#" class="btn-mas-packs">
+        Ver más packs
+        <span class="flecha">›</span>
+    </a>
+
+</section>
+
+<!-- *================================================================================= -->
+<section class="clinica-domicilio" appScrollReveal>
+    <h2>CLÍNICA EN TU DOMICILIO</h2>
+    <div class="estadisticas">
+        <div class="item">
+            <h3 [appCountUp]="50000" prefix="+">+0</h3>
+            <p>Pacientes Atendidos</p>
+        </div>
+
+        <div class="item">
+            <h3 [appCountUp]="30" prefix="+">+0</h3>
+            <p>Médicos Colegiados</p>
+        </div>
+
+        <div class="item">
+            <h3 [appCountUp]="24">0</h3>
+            <p>Horas al día</p>
+        </div>
+
+        <div class="item">
+            <h3 [appCountUp]="100" suffix="%">0%</h3>
+            <p>A domicilio</p>
+        </div>
+
+    </div>
+</section>
+
+
+
+<!-- *Popup -->
+
+@if (mostrarPopup) {
+<div id="popup-modal" class="popup-overlay">
+    <div class="popup-content">
+        <button class="popup-close" (click)="cerrarPopup()">×</button>
+        <img src="../../../assets/img/web-1.png" alt="Promoción APU Salud" />
+        <a href="https://api.whatsapp.com/send?phone=51946361049" class="btn-adquirir" target="_blank">
+            <i class="fa-solid fa-comment-dots"></i> ¡Adquiérelo Ahora!
+        </a>
+    </div>
+</div>
+}

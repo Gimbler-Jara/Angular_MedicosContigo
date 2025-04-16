@@ -1,0 +1,134 @@
+.hero-banner {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  background-image: url("../../../assets/img/generales/Portada-Servicios_v3.jpg");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+
+.overlay {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(0, 200, 215, 0.85),
+    rgba(0, 200, 215, 0.1)
+  );
+  display: flex;
+  align-items: center;
+  padding-left: 80px;
+}
+
+.hero-content {
+  margin-left: 20%;
+  margin-top: 5%;
+}
+
+.hero-content h1 {
+  width: 100%;
+  color: white;
+  font-size: 3rem;
+  font-weight: 600;
+  line-height: 1.2;
+  overflow: hidden;
+}
+
+/* *==================================================== */
+.servicios-generales {
+  padding: 60px 20px;
+  text-align: center;
+  background-color: #f9fcfe;
+}
+
+.servicios-generales h2 {
+  font-size: 2rem;
+  color: #003366;
+  margin-bottom: 0;
+}
+
+.linea {
+  display: block;
+  width: 60px;
+  height: 3px;
+  background-color: #00c8d7;
+  margin: 10px auto 30px;
+  border-radius: 10px;
+}
+
+.servicios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+.servicio {
+  background-color: white;
+  border-radius: 20px;
+  /* box-shadow: 0 15px 25px rgba(0, 200, 215, 0.15); */
+  box-shadow: 4px 1px 10px -4px #09c9ce;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(0.4);
+  transition: transform 1.5s ease;
+}
+
+.servicio.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.servicio:hover {
+  transform: translateY(-5px);
+  box-shadow: 4px 1px 10px 2px #09c9ce;
+}
+
+.servicio img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.contenido {
+  /* border: 1px solid #00c8d7; */
+  border-top: none;
+  padding: 20px 15px;
+}
+
+.contenido h3 {
+  font-size: 1.2rem;
+  color: #003366;
+  margin-bottom: 10px;
+}
+
+.contenido p {
+  font-size: 14px;
+  color: #003366;
+}
+
+.btn-ver {
+  background-color: #00c8d7;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 10px 30px;
+  border-radius: 8px;
+  margin: 20px 0;
+  display: inline-block;
+  box-shadow: 0 8px 16px rgba(0, 200, 215, 0.2);
+  transition: background 0.3s ease;
+}
+
+.btn-ver:hover {
+  background-color: #00acc1;
+}

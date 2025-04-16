@@ -1,0 +1,133 @@
+.banner-preventivos {
+  width: 100%;
+  height: 400px;
+  background-image: url("../../../assets/img/packs-preventivos/Pulmones-Portada.jpg");
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+
+.banner-preventivos .overlay {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(0, 200, 215, 0.9),
+    rgba(0, 200, 215, 0.1)
+  );
+  display: flex;
+  align-items: center;
+  padding-left: 60px;
+}
+
+.banner-preventivos .contenido {
+  max-width: 800px;
+  margin-left: 20%;
+  margin-top: 5%;
+}
+
+.banner-preventivos h2 {
+  font-size: 3rem;
+  color: white;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.banner-preventivos p {
+  color: white;
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+/* *====================================================== */
+
+.planes-salud {
+  max-width: 1550px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  padding: 40px 20px;
+  /* background: #f9fcfd; */
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 200, 215, 0.2);
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 20px;
+  transform: scale(0.4);
+  transition: transform 1.5s ease;
+}
+
+.card.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.card img {
+  width: 100%;
+  height: 360px;
+  object-fit: cover;
+  border-bottom: 3px solid #00c8d7;
+}
+
+.card h3 {
+  color: #003366;
+  font-size: 20px;
+  margin: 15px 0 10px;
+  text-align: center;
+}
+
+.card .contenido {
+  padding: 0 20px;
+  text-align: left;
+  width: 100%;
+}
+
+.card ul {
+  padding-left: 20px;
+  margin: 10px 0;
+}
+
+.card ul li {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+.card .price {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card .price .precio {
+  margin: 15px 0 5px;
+  font-weight: bold;
+  color: #00acc1;
+  text-align: center;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 25px;
+  background-color: #00c8d7;
+  color: white;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.btn:hover {
+  background-color: #009eaa;
+}

@@ -1,0 +1,99 @@
+.header {
+  background-color: white;
+  width: 100vw;
+  box-shadow: 0px 5px 40px #eef0f7;
+  padding: 10px 0;
+  position: fixed;
+  z-index: 1000;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  height: 60px;
+}
+
+.nav ul {
+  display: flex;
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.nav li {
+  margin: 0 15px;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #003366;
+  font-weight: bold;
+  font-size: 15px;
+  letter-spacing: 1px;
+}
+
+.contacto {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.telefono-btn {
+  background-color: #00c8d7;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 5px 15px rgba(0, 200, 215, 0.3);
+  transition: background 0.3s;
+}
+
+.telefono-btn:hover {
+  background-color: #00acc1;
+}
+
+.compartir-icono {
+  color: #00c8d7;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.whatsapp {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.whatsapp-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #25d366;
+  color: white;
+  width: 60px;
+  height: 60px;
+  font-size: 30px;
+  border-radius: 50%;
+  text-decoration: none;
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out;
+}
+
+.whatsapp-btn:hover {
+  background-color: #1ebc59;
+  transform: scale(1.05);
+}

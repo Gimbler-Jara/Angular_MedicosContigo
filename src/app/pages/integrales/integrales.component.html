@@ -1,0 +1,25 @@
+<section class="rehabilitacion-banner">
+    <div class="overlay">
+        <div class="contenido">
+            <h2>Te ayudamos en tu<br>rehabilitación</h2>
+        </div>
+    </div>
+</section>
+
+
+<section class="servicios-integrales">
+    <h2>Servicios Integrales</h2>
+    <div class="tarjetas-container">
+
+        @for (servicio of serviciosIntegrales; track $index) {
+        <div class="tarjeta" appScrollReveal>
+            <img [src]="servicio.imagen" [alt]="servicio.alt">
+            <div class="contenido">
+                <h3>{{ servicio.titulo }}</h3>
+                <p>{{ servicio.descripcion }}</p>
+                <a href="#">Ver Más</a>
+            </div>
+        </div>
+        }
+    </div>
+</section>

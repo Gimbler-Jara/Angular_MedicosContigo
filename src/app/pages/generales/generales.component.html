@@ -1,0 +1,26 @@
+<section class="hero-banner">
+    <div class="overlay">
+        <div class="hero-content">
+            <h1>Preparados para<br>Atenderte</h1>
+        </div>
+    </div>
+</section>
+
+<section class="servicios-generales">
+    <h2>Servicios Generales</h2>
+    <span class="linea"></span>
+
+    <div class="servicios-grid">
+
+        @for (servicio of serviciosGenerales; track $index) {
+        <div class="servicio" appScrollReveal>
+            <img [src]="servicio.imagen" [alt]="servicio.alt">
+            <div class="contenido">
+                <h3>{{ servicio.titulo }}</h3>
+                <p>{{ servicio.descripcion }}</p>
+            </div>
+            <a href="#" class="btn-ver">Ver Más</a>
+        </div>
+        }
+    </div>
+</section>
