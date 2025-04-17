@@ -30,6 +30,8 @@ export class PerfilMedicoComponent {
   nuevaDisponibilidad = { dia: '', hora: '' };
 
   ngOnInit(): void {
+    window.scrollTo(0, 0);
+
     this.citasProgramadas.sort((a, b) => {
       return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
     });

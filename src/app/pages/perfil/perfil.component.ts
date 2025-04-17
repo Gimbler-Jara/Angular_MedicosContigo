@@ -48,6 +48,9 @@ export class PerfilComponent {
   horaSeleccionada: number | null = null;
 
   constructor(private citaService: CitasService) { }
+  ngOnInit(): void {
+    window.scrollTo(0, 0); 
+  }
 
   seleccionarEspecialidad(esp: Especialidad) {
     this.especialidadSeleccionada = esp;

@@ -82,4 +82,7 @@ export class IntegralesComponent {
     }
   ];
 
+  ngOnInit(): void {
+    window.scrollTo(0, 0); 
+  }
 }

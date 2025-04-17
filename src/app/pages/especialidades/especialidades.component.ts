@@ -9,4 +9,7 @@ import { Component } from '@angular/core';
 })
 export class EspecialidadesComponent {
 
+  ngOnInit(): void {
+    window.scrollTo(0, 0); 
+  }
 }

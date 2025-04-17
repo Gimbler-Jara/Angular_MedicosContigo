@@ -1,11 +1,12 @@
 import { Component, Renderer2 } from '@angular/core';
 import { ScrollRevealDirective } from '../../directives/scroll-reveal.directive';
 import { CountUpDirective } from '../../directives/count-up.directive';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ScrollRevealDirective, CountUpDirective],
+  imports: [ScrollRevealDirective, CountUpDirective, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })

@@ -61,5 +61,7 @@ export class GeneralesComponent {
     }
   ];
 
-
+  ngOnInit(): void {
+    window.scrollTo(0, 0); 
+  }
 }

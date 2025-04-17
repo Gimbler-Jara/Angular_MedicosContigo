@@ -3,25 +3,31 @@
         <img src="../../../assets/img/logo/Logo-Apu-Salud.svg" alt="Clínica APU" class="logo">
 
         <nav class="nav">
-            <ul class="main-menu">
+            <ul class="menu">
                 <li><a href="#">INICIO</a></li>
-                <li><a href="#">SERVICIOS</a>
-                    <!-- <ul class="dropdown-menu">
-                        <li><a href="#">Servicios Generales</a></li>
-                        <li><a href="#">Servicios Integrales</a></li>
-                        <li><a href="#">Especialidades</a></li>
-                    </ul> -->
+
+                <li>
+                    <a href="#">SERVICIOS</a>
+                    <ul>
+                        <li><a [routerLink]="'/generales'">Servicios Generales</a></li>
+                        <li><a [routerLink]="'/integrales'">Servicios Integrales</a></li>
+                        <li><a (click)="navegarAEspecialidades()">Especialidades</a></li>
+                    </ul>
                 </li>
-                <li><a href="#">PACK & PLANES</a>
-                    <!-- <ul class="dropdown-menu">
-                        <li><a href="#">Kist Preventivos</a></li>
-                        <li><a href="#">Packs Preventivos</a></li>
-                    </ul> -->
+
+                <li>
+                    <a href="#">PACK Y PLANES</a>
+                    <ul>
+                        <li><a [routerLink]="'/packs-preventivos'">Packs Preventivos</a></li>
+                        <li><a [routerLink]="'/kits-preventivos'">Kits Preventivos</a></li>
+                    </ul>
                 </li>
-                <li><a href="#">NOSOTROS</a>
-                    <!-- <ul class="dropdown-menu">
-                        <li><a href="#">Contacto</a></li>
-                    </ul> -->
+
+                <li>
+                    <a href="#">NOSOTROS</a>
+                    <ul>
+                        <li><a [routerLink]="'/contacto'">Contacto</a></li>
+                    </ul>
                 </li>
             </ul>
         </nav>

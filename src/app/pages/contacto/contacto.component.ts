@@ -21,6 +21,11 @@ export class ContactoComponent {
     });
   }
 
+
+  ngOnInit(): void {
+    window.scrollTo(0, 0); 
+  }
+
   enviarFormulario(): void {
     if (this.formularioContacto.valid) {
       const datos = this.formularioContacto.value;

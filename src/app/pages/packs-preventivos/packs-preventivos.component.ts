@@ -255,4 +255,8 @@ export class PacksPreventivosComponent {
     }
   ]
 
+
+  ngOnInit(): void {
+    window.scrollTo(0, 0); 
+  }
 }
