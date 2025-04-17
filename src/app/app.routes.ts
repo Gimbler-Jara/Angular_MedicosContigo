@@ -6,6 +6,11 @@ import { EspecialidadesComponent } from './pages/especialidades/especialidades.c
 import { IntegralesComponent } from './pages/integrales/integrales.component';
 import { PacksPreventivosComponent } from './pages/packs-preventivos/packs-preventivos.component';
 import { KitsPreventivosComponent } from './pages/kits-preventivos/kits-preventivos.component';
+import { ContactoComponent } from './pages/contacto/contacto.component';
+import { RegisterComponent } from './auth/register/register.component';
+import { LoginComponent } from './auth/login/login.component';
+import { PerfilComponent } from './pages/perfil/perfil.component';
+import { PerfilMedicoComponent } from './pages/perfil-medico/perfil-medico.component';
 
 export const routes: Routes = [
     {
@@ -35,11 +40,31 @@ export const routes: Routes = [
             {
                 path: "kits-preventivos",
                 component: KitsPreventivosComponent
+            },
+            {
+                path: "contacto",
+                component: ContactoComponent
+            },
+            {
+                path: "register",
+                component: RegisterComponent
+            },
+            {
+                path: "login",
+                component: LoginComponent
+            },
+            {
+                path: "perfil",
+                component: PerfilComponent
+            },
+            {
+                path: "perfil-medico",
+                component: PerfilMedicoComponent
             }
         ]
     }, {
         path: '',
-        redirectTo: 'content',
+        redirectTo: '',
         pathMatch: 'full'
     }
 ];

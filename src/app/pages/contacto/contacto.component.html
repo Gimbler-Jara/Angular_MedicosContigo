@@ -1,0 +1,48 @@
+<section class="banner-contacto"></section>
+
+<section class="contacto">
+    <div class="content-left">
+        <h2>Contáctanos</h2>
+
+        <div class="info-contacto">
+            <p><strong>Teléfonos:</strong></p>
+            <p>📞 <a href="tel:980793614">980 793 614</a></p>
+            <p>📞 <a href="tel:946361049">946 361 049</a></p>
+
+            <p><strong>Correo:</strong></p>
+            <p>📧 <a href="mailto:contacto@apusalud.com">contacto&#64;apusalud.com</a></p>
+
+            <p><strong>Dirección:</strong></p>
+            <p><span>Breña, Lima, Perú</span></p>
+        </div>
+
+        <form [formGroup]="formularioContacto" (ngSubmit)="enviarFormulario()" class="formulario-contacto">
+            <div class="campo-doble">
+                <input type="text" formControlName="nombre" placeholder="Nombre" required />
+                <input type="email" formControlName="correo" placeholder="Correo electrónico" required />
+            </div>
+
+            <input type="tel" formControlName="telefono" placeholder="Número de Celular" required />
+
+            <textarea formControlName="mensaje" placeholder="Mensaje" rows="5" required></textarea>
+
+            <button type="submit" [disabled]="formularioContacto.invalid">Enviar</button>
+        </form>
+    </div>
+
+    <div class="content-right">
+        <div class="whatsapp-box">
+            <h3>WhatsApp</h3>
+            <p>Si deseas, puedes comunicarte con nosotros mediante WhatsApp para resolver tus preguntas y consultas
+                acerca
+                de nuestros servicios.</p>
+            <a href="https://wa.me/51980793614" class="btn-ws" target="_blank">💬 Chatear con un asesor</a>
+        </div>
+
+        <div class="mapa">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3900.954058415339!2d-77.06161622410296!3d-12.13293188812947!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c89f80a515c5%3A0xfcc8b8d5b83cc3ef!2sBre%C3%B1a%2C%20Lima!5e0!3m2!1ses-419!2spe!4v1713302345678"
+                width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+    </div>
+</section>

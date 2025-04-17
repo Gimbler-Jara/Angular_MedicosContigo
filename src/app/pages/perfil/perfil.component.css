@@ -1,0 +1,165 @@
+.dashboard {
+  margin: 100px auto 20px;
+  display: flex;
+  gap: 20px;
+  padding: 30px;
+}
+
+.perfil-panel {
+  width: 280px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.perfil-card {
+  text-align: center;
+}
+
+.perfil-icon {
+  overflow: hidden;
+  font-size: 70px;
+  color: #007acc;
+  margin-bottom: 10px;
+}
+
+.perfil-card h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #003366;
+}
+
+.perfil-card p {
+  font-size: 14px;
+  color: #555;
+  margin: 8px 0;
+}
+
+.contenido {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.nav-buttons button {
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  background: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.nav-buttons button.active,
+.nav-buttons button:hover {
+  background-color: #007acc;
+  color: white;
+  border-color: #007acc;
+}
+
+.vista-contenido {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  min-height: 300px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* *================================================= agendar cita ============================== */
+.agenda-container {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 20px;
+  border: 1px solid #e2e2e2;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+}
+
+.step {
+  margin-bottom: 30px;
+}
+
+.step h3 {
+  font-size: 1.3rem;
+  color: #1e4d6b;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.card-option {
+  padding: 12px 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #f8f9fa;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 180px;
+  text-align: center;
+}
+
+.card-option:hover {
+  background-color: #e6f7ff;
+  border-color: #00aaff;
+}
+
+.card-option.active {
+  background-color: #00c8d7;
+  color: white;
+  border-color: #00a0bb;
+  font-weight: 600;
+}
+
+.btn-confirm {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-confirm:hover {
+  background-color: #218838;
+}
+
+/* *====================================== Citas atendidas ======================= */
+.citas-lista {
+  list-style: none;
+  padding: 0;
+  margin-top: 15px;
+}
+
+.citas-lista li {
+  background: #f3f8fa;
+  border-left: 4px solid #00acc1;
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.citas-lista i {
+  color: #00acc1;
+  margin-right: 6px;
+}

@@ -1,0 +1,106 @@
+.formulario-usuario {
+  max-width: 800px;
+  margin: 100px auto 20px;
+  padding: 2rem;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+}
+
+.formulario-usuario h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #00324a;
+}
+
+.input-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.input-group input,
+.input-group select {
+  flex: 1 1 250px;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.input-group-password {
+  display: flex;
+  gap: 16px;
+  margin: 10px 0px;
+}
+
+.form-group {
+  position: relative;
+  width: 100%;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px 40px 10px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: border 0.3s ease;
+  outline: none;
+}
+
+.form-group i {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+}
+
+.input-error {
+  border: 1px solid red !important;
+}
+
+button[type="submit"] {
+  background-color: #00c3c8;
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button[type="submit"]:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+  background-color: #009fa4;
+}
+
+.login-link {
+  display: block;
+  margin-top: 20px;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.login-link a {
+  color: #00bcd4;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.login-link a:hover {
+  color: #007b9e;
+  text-decoration: underline;
+}

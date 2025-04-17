@@ -1,0 +1,133 @@
+<div class="dashboard">
+    <!-- Panel lateral del perfil -->
+    <aside class="perfil-panel">
+        <div class="perfil-card">
+            <i class="fas fa-user-circle perfil-icon"></i>
+            <h3>{{ usuario.first_name }} {{ usuario.last_name }} {{usuario.middle_name}}</h3>
+            <p><i class="fas fa-envelope"></i> {{ usuario.email }}</p>
+            <p><i class="fas fa-phone"></i> {{ usuario.telefono }}</p>
+            <p><i class="fas fa-user-shield"></i> {{ usuario.rol_id }}</p>
+        </div>
+    </aside>
+
+    <!-- Contenido principal -->
+    <section class="contenido">
+        <!-- Botones de navegación -->
+        <div class="nav-buttons">
+            <button [class.active]="vista === 'citas'" (click)="vista = 'citas'">Mostrar citas atendidas</button>
+            <button [class.active]="vista === 'reservar'" (click)="vista = 'reservar'">Reservar cita</button>
+            <button [class.active]="vista === 'extra'" (click)="vista = 'extra'">Otra opción</button>
+        </div>
+
+        <!-- Contenido dinámico -->
+        <div class="vista-contenido">
+            @if (vista === 'citas') {
+            <ng-container>
+                <!-- Citas Atendidas -->
+                @if (citasAtendidas.length) {
+                <div class="step">
+                    <h3><i class="fa-solid fa-calendar-check"></i> Citas Atendidas</h3>
+                    <ul class="citas-lista">
+                        @for (cita of citasAtendidas; track $index) {
+                        <li>
+                            <strong>{{ cita.fecha }}</strong> - {{ getHoraTexto(cita.idHora) }}<br>
+                            <span>
+                                <i class="fa-solid fa-user-doctor"></i> {{ getNombreMedico(cita.id_medico) }}
+                                ({{ getEspecialidadMedico(cita.id_medico) }})
+                            </span>
+                        </li>
+                        }
+                    </ul>
+                </div>
+                }@else {
+                <h2>Aún no tiene atenciones realizadas</h2>
+                }
+
+            </ng-container>
+            }
+
+            @if (vista === 'reservar') {
+            <ng-container>
+                <h2>Reservar Cita</h2>
+                <div class="agenda-container">
+                    <!-- Paso 1: Especialidades -->
+                    @if (especialidades.length) {
+                    <div class="step">
+                        <h3><i class="fa-solid fa-stethoscope"></i> Elige una especialidad</h3>
+                        <div class="card-list">
+                            @for (esp of especialidades; track $index) {
+                            <div class="card-option" (click)="seleccionarEspecialidad(esp)"
+                                [class.active]="especialidadSeleccionada?.id === esp.id">
+                                {{ esp.especialidad }}
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    }
+
+                    <!-- Paso 2: Médicos -->
+                    @if (especialidadSeleccionada && medicosFiltrados.length) {
+                    <div class="step">
+                        <h3><i class="fa-solid fa-user-doctor"></i> Elige un médico</h3>
+                        <div class="card-list">
+                            @for (med of medicosFiltrados; track $index) {
+                            <div class="card-option" (click)="seleccionarMedico(med)"
+                                [class.active]="medicoSeleccionado?.usuario?.id === med.usuario.id">
+                                {{ med.usuario.first_name }}
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    }
+
+                    <!-- Paso 3: Fechas disponibles -->
+                    @if (medicoSeleccionado && fechasFiltradas.length) {
+                    <div class="step">
+                        <h3><i class="fa-solid fa-calendar-days"></i> Selecciona una fecha</h3>
+                        <div class="card-list">
+                            @for (fecha of fechasFiltradas; track $index) {
+                            <div class="card-option" (click)="seleccionarFecha(fecha)"
+                                [class.active]="fechaSeleccionada === fecha">
+                                {{ fecha | date: 'fullDate' }}
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    }
+
+                    <!-- Paso 4: Horarios disponibles -->
+                    @if (fechaSeleccionada && horasFiltradas.length) {
+                    <div class="step">
+                        <h3><i class="fa-solid fa-clock"></i> Selecciona un horario</h3>
+                        <div class="card-list">
+                            @for (hora of horasFiltradas; track $index) {
+                            <div class="card-option" (click)="seleccionarHora(hora)"
+                                [class.active]="horaSeleccionada === hora">
+                                {{ getHoraTexto(hora) }}
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    }
+
+                    <!-- Confirmación -->
+                    @if (horaSeleccionada) {
+                    <div class="step confirm-section">
+                        <button class="btn-confirm" (click)="confirmarCita()">
+                            <i class="fa-solid fa-check-circle"></i> Confirmar Cita
+                        </button>
+                    </div>
+                    }
+                </div>
+            </ng-container>
+            }
+
+            @if (vista === 'extra') {
+            <ng-container>
+                <h2>Opción Adicional</h2>
+                <!-- Otro contenido -->
+            </ng-container>
+            }
+        </div>
+    </section>
+</div>

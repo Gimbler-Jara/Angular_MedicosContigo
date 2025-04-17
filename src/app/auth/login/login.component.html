@@ -1,1 +1,32 @@
-<p>login works!</p>
+<div class="container">
+    <div class="login-container">
+        <h2>Iniciar Sesión</h2>
+        <form [formGroup]="formularioLogin" (ngSubmit)="iniciarSesion()">
+            <div class="form-group">
+                <input type="email" placeholder="Correo electrónico" formControlName="email" />
+                @if (formularioLogin.get('email')?.invalid && formularioLogin.get('email')?.touched) {
+                <div class="error">
+                    Ingresa un correo válido.
+                </div>
+                }
+            </div>
+
+            <div class="form-group">
+                <input [type]="showPassword ? 'text' : 'password'" placeholder="Contraseña"
+                    formControlName="password" />
+                <i class="fa-solid" [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash'" (click)="togglePassword()"></i>
+                @if (formularioLogin.get('password')?.invalid && formularioLogin.get('password')?.touched) {
+                <div class="error">
+                    La contraseña es obligatoria.
+                </div>
+                }
+            </div>
+
+            <button type="submit" [disabled]="formularioLogin.invalid">Ingresar</button>
+        </form>
+
+        <span class="registro-link">
+            ¿No tienes cuenta? <a [routerLink]="['/register']">Regístrate</a>
+        </span>
+    </div>
+</div>

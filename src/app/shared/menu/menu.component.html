@@ -3,27 +3,63 @@
         <img src="../../../assets/img/logo/Logo-Apu-Salud.svg" alt="Clínica APU" class="logo">
 
         <nav class="nav">
-            <ul>
+            <ul class="main-menu">
                 <li><a href="#">INICIO</a></li>
                 <li><a href="#">SERVICIOS</a>
                     <!-- <ul class="dropdown-menu">
-                        <li><a href="#">Ambulancia</a></li>
                         <li><a href="#">Servicios Generales</a></li>
                         <li><a href="#">Servicios Integrales</a></li>
                         <li><a href="#">Especialidades</a></li>
-                      </ul> -->
+                    </ul> -->
                 </li>
-                <li><a href="#">PACK & PLANES</a></li>
-                <li><a href="#">NOSOTROS</a></li>
+                <li><a href="#">PACK & PLANES</a>
+                    <!-- <ul class="dropdown-menu">
+                        <li><a href="#">Kist Preventivos</a></li>
+                        <li><a href="#">Packs Preventivos</a></li>
+                    </ul> -->
+                </li>
+                <li><a href="#">NOSOTROS</a>
+                    <!-- <ul class="dropdown-menu">
+                        <li><a href="#">Contacto</a></li>
+                    </ul> -->
+                </li>
             </ul>
         </nav>
 
-        <div class="contacto">
-            <a href="tel:980793614" class="telefono-btn">
-                <i class="fas fa-phone"></i> 980 793 614
-            </a>
-            <i class="fas fa-share-alt compartir-icono"></i>
+        <div class="buttons">
+            <div class="contacto">
+                <a href="tel:980793614" class="telefono-btn">
+                    <i class="fas fa-phone"></i> 980 793 614
+                </a>
+            </div>
+
+            <div class="contacto">
+                <a [routerLink]="['/login']" class="telefono-btn">
+                    <i class="fa-solid fa-user-tie"></i> Login
+                </a>
+            </div>
+
+
+            @if (isAutentiticared) {
+            <div class="contacto">
+                <a href="tel:980793614" class="telefono-btn">
+                    <i class="fa-solid fa-user-tie"></i> Perfil
+                </a>
+            </div>
+
+            <div class="contacto">
+                <a [routerLink]="['/contacto']" class="telefono-btn">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </a>
+            </div>
+            }
         </div>
+    </div>
+
+    <div class="registrate">
+        <a [routerLink]="['']" class="telefono-btn">
+            <i class="fa-regular fa-calendar-plus"></i> Agendar cita
+        </a>
     </div>
 
     <div class="whatsapp">

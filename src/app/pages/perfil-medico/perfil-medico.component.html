@@ -1,0 +1,119 @@
+<div class="perfil-container">
+    <!-- Panel izquierdo con datos del médico -->
+    <aside class="perfil-panel">
+        <div class="perfil-card">
+            <i class="fas fa-user-circle perfil-icon"></i>
+            <h3><i class="fa-solid fa-user-doctor"></i> Dr. Juan Pérez</h3>
+            <p><i class="fa-solid fa-id-badge"></i> CMP: 123456</p>
+            <p><i class="fa-solid fa-envelope"></i> juanperez&#64;correo.com</p>
+            <p><i class="fa-solid fa-phone"></i> +51 999 999 999</p>
+        </div>
+    </aside>
+
+    <div class="perfil-lateral">
+
+    </div>
+
+    <!-- Panel derecho con menú y contenido -->
+    <div class="perfil-derecha">
+        <div class="menu-opciones">
+            <button [class.active]="vista === 'citas'" (click)="vista = 'citas'">Ver citas programadas</button>
+            <button [class.active]="vista === 'agregar'" (click)="vista = 'agregar'">Agregar disponibilidad</button>
+            <button [class.active]="vista === 'eliminar'" (click)="vista = 'eliminar'">Eliminar disponibilidad</button>
+        </div>
+
+        <div class="contenido">
+
+            <!-- Vista de citas -->
+            @if (vista === 'citas') {
+            <h3>Citas programadas</h3>
+
+            <!-- Filtro -->
+            <div class="filtro-citas">
+                <label for="filtroDia"><i class="fa-solid fa-filter"></i> Filtrar por día:</label>
+                <select id="filtroDia" [(ngModel)]="filtroDia" (change)="filtrarCitasPorDia()">
+                    <option value="">-- Todos --</option>
+                    @for (dia of diasSemana; track $index) {
+                    <option [value]="dia">{{ dia }}</option>
+                    }
+                </select>
+            </div>
+
+
+            @if (citasFiltradas.length) {
+            <table class="tabla-citas">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Paciente</th>
+
+                        <th>Estado de cita</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (cita of citasFiltradas; track $index) {
+                    <tr>
+                        <td>{{ cita.fecha }}</td>
+                        <td>{{ cita.hora }}</td>
+                        <td>{{ cita.paciente }}</td>
+                        <td><span class="estado {{ cita.estado }}">{{ cita.estado }}</span></td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+            }@else {
+            <p>No hay citas programadas para el filtro seleccionado.</p>
+            }
+            }
+
+            <!-- Agregar disponibilidad -->
+            @if (vista === 'agregar') {
+            <div class="disponibilidad-form">
+                <h3><i class="fa-solid fa-calendar-plus"></i> Agregar disponibilidad</h3>
+
+                <div class="form-row">
+                    <label for="dia">Día de la semana:</label>
+                    <select id="dia" [(ngModel)]="nuevaDisponibilidad.dia">
+                        @for (dia of diasSemana; track $index) {
+                        <option [value]="dia">{{ dia }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <label for="hora">Hora:</label>
+                    <select id="hora" [(ngModel)]="nuevaDisponibilidad.hora">
+                        @for (hora of horas; track $index) {
+                        <option [value]="hora">{{ hora }}</option>
+                        }
+                    </select>
+                </div>
+
+                <button class="btn-agregar" (click)="agregarDisponibilidad()">
+                    <i class="fa-solid fa-plus"></i> Agregar
+                </button>
+            </div>
+            }
+
+
+            <!-- Eliminar disponibilidad -->
+            @if (vista === 'eliminar') {
+            <div class="disponibilidad-eliminar">
+                <h3><i class="fa-solid fa-calendar-xmark"></i> Ver disponibilidad de Citas</h3>
+                <ul>
+                    @for (dispo of disponibilidades; track $index) {
+                    <li>
+                        {{ dispo.dia }} - {{ dispo.hora }}
+                        <button (click)="eliminarDisponibilidad(dispo)">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </li>
+                    }
+                </ul>
+            </div>
+            }
+
+        </div>
+    </div>
+</div>

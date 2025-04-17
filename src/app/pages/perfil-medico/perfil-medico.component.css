@@ -1,0 +1,266 @@
+.perfil-container {
+  margin: 100px auto 20px;
+  display: flex;
+  gap: 20px;
+  padding: 30px;
+}
+
+/* Panel izquierdo */
+.perfil-panel {
+  width: 280px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.perfil-card {
+  text-align: center;
+}
+
+.perfil-icon {
+  overflow: hidden;
+  font-size: 70px;
+  color: #007acc;
+  margin-bottom: 10px;
+}
+
+.perfil-card h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #003366;
+}
+
+.perfil-card p {
+  font-size: 14px;
+  color: #555;
+  margin: 8px 0;
+}
+
+/* Panel derecho */
+.perfil-derecha {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Botones de menú */
+.menu-opciones {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.menu-opciones button {
+  padding: 8px 16px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+}
+
+.menu-opciones button:hover,
+.menu-opciones button.active {
+  background-color: #007acc;
+  color: white;
+  border-color: #007acc;
+}
+
+/* Contenido */
+.contenido {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* Filtro */
+.filtro-citas {
+  margin-bottom: 15px;
+  background-color: #eaf6ff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filtro-citas label {
+  font-weight: 600;
+  color: #004d73;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.filtro-citas select {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  min-width: 150px;
+  cursor: pointer;
+  background-color: white;
+}
+
+/* Tabla de citas */
+.tabla-citas {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.tabla-citas th,
+.tabla-citas td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+.tabla-citas th {
+  background-color: #e0f2ff;
+  color: #004d73;
+}
+
+/* Estados */
+.estado {
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-transform: capitalize;
+  font-size: 13px;
+}
+
+.estado.pendiente {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.estado.atendida {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.estado.cancelada {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Formulario de disponibilidad */
+.disponibilidad-form {
+  background-color: #f8fbff;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 500px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.disponibilidad-form h3 {
+  margin-bottom: 15px;
+  color: #004d73;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 10px;
+}
+
+.form-row label {
+  min-width: 130px;
+  font-weight: 500;
+  color: #333;
+}
+
+.form-row select {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  outline: none;
+}
+
+/* Botón agregar */
+.btn-agregar {
+  background-color: #42a5f5;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-weight: bold;
+}
+
+.btn-agregar:hover {
+  background-color: #1e88e5;
+}
+
+/* Contenedor general eliminar */
+.contenido .disponibilidad-eliminar {
+  background-color: #fff;
+  padding: 20px 25px;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-top: 20px;
+}
+
+/* Título */
+.disponibilidad-eliminar h3 {
+  font-size: 18px;
+  color: #003366;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Lista de disponibilidades */
+.disponibilidad-eliminar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.disponibilidad-eliminar li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8f9fa;
+  border: 1px solid #dfe6ec;
+  padding: 10px 15px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #333;
+  transition: background 0.2s ease;
+}
+
+/* Botón de eliminar */
+.disponibilidad-eliminar li button {
+  background: #e74c3c;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.disponibilidad-eliminar li button:hover {
+  background: #c0392b;
+}
+
