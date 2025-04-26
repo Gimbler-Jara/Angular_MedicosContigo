@@ -1,0 +1,11 @@
+export interface CitasAgendadasResponseDTO {
+    id: number,
+    fecha: string,
+    hora: string,
+    estado: string,
+    pacienteID: string,
+    pacienteNombre: string,
+    medicoId: number,
+    medicoNombre: string;
+    Especialidad: string
+} 

@@ -39,23 +39,25 @@
                 </a>
             </div>
 
-            <div class="contacto">
-                <a [routerLink]="['/login']" class="telefono-btn">
-                    <i class="fa-solid fa-user-tie"></i> Login
-                </a>
-            </div>
+
 
 
             @if (isAutentiticared) {
             <div class="contacto">
-                <a href="tel:980793614" class="telefono-btn">
+                <a [routerLink]="['/perfil']" class="telefono-btn">
                     <i class="fa-solid fa-user-tie"></i> Perfil
                 </a>
             </div>
 
             <div class="contacto">
-                <a [routerLink]="['/contacto']" class="telefono-btn">
+                <a (click)="logOut()" class="telefono-btn">
                     <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </a>
+            </div>
+            }@else {
+            <div class="contacto">
+                <a [routerLink]="['/login']" class="telefono-btn">
+                    <i class="fa-solid fa-user-tie"></i> Login
                 </a>
             </div>
             }

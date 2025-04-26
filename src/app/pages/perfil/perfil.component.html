@@ -3,10 +3,10 @@
     <aside class="perfil-panel">
         <div class="perfil-card">
             <i class="fas fa-user-circle perfil-icon"></i>
-            <h3>{{ usuario.first_name }} {{ usuario.last_name }} {{usuario.middle_name}}</h3>
+            <h3>{{ usuario.firstName }} {{ usuario.lastName }} {{usuario.middleName}}</h3>
             <p><i class="fas fa-envelope"></i> {{ usuario.email }}</p>
             <p><i class="fas fa-phone"></i> {{ usuario.telefono }}</p>
-            <p><i class="fas fa-user-shield"></i> {{ usuario.rol_id }}</p>
+            <p><i class="fas fa-user-shield"></i> {{ usuario.rol.id }}</p>
         </div>
     </aside>
 
@@ -14,9 +14,9 @@
     <section class="contenido">
         <!-- Botones de navegación -->
         <div class="nav-buttons">
-            <button [class.active]="vista === 'citas'" (click)="vista = 'citas'">Mostrar citas atendidas</button>
-            <button [class.active]="vista === 'reservar'" (click)="vista = 'reservar'">Reservar cita</button>
-            <button [class.active]="vista === 'extra'" (click)="vista = 'extra'">Otra opción</button>
+            <button [class.active]="vista === 'citas'" (click)="cambiarVista('citas')">Mostrar citas atendidas</button>
+            <button [class.active]="vista === 'reservar'" (click)="cambiarVista('reservar')">Reservar cita</button>
+            <button [class.active]="vista === 'extra'" (click)="cambiarVista('extra')">Otra opción</button>
         </div>
 
         <!-- Contenido dinámico -->
@@ -24,16 +24,16 @@
             @if (vista === 'citas') {
             <ng-container>
                 <!-- Citas Atendidas -->
-                @if (citasAtendidas.length) {
+                @if (citasRegistradas.length) {
                 <div class="step">
-                    <h3><i class="fa-solid fa-calendar-check"></i> Citas Atendidas</h3>
+                    <h3><i class="fa-solid fa-calendar-check"></i> Citas Programadas</h3>
                     <ul class="citas-lista">
-                        @for (cita of citasAtendidas; track $index) {
+                        @for (cita of citasRegistradas; track $index) {
                         <li>
                             <strong>{{ cita.fecha }}</strong> - {{ getHoraTexto(cita.idHora) }}<br>
                             <span>
-                                <i class="fa-solid fa-user-doctor"></i> {{ getNombreMedico(cita.id_medico) }}
-                                ({{ getEspecialidadMedico(cita.id_medico) }})
+                                <i class="fa-solid fa-user-doctor"></i> {{ cita.medico }}
+                                ({{ cita.especialidad }})
                             </span>
                         </li>
                         }
@@ -51,19 +51,23 @@
                 <h2>Reservar Cita</h2>
                 <div class="agenda-container">
                     <!-- Paso 1: Especialidades -->
-                    @if (especialidades.length) {
-                    <div class="step">
-                        <h3><i class="fa-solid fa-stethoscope"></i> Elige una especialidad</h3>
-                        <div class="card-list">
-                            @for (esp of especialidades; track $index) {
-                            <div class="card-option" (click)="seleccionarEspecialidad(esp)"
-                                [class.active]="especialidadSeleccionada?.id === esp.id">
-                                {{ esp.especialidad }}
+                    @if (especialidades$ | async; as especialidades) {
+                        @if (especialidades.length) {
+                          <div class="step">
+                            <h3><i class="fa-solid fa-stethoscope"></i> Elige una especialidad</h3>
+                            <div class="card-list">
+                              @for (esp of especialidades; track $index) {
+                                <div class="card-option"
+                                     (click)="seleccionarEspecialidad(esp)"
+                                     [class.active]="especialidadSeleccionada?.id === esp.id">
+                                  {{ esp.especialidad }}
+                                </div>
+                              }
                             </div>
-                            }
-                        </div>
-                    </div>
-                    }
+                          </div>
+                        }
+                      }
+                      
 
                     <!-- Paso 2: Médicos -->
                     @if (especialidadSeleccionada && medicosFiltrados.length) {
@@ -72,8 +76,8 @@
                         <div class="card-list">
                             @for (med of medicosFiltrados; track $index) {
                             <div class="card-option" (click)="seleccionarMedico(med)"
-                                [class.active]="medicoSeleccionado?.usuario?.id === med.usuario.id">
-                                {{ med.usuario.first_name }}
+                                [class.active]="medicoSeleccionado?.id === med.id">
+                                {{ med.medico }}
                             </div>
                             }
                         </div>
@@ -88,7 +92,7 @@
                             @for (fecha of fechasFiltradas; track $index) {
                             <div class="card-option" (click)="seleccionarFecha(fecha)"
                                 [class.active]="fechaSeleccionada === fecha">
-                                {{ fecha | date: 'fullDate' }}
+                                {{ fecha }}
                             </div>
                             }
                         </div>
@@ -101,9 +105,9 @@
                         <h3><i class="fa-solid fa-clock"></i> Selecciona un horario</h3>
                         <div class="card-list">
                             @for (hora of horasFiltradas; track $index) {
-                            <div class="card-option" (click)="seleccionarHora(hora)"
-                                [class.active]="horaSeleccionada === hora">
-                                {{ getHoraTexto(hora) }}
+                            <div class="card-option" (click)="seleccionarHora(hora.id)"
+                                [class.active]="horaSeleccionada === hora.id">
+                                {{ getHoraTexto(hora.id) }}
                             </div>
                             }
                         </div>

@@ -1,102 +1,177 @@
-import { Injectable } from '@angular/core';
+import { inject, Inject, Injectable } from '@angular/core';
 import { Especialidad } from '../interface/Especialidad.interface';
-import { Usuario } from '../interface/Usuario.interface';
-import { CitaMedica } from '../interface/CitaMedica.interface';
+import { UsuarioRequest } from '../interface/Usuario/Usuario.interface';
+import { AgendarCitaMedicaDTO } from '../DTO/CitaMedica.interface';
 import { MedicoConUsuario } from '../interface/MedicoConUsuario.interface';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { catchError, lastValueFrom, throwError } from 'rxjs';
+import { API, CITAS_RESERVADAS_PORPACIENTE, DIAS_DISPONIBLES, ENDPOINTS_CITAS, ESPECIALIDAD_POR_ID_MEDICO, MEDICO_POR_ESPECIALIDAD, PROCEDIMIENTOS } from '../utils/constants';
+import { CitasAgendadasResponseDTO } from '../DTO/CitasAgendada.response.interface';
+import { MedicosPorEspecialidadDTO } from '../DTO/MedicosPorEspecialidad.interface';
+import { DiasDisponiblesPorMedicoDTO } from '../DTO/DiasDisponiblesPorMedico.interface';
+import { HorasDispiniblesDTO } from '../DTO/HorasDispinibles.interface';
+import { CitasReservadasPorPacienteResponseDTO } from '../DTO/CitasReservadasPorPaciente.interface';
+import { RegistrarDisponibilidadCitaDTO } from '../DTO/RegistrarDisponibilidad.interface';
+
+
+export interface CambiarEstadoDisponibilidadRequest {
+  idMedico: number;
+  idDiaSemana: number;
+  idHora: number;
+  activo: boolean;
+}
+
+// export interface AgendarCitaRequest {
+//   idMedico: number;
+//   idPaciente: number;
+//   fecha: string; // formato 'YYYY-MM-DD'
+//   idHora: number;
+// }
 
 @Injectable({
   providedIn: 'root'
 })
 export class CitasService {
-
-  private especialidades: Especialidad[] = [
-    { id: 1, especialidad: 'Cardiología' },
-    { id: 2, especialidad: 'Pediatría' },
-    { id: 3, especialidad: 'Dermatología' },
-  ];
-
-  private medicos: MedicoConUsuario[] = [
-    {
-      usuario: {
-        id: 1, first_name: 'Juan', last_name: 'Ramírez', document_type: 1, dni: '12345678', birth_date: '1990-01-01', gender: 'M', password_hash: '', rol_id: 2, telefono: '999111222', email: 'juan.ramirez@example.com'
-      }, especialidad_id: 1
-    },
-    {
-      usuario: {
-        id: 2, first_name: 'Ana', last_name: 'Soto', document_type: 1, dni: '87654321', birth_date: '1985-02-02', gender: 'F', password_hash: '', rol_id: 2, telefono: '999333444', email: 'ana.soto@example.com'
-      }, especialidad_id: 2
-    },
-    {
-      usuario: {
-        id: 3, first_name: 'Luis', last_name: 'Rivas', document_type: 1, dni: '11223344', birth_date: '1992-03-03', gender: 'M', password_hash: '', rol_id: 2, telefono: '999555666', email: 'luis.rivas@example.com'
-      }, especialidad_id: 1
-    }
-  ];
-
-
-  private diasDisponibles: { [idMedico: number]: string[] } = {
-    1: ['2025-04-20', '2025-04-22'],
-    2: ['2025-04-21'],
-    3: ['2025-04-20', '2025-04-23']
-  };
-
-  private horasDisponibles: { [fecha: string]: number[] } = {
-    '2025-04-20': [1, 2, 3],
-    '2025-04-21': [4, 5],
-    '2025-04-22': [2, 6],
-    '2025-04-23': [1, 7]
-  };
-
-  citasAtendidas: CitaMedica[] = [];
-
-  constructor() { }
+  http = inject(HttpClient);
 
   private horasCatalogo: { [id: number]: string } = {
-    1: '09:00',
-    2: '10:00',
-    3: '11:00',
-    4: '12:00',
-    5: '13:00',
+    1: '08:00',
+    2: '09:00',
+    3: '10:00',
+    4: '11:00',
+    5: '12:00',
     6: '14:00',
     7: '15:00',
     8: '16:00'
   };
-  
+
   getHoraById(id: number): string {
     return this.horasCatalogo[id] || 'Hora no encontrada';
   }
-  
 
-  getEspecialidades(): Especialidad[] {
-    return this.especialidades;
+
+  // 1. Listar citas agendadas por médico
+  listarCitasAgendadas(idMedico: number): Promise<CitasAgendadasResponseDTO[]> {
+    return lastValueFrom(this.http.get<CitasAgendadasResponseDTO[]>(`${API}/${PROCEDIMIENTOS}/${ENDPOINTS_CITAS.CITAS_AGENDADAS}/${idMedico}`).pipe(
+      catchError(error => {
+        return throwError(() => error);
+      })
+    ))
   }
 
-  getMedicos(): MedicoConUsuario[] {
-    return this.medicos;
+  // 2. Registrar disponibilidad
+  registrarDisponibilidad(req: RegistrarDisponibilidadCitaDTO): Promise<void> {
+    console.log(`${API}/${PROCEDIMIENTOS}/${ENDPOINTS_CITAS.REGISTRAR_DISPONIBILIDAD}`);
+    return lastValueFrom(
+     
+      
+      this.http.post<void>(`${API}/${PROCEDIMIENTOS}/${ENDPOINTS_CITAS.REGISTRAR_DISPONIBILIDAD}`, req)
+        .pipe(
+          catchError(error => throwError(() => error))
+        )
+    );
   }
 
-  getMedicosPorEspecialidad(especialidadId: number): MedicoConUsuario[] {
-    return this.medicos.filter(m => m.especialidad_id === especialidadId);
+  // 3. Cambiar estado de disponibilidad
+  cambiarEstadoDisponibilidadMedico(req: CambiarEstadoDisponibilidadRequest): Promise<void> {
+    return lastValueFrom(
+      this.http.put<void>(`${API}/${ENDPOINTS_CITAS.CAMBIAR_ESTADO_DISPONIBILIDAd}`, req)
+        .pipe(
+          catchError(error => throwError(() => error))
+        )
+    );
   }
 
-  getDiasDisponibles(idMedico: number): string[] {
-    return this.diasDisponibles[idMedico] || [];
+  // 4. Agendar cita
+  agendarCita(req: AgendarCitaMedicaDTO): Promise<void> {
+    return lastValueFrom(
+      this.http.post<void>(`${API}/${PROCEDIMIENTOS}/${ENDPOINTS_CITAS.AGENDAR_CITA}`, req)
+        .pipe(
+          catchError(error => throwError(() => error))
+        )
+    );
   }
 
-  getHorasDisponibles(fecha: string): number[] {
-    return this.horasDisponibles[fecha] || [];
+  // 5. Listar especialidades
+  // listarEspecialidades(): Promise<Especialidad[]> {
+  //   return lastValueFrom(
+  //     this.http.get<Especialidad[]>(`${API}/especialidades`)
+  //       .pipe(
+  //         catchError(error => throwError(() => error))
+  //       )
+  //   );
+  // }
+
+  // 6. Listar médicos por especialidad
+  listarMedicosPorEspecialidad(idEspecialidad: number): Promise<MedicosPorEspecialidadDTO[]> {
+    return lastValueFrom(
+      this.http.get<MedicosPorEspecialidadDTO[]>(`${API}/${PROCEDIMIENTOS}/${MEDICO_POR_ESPECIALIDAD}/${idEspecialidad}`)
+        .pipe(
+          catchError(error => throwError(() => error))
+        )
+    );
   }
 
-  agendarCita(cita: CitaMedica): void {
-    console.log('Cita agendada (simulada)', cita);
-    this.citasAtendidas.push(cita);
-
-    // Eliminar la hora agendada de la lista de horas disponibles
-    const horas = this.horasDisponibles[cita.fecha];
-    if (horas) {
-      this.horasDisponibles[cita.fecha] = horas.filter(h => h !== cita.idHora);
-    }
+  // 7. Listar días disponibles por médico
+  listarDiasDisponibles(idMedico: number): Promise<DiasDisponiblesPorMedicoDTO[]> {
+    return lastValueFrom(
+      this.http.get<DiasDisponiblesPorMedicoDTO[]>(`${API}/${PROCEDIMIENTOS}/${DIAS_DISPONIBLES}/${idMedico}`)
+        .pipe(
+          catchError(error => throwError(() => error))
+        )
+    );
   }
 
-  
+  // 8. Listar horas disponibles (usa params)
+  listarHorasDisponibles(idMedico: number, fecha: string): Promise<HorasDispiniblesDTO[]> {
+    let params = new HttpParams()
+      .set('idMedico', idMedico)
+      .set('fecha', fecha);
+    return lastValueFrom(
+      this.http.get<HorasDispiniblesDTO[]>(`${API}/${PROCEDIMIENTOS}/${ENDPOINTS_CITAS.HORAS_DISPONIBLES}`, { params })
+        .pipe(
+          catchError(error => throwError(() => error))
+        )
+    );
+  }
+
+  // 9. Cambiar estado de cita a reservado (descomenta si lo usas)
+  // cambiarEstadoCita(idCita: number): Promise<void> {
+  //   let params = new HttpParams().set('idCita', idCita);
+  //   return lastValueFrom(
+  //     this.http.put<void>(`${this.apiUrl}/${ENDPOINTS_CITAS.CAMBIAR_ESTADO_CITA}`, null, { params })
+  //       .pipe(
+  //         catchError(error => throwError(() => error))
+  //       )
+  //   );
+  // }
+
+  // 10. Eliminar cita reservada (descomenta si lo usas)
+  // eliminarCitaReservado(idCita: number): Promise<void> {
+  //   return lastValueFrom(
+  //     this.http.delete<void>(`${this.apiUrl}/${ENDPOINTS_CITAS.ELIMINAR_CITA}/${idCita}`)
+  //       .pipe(
+  //         catchError(error => throwError(() => error))
+  //       )
+  //   );
+  // }
+
+  // 11. Listar citas reservadas por paciente
+  listarCitasReservadasPorPaciente(idPaciente: number): Promise<CitasReservadasPorPacienteResponseDTO[]> {
+    return lastValueFrom(
+      this.http.get<CitasReservadasPorPacienteResponseDTO[]>(`${API}/${PROCEDIMIENTOS}/${CITAS_RESERVADAS_PORPACIENTE}/${idPaciente}`)
+        .pipe(
+          catchError(error => throwError(() => error))
+        )
+    );
+  }
+
+  obtenerEspecialidadPorIdMedico(idMedico: number): Promise<Especialidad> {
+    return lastValueFrom(
+      this.http.get<Especialidad>(`${API}/${PROCEDIMIENTOS}/${ESPECIALIDAD_POR_ID_MEDICO}/${idMedico}`)
+        .pipe(
+          catchError(error => throwError(() => error))
+        )
+    );
+  }
 }

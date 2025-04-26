@@ -1,7 +1,9 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { LoginDTO } from '../../DTO/Login.interface';
 
 @Component({
   selector: 'app-login',
@@ -11,6 +13,8 @@ import { RouterLink } from '@angular/router';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
+  authService = inject(AuthService)
+  router = inject(Router)
   formularioLogin: FormGroup;
   showPassword: boolean = false;
 
@@ -27,7 +31,29 @@ export class LoginComponent {
 
   iniciarSesion(): void {
     if (this.formularioLogin.valid) {
-      console.log('Datos enviados:', this.formularioLogin.value);
+      var user: LoginDTO = {
+        email: this.formularioLogin.value.email,
+        password: this.formularioLogin.value.password
+      }
+      console.log('Datos enviados:', user);
+      this.authService.login(user).then(usuario => {
+        if (usuario) {
+          this.authService.setUsuario(usuario);
+          console.log(usuario);
+
+
+          if (usuario.rol.id == 1) {
+            this.router.navigate(['/perfil']);
+          } else if (usuario.rol.id == 2) {
+            this.router.navigate(['/perfil-medico']);
+          } else {
+            console.log("Adminstrador");
+          }
+
+        }
+      });
+
+
       // Aquí puedes enviar los datos al backend
       this.formularioLogin.reset();
     }

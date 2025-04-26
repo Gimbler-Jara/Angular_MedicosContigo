@@ -1,7 +1,9 @@
 import { CommonModule, NgStyle } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, NgModel, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { UsuarioRequest } from '../../interface/Usuario/Usuario.interface';
 
 @Component({
   selector: 'app-register',
@@ -11,6 +13,9 @@ import { RouterLink } from '@angular/router';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
+
+  usuarioService = inject(AuthService)
+
   formularioUsuario: FormGroup;
   showPassword: boolean = false;
   showConfirm: boolean = false;
@@ -24,18 +29,18 @@ export class RegisterComponent {
   ];
 
   private formularioInicial = {
-    document_type: '',
+    document_type: "",
     dni: '',
     last_name: '',
     middle_name: '',
     first_name: '',
     birth_date: '',
-    gender: '',
+    gender: 'M',
     telefono: '',
     email: '',
     password_hash: '',
-    confirmPassword: '',
-    rol: 'paciente'
+    // confirmPassword: '',
+    rol_id: 1
   };
 
   constructor(private fb: FormBuilder) {
@@ -46,12 +51,12 @@ export class RegisterComponent {
       middle_name: [''],
       first_name: ['', Validators.required],
       birth_date: ['', Validators.required],
-      gender: ['', Validators.required],
+      gender: ['M', Validators.required],
       telefono: [''],
       email: ['', [Validators.required, Validators.email]],
       password_hash: ['', Validators.required],
       confirmPassword: ['', Validators.required],
-      rol: ['paciente']
+      rol: [1]
     },
       {
         validators: [this.passwordsMatchValidator]
@@ -75,7 +80,21 @@ export class RegisterComponent {
 
   registrarUsuario() {
     if (this.formularioUsuario.valid) {
-      console.log(this.formularioUsuario.value);
+      var usuario: UsuarioRequest = {
+        document_type: Number(this.formularioUsuario.value.document_type),
+        dni: this.formularioUsuario.value.dni,
+        lastName: this.formularioUsuario.value.last_name,
+        middleName: this.formularioUsuario.value.middle_name,
+        firstName: this.formularioUsuario.value.first_name,
+        birthDate: this.formularioUsuario.value.birth_date,
+        gender: this.formularioUsuario.value.gender,
+        telefono: this.formularioUsuario.value.telefono,
+        email: this.formularioUsuario.value.email,
+        passwordHash: this.formularioUsuario.value.password_hash,
+        rol_id: Number(this.formularioUsuario.value.rol)
+      }
+      console.log(usuario);
+      this.usuarioService.agregarUsuario(usuario)
       this.formularioUsuario.reset(this.formularioInicial);
     }
   }

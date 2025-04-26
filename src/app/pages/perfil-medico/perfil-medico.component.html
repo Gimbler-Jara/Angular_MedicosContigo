@@ -3,10 +3,10 @@
     <aside class="perfil-panel">
         <div class="perfil-card">
             <i class="fas fa-user-circle perfil-icon"></i>
-            <h3><i class="fa-solid fa-user-doctor"></i> Dr. Juan Pérez</h3>
+            <h3><i class="fa-solid fa-user-doctor"></i> Dr. {{usuario.firstName}} {{usuario.lastName}}</h3>
             <p><i class="fa-solid fa-id-badge"></i> CMP: 123456</p>
-            <p><i class="fa-solid fa-envelope"></i> juanperez&#64;correo.com</p>
-            <p><i class="fa-solid fa-phone"></i> +51 999 999 999</p>
+            <p><i class="fa-solid fa-envelope"></i> {{usuario.email}}</p>
+            <p><i class="fa-solid fa-phone"></i> +51 {{usuario.telefono}}</p>
         </div>
     </aside>
 
@@ -17,9 +17,9 @@
     <!-- Panel derecho con menú y contenido -->
     <div class="perfil-derecha">
         <div class="menu-opciones">
-            <button [class.active]="vista === 'citas'" (click)="vista = 'citas'">Ver citas programadas</button>
-            <button [class.active]="vista === 'agregar'" (click)="vista = 'agregar'">Agregar disponibilidad</button>
-            <button [class.active]="vista === 'eliminar'" (click)="vista = 'eliminar'">Eliminar disponibilidad</button>
+            <button [class.active]="vista === 'citas'" (click)="cambiarVista('citas')">Ver citas programadas</button>
+            <button [class.active]="vista === 'agregar'" (click)="cambiarVista('agregar')">Agregar disponibilidad</button>
+            <button [class.active]="vista === 'eliminar'" (click)="cambiarVista('eliminar')">Eliminar disponibilidad</button>
         </div>
 
         <div class="contenido">
@@ -56,7 +56,7 @@
                     <tr>
                         <td>{{ cita.fecha }}</td>
                         <td>{{ cita.hora }}</td>
-                        <td>{{ cita.paciente }}</td>
+                        <td>{{ cita.pacienteNombre }}</td>
                         <td><span class="estado {{ cita.estado }}">{{ cita.estado }}</span></td>
                     </tr>
                     }
