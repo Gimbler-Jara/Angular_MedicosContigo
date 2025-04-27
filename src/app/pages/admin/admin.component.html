@@ -1,0 +1,143 @@
+<div class="container-principal">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+
+        <aside class="perfil-panel">
+            <div class="perfil-card">
+                <i class="fas fa-user-circle perfil-icon"></i>
+                <h3>{{ usuario.firstName }} {{ usuario.lastName }} {{usuario.middleName}}</h3>
+                <p><i class="fas fa-envelope"></i> {{ usuario.email }}</p>
+                <p><i class="fas fa-phone"></i> {{ usuario.telefono }}</p>
+                <p><i class="fas fa-user-shield"></i> {{ usuario.rol.id }}</p>
+            </div>
+        </aside>
+
+        <br>
+        <br>
+
+
+
+        <button [ngClass]="{active: selectedGestion === 'medico'}" (click)="selectGestion('medico')">
+            Gestion Médico
+        </button>
+        <button [ngClass]="{active: selectedGestion === 'paciente'}" (click)="selectGestion('paciente')">
+            Gestion Paciente
+        </button>
+        <!-- <button [ngClass]="{active: selectedGestion === 'admin'}" (click)="selectGestion('admin')">
+            Gestion Admin
+        </button> -->
+    </nav>
+
+    <div class="main-content">
+        <!-- Tabs -->
+        <div class="tabs">
+            @for (tab of currentTabs; track $index) {
+            <button [ngClass]="{active: selectedTab === tab.key}" (click)="selectTab(tab.key)">
+                {{ tab.label }}
+            </button>
+            }
+        </div>
+
+        <div class="content-box">
+            <!-- Gestión Médico -->
+            @if (selectedGestion === 'medico' && selectedTab === "registrar") {
+            <ng-container>
+                <app-registrar-medico></app-registrar-medico>
+            </ng-container>
+            }
+            @if (selectedGestion === 'medico' && selectedTab === "listar") {
+            <ng-container>
+                <table class="tabla-medicos">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Documento</th>
+                            <th>N°</th>
+                            <th>Apellidos</th>
+                            <th>Nombres</th>
+                            <th>Especialidad</th>
+                            <th>Teléfono</th>
+                            <th>Email</th>
+                            <th>Género</th>
+                            <th>Fecha de Nacimiento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (medico of medicos; track $index) {
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ medico.usuario.documentType.doc }}</td>
+                            <td>{{ medico.usuario.dni }}</td>
+                            <td>{{ medico.usuario.lastName }} {{ medico.usuario.middleName || '' }}</td>
+                            <td>{{ medico.usuario.firstName }}</td>
+                            <td>{{ medico.especialidad.especialidad }}</td>
+                            <td>{{ medico.usuario.telefono }}</td>
+                            <td>{{ medico.usuario.email }}</td>
+                            <td>{{ medico.usuario.gender === 'M' ? 'Masculino' : 'Femenino' }}</td>
+                            <td>{{ medico.usuario.birthDate }}</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </ng-container>
+            }
+
+            <!-- Gestión Paciente -->
+            @if (selectedGestion === 'paciente' && selectedTab === "registrar") {
+            <ng-container>
+                <app-register></app-register>
+            </ng-container>
+            }
+            @if (selectedGestion === 'paciente' && selectedTab === "listar") {
+            <ng-container>
+                <table class="tabla-pacientes">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Tipo Doc</th>
+                            <th>DNI</th>
+                            <th>Apellidos</th>
+                            <th>Nombres</th>
+                            <th>Género</th>
+                            <th>Fecha Nacimiento</th>
+                            <th>Teléfono</th>
+                            <th>Email</th>
+                            <!-- <th>Rol</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (paciente of pacientes; track $index) {
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ paciente.usuario.documentType.doc }}</td>
+                            <td>{{ paciente.usuario.dni }}</td>
+                            <td>{{ paciente.usuario.lastName }} {{ paciente.usuario.middleName || '' }}</td>
+                            <td>{{ paciente.usuario.firstName }}</td>
+                            <td>{{ paciente.usuario.gender === 'F' ? 'Femenino' : 'Masculino' }}</td>
+                            <td>{{ paciente.usuario.birthDate }}</td>
+                            <td>{{ paciente.usuario.telefono }}</td>
+                            <td>{{ paciente.usuario.email }}</td>
+                            <!-- <td>{{ paciente.usuario.rol.rol }}</td> -->
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </ng-container>
+            }
+
+            <!-- Gestión Admin -->
+            @if (selectedGestion === 'admin' && selectedTab === "registrar") {
+            <ng-container>
+                <p>Formulario de <strong>Registrar Administrador</strong> aquí...</p>
+            </ng-container>
+            }
+            @if (selectedGestion === 'admin' && selectedTab === "listar") {
+            <ng-container>
+                <p>Listado de <strong>Administradores</strong> aquí...</p>
+            </ng-container>
+            }
+        </div>
+    </div>
+</div>

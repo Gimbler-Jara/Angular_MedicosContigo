@@ -1,0 +1,175 @@
+.container-principal {
+  display: flex;
+  height: auto;
+  background: #f7f9fa;
+  margin-top: 80px;
+  margin-bottom: 20px;
+}
+
+.perfil-panel {
+  width: 280px;
+  padding: 20px;
+}
+
+.perfil-card {
+  text-align: center;
+}
+
+.perfil-icon {
+  overflow: hidden;
+  font-size: 70px;
+  color: #007acc;
+  margin-bottom: 10px;
+}
+
+.perfil-card h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #003366;
+}
+
+.perfil-card p {
+  font-size: 14px;
+  color: #555;
+  margin: 8px 0;
+}
+
+.sidebar {
+  width: 280px;
+  background: #fff;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.07);
+  padding: 32px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.sidebar button {
+  margin: 0 16px 16px 16px;
+  padding: 14px 10px;
+  background: #f8faff;
+  border: 1px solid #00324a;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-weight: 500;
+}
+
+.sidebar button.active,
+.sidebar button:hover {
+  background: #e3f3fb;
+  color: #00324a;
+  border: 2px solid #2196f3;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 34px 0 34px;
+}
+
+.tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 16px;
+}
+
+.tabs button {
+  background: #f1f4f6;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 4px 4px 0 0;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-right: 2px;
+  border-bottom: 2px solid #c6c6c6;
+  transition: background 0.2s, border-bottom 0.2s;
+}
+
+.tabs button.active,
+.tabs button:hover {
+  background: #b3e5fc;
+  border-bottom: 2px solid #2196f3;
+  color: #00324a;
+}
+
+.content-box {
+  background: #fff;
+  flex: 1;
+  border: 2px solid #dbe6ee;
+  border-radius: 0 10px 10px 10px;
+  /* padding: 32px 24px; */
+  min-height: 360px;
+  box-shadow: 0 4px 22px rgba(33, 150, 243, 0.04);
+  font-size: 1.1rem;
+  color: #00324a;
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
+}
+
+/* *================== TABLA MEDICOS ================================== */
+.tabla-medicos {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  /* margin-top: 20px; */
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 0.97rem;
+}
+
+.tabla-medicos th,
+.tabla-medicos td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #eaeaea;
+  text-align: left;
+}
+
+.tabla-medicos thead th {
+  background: #00324a;
+  color: #fff;
+  font-weight: 600;
+}
+
+.tabla-medicos tbody tr:nth-child(even) {
+  background: #f3fafd;
+}
+
+.tabla-medicos tbody tr:hover {
+  background: #e3f2fd;
+}
+
+/* *=========================== TABLA PACIENTES ====================== */
+.tabla-pacientes {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  /* margin-top: 20px; */
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 0.97rem;
+}
+
+.tabla-pacientes th,
+.tabla-pacientes td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #eaeaea;
+  text-align: left;
+}
+
+.tabla-pacientes thead th {
+  background: #00324a;
+  color: #fff;
+  font-weight: 600;
+}
+
+.tabla-pacientes tbody tr:nth-child(even) {
+  background: #f3fafd;
+}
+
+.tabla-pacientes tbody tr:hover {
+  background: #e3f2fd;
+}

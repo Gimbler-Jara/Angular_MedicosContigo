@@ -1,8 +1,6 @@
-import { inject, Inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Especialidad } from '../interface/Especialidad.interface';
-import { UsuarioRequest } from '../interface/Usuario/Usuario.interface';
 import { AgendarCitaMedicaDTO } from '../DTO/CitaMedica.interface';
-import { MedicoConUsuario } from '../interface/MedicoConUsuario.interface';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { catchError, lastValueFrom, throwError } from 'rxjs';
 import { API, CITAS_RESERVADAS_PORPACIENTE, DIAS_DISPONIBLES, ENDPOINTS_CITAS, ESPECIALIDAD_POR_ID_MEDICO, MEDICO_POR_ESPECIALIDAD, PROCEDIMIENTOS } from '../utils/constants';
@@ -20,13 +18,6 @@ export interface CambiarEstadoDisponibilidadRequest {
   idHora: number;
   activo: boolean;
 }
-
-// export interface AgendarCitaRequest {
-//   idMedico: number;
-//   idPaciente: number;
-//   fecha: string; // formato 'YYYY-MM-DD'
-//   idHora: number;
-// }
 
 @Injectable({
   providedIn: 'root'

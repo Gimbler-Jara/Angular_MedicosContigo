@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { UsuarioRequest, UsuarioResponse } from '../interface/Usuario/Usuario.interface';
+import { UsuarioMedicoRequest, UsuarioPacienteRequest, UsuarioResponse } from '../interface/Usuario/Usuario.interface';
 import { BehaviorSubject, lastValueFrom } from 'rxjs';
-import { API, ENDPOINTS_CITAS } from '../utils/constants';
+import { API, USUARIO, PACIENTE, MEDICO } from '../utils/constants';
 import { LoginDTO } from '../DTO/Login.interface';
 
 @Injectable({
@@ -41,8 +41,14 @@ export class AuthService {
   //   return lastValueFrom(this.http.get<Usuario>(`${API}/${id}`));
   // }
 
-  agregarUsuario(usuario: UsuarioRequest): Promise<UsuarioRequest> {
-    return lastValueFrom(this.http.post<UsuarioRequest>(`${API}/${ENDPOINTS_CITAS.USUARIO}`, usuario));
+  registrarPaciente(usuario: UsuarioPacienteRequest): Promise<UsuarioPacienteRequest> {
+    return lastValueFrom(this.http.post<UsuarioPacienteRequest>(`${API}/${USUARIO}/${PACIENTE}`, usuario));
+  }
+
+
+  
+  registrarMedico(usuario: UsuarioMedicoRequest): Promise<UsuarioMedicoRequest> {
+    return lastValueFrom(this.http.post<UsuarioMedicoRequest>(`${API}/${USUARIO}/${MEDICO}`, usuario));
   }
 
   // actualizarUsuario(id: number, usuario: Usuario): Promise<Usuario> {
@@ -54,7 +60,11 @@ export class AuthService {
   // }
 
   login(user: LoginDTO): Promise<UsuarioResponse> {
-    return lastValueFrom(this.http.post<UsuarioResponse>(`${API}/${ENDPOINTS_CITAS.USUARIO}/login`, user));
+    return lastValueFrom(this.http.post<UsuarioResponse>(`${API}/${USUARIO}/login`, user));
+  }
+
+  isAuthenticated(): boolean {
+    return !!localStorage.getItem('usuario');
   }
 
 }

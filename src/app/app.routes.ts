@@ -11,6 +11,9 @@ import { RegisterComponent } from './auth/register/register.component';
 import { LoginComponent } from './auth/login/login.component';
 import { PerfilComponent } from './pages/perfil/perfil.component';
 import { PerfilMedicoComponent } from './pages/perfil-medico/perfil-medico.component';
+import { RegistrarMedicoComponent } from './auth/registrar-medico/registrar-medico.component';
+import { AdminComponent } from './pages/admin/admin.component';
+import { authGuard } from './guard/auth.guard';
 
 export const routes: Routes = [
     {
@@ -50,21 +53,37 @@ export const routes: Routes = [
                 component: RegisterComponent
             },
             {
+                path: "registrar-medico",
+                component: RegistrarMedicoComponent,
+                canActivate: [authGuard],
+            },
+            {
                 path: "login",
                 component: LoginComponent
             },
             {
                 path: "perfil",
-                component: PerfilComponent
+                component: PerfilComponent,
+                canActivate: [authGuard],
             },
             {
                 path: "perfil-medico",
-                component: PerfilMedicoComponent
+                component: PerfilMedicoComponent,
+                canActivate: [authGuard],
+            }, {
+                path: "admin",
+                component: AdminComponent,
+                canActivate: [authGuard],
             }
         ]
-    }, {
+    },
+    {
         path: '',
         redirectTo: '',
         pathMatch: 'full'
-    }
+    },
+    {
+        path: '**',
+        redirectTo: 'not-found',
+    },
 ];

@@ -45,13 +45,13 @@
             @if (isAutentiticared) {
             <div class="contacto">
                 <a [routerLink]="['/perfil']" class="telefono-btn">
-                    <i class="fa-solid fa-user-tie"></i> Perfil
+                    <i class="fa-solid fa-user-tie"></i>
                 </a>
             </div>
 
             <div class="contacto">
                 <a (click)="logOut()" class="telefono-btn">
-                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                    <i class="fa-solid fa-right-from-bracket"></i>
                 </a>
             </div>
             }@else {
@@ -65,10 +65,11 @@
     </div>
 
     <div class="registrate">
-        <a [routerLink]="['']" class="telefono-btn">
+        <a [routerLink]="isLoggedIn ? ['/perfil'] : ['/login']" class="telefono-btn">
             <i class="fa-regular fa-calendar-plus"></i> Agendar cita
-        </a>
+          </a>
     </div>
+
 
     <div class="whatsapp">
         <a href="https://api.whatsapp.com/send?phone=51980793614" target="_blank" class="whatsapp-btn">

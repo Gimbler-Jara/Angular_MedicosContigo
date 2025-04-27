@@ -1,32 +1,48 @@
+import { Document_Type } from "../DocumentType.interface";
 import { Rol } from "../Rol.interface";
 
-export interface UsuarioRequest {
+export interface UsuarioPacienteRequest {
     id?: number;
-    document_type: number; 
+    documentTypeId: number;
     dni: string;
     lastName: string;
     middleName?: string;
     firstName: string;
-    birthDate: string; 
+    birthDate: string;
     gender: 'M' | 'F';
     telefono?: string;
     email?: string;
-    passwordHash: string;
-    rol_id: number; 
+    password: string;
 }
+
+export interface UsuarioMedicoRequest {
+    id?: number;
+    documentTypeId: number;
+    dni: string;
+    lastName: string;
+    middleName?: string;
+    firstName: string;
+    birthDate: string;
+    gender: 'M' | 'F';
+    telefono?: string;
+    email?: string;
+    password: string;
+    especialidadId: number
+}
+
 
 
 export interface UsuarioResponse {
     id?: number;
-    document_type: DocumentType; 
+    documentType: Document_Type;
     dni: string;
     lastName: string;
     middleName?: string;
     firstName: string;
-    birthDate: string; 
+    birthDate: string;
     gender: 'M' | 'F';
     telefono?: string;
     email?: string;
     passwordHash: string;
-    rol: Rol; 
+    rol: Rol;
 }

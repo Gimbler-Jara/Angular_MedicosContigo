@@ -1,0 +1,181 @@
+<section class="formulario-usuario">
+    <h2>Registro de Médico</h2>
+    <form [formGroup]="formularioMedico" (ngSubmit)="registrarMedico()">
+
+        <!-- Tipo de documento y DNI -->
+        <div class="input-group">
+            <div class="input-control">
+                <select formControlName="documentType">
+                    <option value="" disabled selected>Tipo de Documento</option>
+                    @for (tipo of tiposDocumento; track $index) {
+                    <ng-container>
+                        <option [value]="tipo.id">{{ tipo.doc }}</option>
+                    </ng-container>
+                    }
+                </select>
+            </div>
+            <div class="input-control">
+                <input type="text" placeholder="Número de Documento" formControlName="dni" />
+                @if (formularioMedico.get('dni')?.invalid && formularioMedico.get('dni')?.touched) {
+                <div class="error">
+                    @if (formularioMedico.get('dni')?.errors?.['required']) {
+                    <span>El número es obligatorio.</span>
+                    }
+                    @if (formularioMedico.get('dni')?.errors?.['pattern']) {
+                    <span>El número debe tener exactamente 8 números.</span>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+
+        <!-- Apellidos -->
+        <div class="input-group">
+            <div class="input-control">
+                <input type="text" placeholder="Apellido Paterno" formControlName="lastName" />
+                @if (formularioMedico.get('lastName')?.invalid && formularioMedico.get('lastName')?.touched) {
+                <div class="error">
+                    @if (formularioMedico.get('lastName')?.errors?.['required']) {
+                    <span>Apellido paterno es obligatorio.</span>
+                    }
+                    @if (formularioMedico.get('lastName')?.errors?.['pattern']) {
+                    <span>Solo letras y espacios permitidos.</span>
+                    }
+                </div>
+                }
+            </div>
+            <div class="input-control">
+                <input type="text" placeholder="Apellido Materno" formControlName="middleName" />
+                @if (formularioMedico.get('middleName')?.invalid && formularioMedico.get('middleName')?.touched) {
+                <div class="error">
+                    @if (formularioMedico.get('middleName')?.errors?.['required']) {
+                    <span>Apellido materno es obligatorio.</span>
+                    }
+                    @if (formularioMedico.get('middleName')?.errors?.['pattern']) {
+                    <span>Solo letras y espacios permitidos.</span>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+
+        <!-- Nombres y Fecha de Nacimiento -->
+        <div class="input-group">
+            <div class="input-control">
+                <input type="text" placeholder="Nombres" formControlName="firstName" />
+                @if (formularioMedico.get('firstName')?.invalid && formularioMedico.get('firstName')?.touched) {
+                <div class="error">
+                    @if (formularioMedico.get('firstName')?.errors?.['required']) {
+                    <span>El nombre es obligatorio.</span>
+                    }
+                    @if (formularioMedico.get('firstName')?.errors?.['pattern']) {
+                    <span>Solo letras y espacios permitidos.</span>
+                    }
+                </div>
+                }
+            </div>
+            <div class="input-control">
+                <input type="date" formControlName="birthDate" />
+                @if (formularioMedico.get('birthDate')?.invalid && formularioMedico.get('birthDate')?.touched) {
+                <div class="error">
+                    <span>La fecha de nacimiento es obligatoria.</span>
+                </div>
+                }
+            </div>
+        </div>
+
+        <!-- Género y Celular -->
+        <div class="input-group">
+            <div class="input-control">
+                <select formControlName="gender">
+                    <option value="" disabled selected>Seleccione género</option>
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                </select>
+            </div>
+            <div class="input-control">
+                <input type="text" placeholder="Celular" formControlName="telefono" />
+                @if (formularioMedico.get('telefono')?.invalid && formularioMedico.get('telefono')?.touched) {
+                <div class="error">
+                    @if (formularioMedico.get('telefono')?.errors?.['required']) {
+                    <span>El número de celular es obligatorio.</span>
+                    }
+                    @if (formularioMedico.get('telefono')?.errors?.['pattern']) {
+                    <span>Debe ser un número de 9 dígitos.</span>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+
+        <!-- Email y Especialidad -->
+        <div class="input-group">
+            <div class="input-control">
+                <input type="email" placeholder="Correo electrónico" formControlName="email" />
+                @if (formularioMedico.get('email')?.invalid && formularioMedico.get('email')?.touched) {
+                <div class="error">
+                    @if (formularioMedico.get('email')?.errors?.['required']) {
+                    <span>El correo electrónico es obligatorio.</span>
+                    }
+                    @if (formularioMedico.get('email')?.errors?.['email']) {
+                    <span>Correo electrónico inválido.</span>
+                    }
+                </div>
+                }
+            </div>
+            <div class="input-control">
+                <select formControlName="especialidadId">
+                    <option value="" disabled selected>Especialidad</option>
+                    @for (especialidad of especialidades; track $index) {
+                    <ng-container>
+                        <option [value]="especialidad.id">{{ especialidad.especialidad }}</option>
+                    </ng-container>
+                    }
+                </select>
+                @if (formularioMedico.get('especialidadId')?.invalid && formularioMedico.get('especialidadId')?.touched)
+                {
+                <div class="error">
+                    <span>Debes seleccionar una especialidad.</span>
+                </div>
+                }
+            </div>
+        </div>
+
+        <!-- Password y Confirm Password -->
+        <div class="input-group-password">
+            <div class="form-group input-control">
+                <input [type]="showPassword ? 'text' : 'password'" placeholder="Password" formControlName="password" />
+                <i class="fa-solid" [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash'" (click)="togglePassword()"></i>
+                @if (formularioMedico.get('password')?.invalid && formularioMedico.get('password')?.touched) {
+                <div class="error">
+                    @if (formularioMedico.get('password')?.errors?.['required']) {
+                    <span>La contraseña es obligatoria.</span>
+                    }
+                    @if (formularioMedico.get('password')?.errors?.['minlength']) {
+                    <span>Debe tener al menos 6 caracteres.</span>
+                    }
+                </div>
+                }
+            </div>
+            <div class="form-group input-control">
+                <input [type]="showConfirm ? 'text' : 'password'" placeholder="Repetir contraseña"
+                    formControlName="confirmPassword"
+                    [ngClass]="{'input-error': formularioMedico.errors?.['passwordsNoMatch']}" />
+                <i class="fa-solid" [ngClass]="showConfirm ? 'fa-eye' : 'fa-eye-slash'" (click)="toggleConfirm()"></i>
+                @if (formularioMedico.get('confirmPassword')?.invalid &&
+                formularioMedico.get('confirmPassword')?.touched) {
+                <div class="error">
+                    @if (formularioMedico.get('confirmPassword')?.errors?.['required']) {
+                    <span>Repetir la contraseña es obligatorio.</span>
+                    }
+                    @if (formularioMedico.errors?.['passwordsNoMatch']) {
+                    <span>Las contraseñas no coinciden.</span>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+
+        <button type="submit" [disabled]="formularioMedico.invalid">Registrar</button>
+    </form>
+</section>

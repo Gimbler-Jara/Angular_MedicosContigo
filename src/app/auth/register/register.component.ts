@@ -3,7 +3,8 @@ import { Component, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, NgModel, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { UsuarioRequest } from '../../interface/Usuario/Usuario.interface';
+import { UsuarioPacienteRequest } from '../../interface/Usuario/Usuario.interface';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -13,14 +14,14 @@ import { UsuarioRequest } from '../../interface/Usuario/Usuario.interface';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
-
+  private usuarioSubscription!: Subscription;
   usuarioService = inject(AuthService)
+  authService = inject(AuthService);
 
   formularioUsuario: FormGroup;
   showPassword: boolean = false;
   showConfirm: boolean = false;
-
-
+  rol: number = 0
 
   tiposDocumento = [
     { value: 1, label: 'DNI' },
@@ -39,28 +40,31 @@ export class RegisterComponent {
     telefono: '',
     email: '',
     password_hash: '',
-    // confirmPassword: '',
-    rol_id: 1
+    // confirmPassword: ''
   };
 
   constructor(private fb: FormBuilder) {
     this.formularioUsuario = this.fb.group({
       document_type: ['', Validators.required],
-      dni: ['', Validators.required],
-      last_name: ['', Validators.required],
-      middle_name: [''],
-      first_name: ['', Validators.required],
+      dni: ['', [Validators.required, Validators.pattern(/^\d{8}$/)]],
+      last_name: ['', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)]],
+      middle_name: ['', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/)]],
+      first_name: ['', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)]],
       birth_date: ['', Validators.required],
-      gender: ['M', Validators.required],
-      telefono: [''],
+      gender: ['', Validators.required],
+      telefono: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
       email: ['', [Validators.required, Validators.email]],
-      password_hash: ['', Validators.required],
-      confirmPassword: ['', Validators.required],
-      rol: [1]
-    },
-      {
-        validators: [this.passwordsMatchValidator]
-      });
+      password_hash: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required]
+    }, {
+      validators: [this.passwordsMatchValidator]
+    });
+  }
+
+  ngOnInit(): void {
+    this.usuarioSubscription = this.authService.usuario$.subscribe(usuario => {
+      this.rol = usuario?.rol.id!;
+    });
   }
 
   togglePassword(): void {
@@ -80,8 +84,8 @@ export class RegisterComponent {
 
   registrarUsuario() {
     if (this.formularioUsuario.valid) {
-      var usuario: UsuarioRequest = {
-        document_type: Number(this.formularioUsuario.value.document_type),
+      var usuario: UsuarioPacienteRequest = {
+        documentTypeId: Number(this.formularioUsuario.value.document_type),
         dni: this.formularioUsuario.value.dni,
         lastName: this.formularioUsuario.value.last_name,
         middleName: this.formularioUsuario.value.middle_name,
@@ -90,11 +94,10 @@ export class RegisterComponent {
         gender: this.formularioUsuario.value.gender,
         telefono: this.formularioUsuario.value.telefono,
         email: this.formularioUsuario.value.email,
-        passwordHash: this.formularioUsuario.value.password_hash,
-        rol_id: Number(this.formularioUsuario.value.rol)
+        password: this.formularioUsuario.value.password_hash,
       }
       console.log(usuario);
-      this.usuarioService.agregarUsuario(usuario)
+      this.usuarioService.registrarPaciente(usuario)
       this.formularioUsuario.reset(this.formularioInicial);
     }
   }

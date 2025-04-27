@@ -15,7 +15,10 @@ export class MenuComponent {
   isAutentiticared: boolean = false;
   private usuarioSubscription!: Subscription;
 
-  constructor(private router: Router, private authService: AuthService) { }
+  rol: number = 0;
+
+  constructor(private router: Router, private authService: AuthService) {
+  }
 
   navegarAEspecialidades() {
     this.router.navigate(['/especialidades'])
@@ -24,6 +27,7 @@ export class MenuComponent {
   ngOnInit(): void {
     this.usuarioSubscription = this.authService.usuario$.subscribe(usuario => {
       this.isAutentiticared = !!usuario;
+      this.rol = usuario?.rol.id!;
     });
   }
 
@@ -36,5 +40,10 @@ export class MenuComponent {
     this.authService.logOut();
     this.router.navigate(['/login']);
   }
+
+  get isLoggedIn(): boolean {
+    return this.authService.isAuthenticated();
+  }
+
 
 }

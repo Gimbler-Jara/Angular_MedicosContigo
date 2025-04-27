@@ -4,7 +4,7 @@ import { CitasService } from '../../services/citas.service';
 import { MedicoConUsuario } from '../../interface/MedicoConUsuario.interface';
 import { Especialidad } from '../../interface/Especialidad.interface';
 import { AgendarCitaMedicaDTO } from '../../DTO/CitaMedica.interface';
-import { UsuarioRequest, UsuarioResponse } from '../../interface/Usuario/Usuario.interface';
+import { UsuarioPacienteRequest, UsuarioResponse } from '../../interface/Usuario/Usuario.interface';
 import { AuthService } from '../../services/auth.service';
 import { EspecialidadService } from '../../services/especialidad.service';
 import { MedicosPorEspecialidadDTO } from '../../DTO/MedicosPorEspecialidad.interface';
@@ -90,7 +90,7 @@ export class PerfilComponent {
       return;
 
     this.citasService.listarHorasDisponibles(this.medicoSeleccionado.id, fecha).then(data => {
-      this.horasFiltradas = data;
+      this.horasFiltradas = data ?? [];
     });
     // } else {
     //   console.error('El ID del médico seleccionado es undefined');
@@ -158,7 +158,7 @@ export class PerfilComponent {
 
   async listarCitasReservadasPorPaciente() {
     this.citaService.listarCitasReservadasPorPaciente(this.usuario.id!).then((data) => {
-      this.citasRegistradas = data;
+      this.citasRegistradas = data ?? [];
     })
   }
 
