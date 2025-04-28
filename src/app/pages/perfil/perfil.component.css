@@ -36,6 +36,22 @@
   margin: 8px 0;
 }
 
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-edit {
+  background-color: #003366;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
 .contenido {
   flex: 1;
   display: flex;
@@ -180,7 +196,6 @@
   margin-right: 6px;
 }
 
-
 /* * =======================================  EDITAR  PERFIL =================================== */
 .formulario-usuario {
   max-width: 800px;
@@ -281,7 +296,6 @@ select.ng-invalid.ng-touched {
   cursor: pointer;
   color: #888;
 }
-
 
 .input-error {
   border: 1px solid red !important;

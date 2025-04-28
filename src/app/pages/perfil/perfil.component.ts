@@ -14,11 +14,15 @@ import { CitasReservadasPorPacienteResponseDTO } from '../../DTO/CitasReservadas
 import { DiaSemana } from '../../interface/DiaSemana.interface';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MedicoService } from '../../services/medico.service';
+import { PacienteDTO } from '../../DTO/paciente.interface';
+import { PacienteActualizacionDTO } from '../../DTO/PacienteActualizacion.interface';
+import { PacienteService } from '../../services/paciente.service';
+import { ModalEditarUsuarioComponent } from '../modal-editar-usuario/modal-editar-usuario.component';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [AsyncPipe, ReactiveFormsModule, NgClass],
+  imports: [AsyncPipe, ReactiveFormsModule, ModalEditarUsuarioComponent],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.css',
 })
@@ -27,6 +31,7 @@ export class PerfilComponent {
   citasService = inject(CitasService)
   especialidadService = inject(EspecialidadService)
   medicoService = inject(MedicoService)
+  pacienteService = inject(PacienteService)
 
   vista: 'citas' | 'reservar' | 'extra' = 'citas';
 
@@ -51,6 +56,16 @@ export class PerfilComponent {
     { value: 3, label: 'Pasaporte' }
   ];
 
+  // * EDITAR PACIENTE
+  modalTipo: 'paciente' | 'medico' | null = null;
+  modalTitulo: string = '';
+  modalCampos: any[] = [];
+  modalFormGroup!: FormGroup;
+  mostrarModalUsuario: boolean = false;
+  especialidades: Especialidad[] = [];
+
+  pacienteEditado: PacienteDTO | null = null;
+
   // especialidadSeleccionada: Especialidad | null = null;
   medicoSeleccionado: MedicosPorEspecialidadDTO | null = null;
   diaSeleccionada: string | null = null;
@@ -58,6 +73,7 @@ export class PerfilComponent {
   fechaCitaSeleccionada: string | null = null;
 
   formularioUsuario: FormGroup;
+  pacienteForm: FormGroup;
 
   constructor(private fb: FormBuilder, private citaService: CitasService) {
     this.formularioUsuario = this.fb.group({
@@ -75,12 +91,28 @@ export class PerfilComponent {
     }, {
       validators: [this.passwordsMatchValidator]
     });
+
+    this.pacienteForm = this.fb.group({
+      idUsuario: [null],
+      firstName: [''],
+      middleName: [''],
+      lastName: [''],
+      telefono: [''],
+      birthDate: [''],
+      gender: ['']
+    });
   }
 
 
   ngOnInit(): void {
     window.scrollTo(0, 0);
     this.listarCitasReservadasPorPaciente();
+
+    this.especialidadService.listarEspecialidades().then(data => {
+      this.especialidades = data ?? [];
+    }).catch((error) => {
+      console.log("Error al listar las especialidades " + error);
+    });
   }
 
   registrarUsuario() {
@@ -181,6 +213,83 @@ export class PerfilComponent {
       this.horasFiltradas = [];
     }
   }
+
+  // Cuando quieres abrir el modal de edición:
+  abrirModalEditarPacienteDesdePerfil() {
+    // Crea un DTO compatible:
+    const pacienteFake: PacienteDTO = {
+      idUsuario: this.usuario.id!, // Usa el id de usuario
+      usuario: this.usuario        // Pasa el objeto de usuario
+    };
+    // Ahora sí puedes usar tu modal genérico
+    this.abrirModalEditarPaciente(pacienteFake);
+  }
+
+
+  abrirModalEditarPaciente(paciente: PacienteDTO) {
+    this.modalFormGroup = this.fb.group({
+      idUsuario: [paciente.idUsuario], // <--- SIEMPRE estará presente en el dto
+      firstName: [paciente.usuario.firstName || '', Validators.required],
+      middleName: [paciente.usuario.middleName || ''],
+      lastName: [paciente.usuario.lastName || '', Validators.required],
+      telefono: [paciente.usuario.telefono || ''],
+      birthDate: [paciente.usuario.birthDate || '', Validators.required],
+      gender: [paciente.usuario.gender || '', Validators.required]
+    });
+
+    this.pacienteEditado = JSON.parse(JSON.stringify(paciente));
+    this.modalTipo = 'paciente';
+    this.modalTitulo = 'Editar Paciente';
+    this.modalCampos = [
+      { name: 'firstName', label: 'Nombre' },
+      { name: 'middleName', label: 'Apellido Materno' },
+      { name: 'lastName', label: 'Apellido Paterno' },
+      { name: 'telefono', label: 'Teléfono' },
+      { name: 'birthDate', label: 'Fecha de nacimiento', type: 'date' },
+      {
+        name: 'gender', label: 'Género', type: 'select', options: [
+          { value: 'M', label: 'Masculino' },
+          { value: 'F', label: 'Femenino' },
+          { value: 'O', label: 'Otro' }
+        ]
+      }
+    ];
+    this.mostrarModalUsuario = true;
+  }
+
+
+  guardarCambiosUsuario() {
+    if (this.modalTipo === 'paciente' && this.pacienteEditado) {
+      const dto: PacienteActualizacionDTO = {
+        idUsuario: this.pacienteEditado.idUsuario, // Asegura el ID aquí
+        ...this.modalFormGroup.value
+      };
+
+      console.log(dto);
+
+      this.pacienteService.actualizarPaciente(dto.idUsuario, dto)
+        .then(res => {
+          if (res.success) {
+            alert(res.message);
+            this.cerrarModalUsuario();
+            // this.authService.setUsuario(res.);
+          }
+        })
+        .catch(() => alert('Error al actualizar paciente'));
+    }
+  }
+
+
+  cerrarModalUsuario() {
+    this.mostrarModalUsuario = false;
+    this.modalTipo = null;
+    this.modalFormGroup.reset();
+  }
+
+
+
+
+
 
   // obtenerIdHora(hora: number): number {
   //   const todasHoras = this.citaService.getHorasDisponibles(this.fechaSeleccionada!);

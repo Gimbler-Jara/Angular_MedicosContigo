@@ -1,0 +1,51 @@
+@if(mostrarModal) {
+<div class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">{{ titulo }}</h5>
+                <button type="button" class="close" (click)="onClose()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+                    @for (campo of campos; track $index) {
+                    <ng-container>
+                        <ng-container [ngSwitch]="campo.type">
+                            <!-- Select especialidad -->
+                            <div *ngSwitchCase="'especialidad'">
+                                <label>{{ campo.label }}</label>
+                                <select class="form-control" formControlName="especialidadId">
+                                    @for (esp of especialidades; track $index) {
+                                    <option [value]="esp.id">{{ esp.especialidad }}</option>
+                                    }
+                                </select>
+                            </div>
+                            <!-- Select simple -->
+                            <div *ngSwitchCase="'select'">
+                                <label>{{ campo.label }}</label>
+                                <select class="form-control" [formControlName]="campo.name">
+                                    @for (opt of campo.options; track $index) {
+                                    <option [value]="opt.value">{{ opt.label }}</option>
+                                    }
+                                </select>
+                            </div>
+                            <!-- Input normal -->
+                            <div *ngSwitchDefault>
+                                <label>{{ campo.label }}</label>
+                                <input [type]="campo.type || 'text'" class="form-control"
+                                    [formControlName]="campo.name" />
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                    }
+                    <button type="submit" class="btn btn-primary" [disabled]="!formGroup.valid">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+

@@ -8,6 +8,11 @@
             <p><i class="fas fa-phone"></i> {{ usuario.telefono }}</p>
             <p><i class="fas fa-user-shield"></i> {{ usuario.rol.rol }}</p>
         </div>
+
+        <br>
+        <div class="btn">
+            <a class="btn-edit" (click)="abrirModalEditarPacienteDesdePerfil()">Editar datos</a>
+        </div>
     </aside>
 
     <!-- Contenido principal -->
@@ -17,7 +22,7 @@
             <button [class.active]="vista === 'citas'" (click)="cambiarVista('citas')">Mostrar citas
                 Programadas</button>
             <button [class.active]="vista === 'reservar'" (click)="cambiarVista('reservar')">Reservar cita</button>
-            <button [class.active]="vista === 'extra'" (click)="cambiarVista('extra')">Editar Perfil</button>
+            <!-- <button [class.active]="vista === 'extra'" (click)="cambiarVista('extra')">Editar Perfil</button> -->
         </div>
 
         <!-- Contenido dinámico -->
@@ -131,173 +136,14 @@
 
             @if (vista === 'extra') {
             <ng-container>
-                <section class="formulario-usuario">
-                    <h2>Actualización de datos</h2>
-                    <form [formGroup]="formularioUsuario" (ngSubmit)="registrarUsuario()">
-                
-                        <!-- Tipo de documento y DNI -->
-                        <div class="input-group">
-                            <div class="input-control">
-                                <select formControlName="document_type">
-                                    <option value="" disabled selected>Tipo de Documento</option>
-                                    @for (tipo of tiposDocumento; track $index) {
-                                    <option [value]="tipo.value">{{ tipo.label }}</option>
-                                    }
-                                </select>
-                            </div>
-                            <div class="input-control">
-                                <input type="text" placeholder="Número de Documento" formControlName="dni" />
-                                @if (formularioUsuario.get('dni')?.invalid && formularioUsuario.get('dni')?.touched) {
-                                <div class="error">
-                                    @if (formularioUsuario.get('dni')?.errors?.['required']) {
-                                    <span>El DNI es obligatorio.</span>
-                                    }
-                                    @if (formularioUsuario.get('dni')?.errors?.['pattern']) {
-                                    <span>El DNI debe tener exactamente 8 números.</span>
-                                    }
-                                </div>
-                                }
-                            </div>
-                        </div>
-                
-                        <!-- Apellidos -->
-                        <div class="input-group">
-                            <div class="input-control">
-                                <input type="text" placeholder="Apellido Paterno" formControlName="last_name" />
-                                @if (formularioUsuario.get('last_name')?.invalid && formularioUsuario.get('last_name')?.touched) {
-                                <div class="error">
-                                    @if (formularioUsuario.get('last_name')?.errors?.['required']) {
-                                    <span>Apellido paterno es obligatorio.</span>
-                                    }
-                                    @if (formularioUsuario.get('last_name')?.errors?.['pattern']) {
-                                    <span>Solo letras y espacios permitidos.</span>
-                                    }
-                                </div>
-                                }
-                            </div>
-                            <div class="input-control">
-                                <input type="text" placeholder="Apellido Materno" formControlName="middle_name" />
-                                @if (formularioUsuario.get('middle_name')?.invalid && formularioUsuario.get('middle_name')?.touched) {
-                                <div class="error">
-                                    @if (formularioUsuario.get('middle_name')?.errors?.['required']) {
-                                    <span>Apellido materno es obligatorio.</span>
-                                    }
-                                    @if (formularioUsuario.get('middle_name')?.errors?.['pattern']) {
-                                    <span>Solo letras y espacios permitidos.</span>
-                                    }
-                                </div>
-                                }
-                            </div>
-                        </div>
-                
-                        <!-- Nombres y Fecha de Nacimiento -->
-                        <div class="input-group">
-                            <div class="input-control">
-                                <input type="text" placeholder="Nombres" formControlName="first_name" />
-                                @if (formularioUsuario.get('first_name')?.invalid && formularioUsuario.get('first_name')?.touched) {
-                                <div class="error">
-                                    @if (formularioUsuario.get('first_name')?.errors?.['required']) {
-                                    <span>El nombre es obligatorio.</span>
-                                    }
-                                    @if (formularioUsuario.get('first_name')?.errors?.['pattern']) {
-                                    <span>Solo letras y espacios permitidos.</span>
-                                    }
-                                </div>
-                                }
-                            </div>
-                            <div class="input-control">
-                                <input type="date" formControlName="birth_date" />
-                                @if (formularioUsuario.get('birth_date')?.invalid && formularioUsuario.get('birth_date')?.touched) {
-                                <div class="error">
-                                    <span>La fecha de nacimiento es obligatoria.</span>
-                                </div>
-                                }
-                            </div>
-                        </div>
-                
-                        <!-- Género y Teléfono -->
-                        <div class="input-group">
-                            <div class="input-control">
-                                <select formControlName="gender">
-                                    <option value="" disabled selected>Seleccione género</option>
-                                    <option value="M">Masculino</option>
-                                    <option value="F">Femenino</option>
-                                </select>
-                            </div>
-                            <div class="input-control">
-                                <input type="text" placeholder="Teléfono" formControlName="telefono" />
-                                @if (formularioUsuario.get('telefono')?.invalid && formularioUsuario.get('telefono')?.touched) {
-                                <div class="error">
-                                    @if (formularioUsuario.get('telefono')?.errors?.['required']) {
-                                    <span>El número de teléfono es obligatorio.</span>
-                                    }
-                                    @if (formularioUsuario.get('telefono')?.errors?.['pattern']) {
-                                    <span>Debe ser un número de 9 dígitos.</span>
-                                    }
-                                </div>
-                                }
-                            </div>
-                        </div>
-                
-                        <!-- Correo electrónico -->
-                        <div class="input-group">
-                            <div class="input-control">
-                                <input type="email" placeholder="Correo electrónico" formControlName="email" />
-                                @if (formularioUsuario.get('email')?.invalid && formularioUsuario.get('email')?.touched) {
-                                <div class="error">
-                                    @if (formularioUsuario.get('email')?.errors?.['required']) {
-                                    <span>El correo electrónico es obligatorio.</span>
-                                    }
-                                    @if (formularioUsuario.get('email')?.errors?.['email']) {
-                                    <span>Correo electrónico inválido.</span>
-                                    }
-                                </div>
-                                }
-                            </div>
-                        </div>
-                
-                        <!-- Password y Confirm Password -->
-                        <div class="input-group-password">
-                            <div class="form-group input-control">
-                                <input [type]="showPassword ? 'text' : 'password'" placeholder="Password"
-                                    formControlName="password_hash" />
-                                <i class="fa-solid" [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash'" (click)="togglePassword()"></i>
-                                @if (formularioUsuario.get('password_hash')?.invalid && formularioUsuario.get('password_hash')?.touched)
-                                {
-                                <div class="error">
-                                    @if (formularioUsuario.get('password_hash')?.errors?.['required']) {
-                                    <span>La contraseña es obligatoria.</span>
-                                    }
-                                    @if (formularioUsuario.get('password_hash')?.errors?.['minlength']) {
-                                    <span>Debe tener al menos 6 caracteres.</span>
-                                    }
-                                </div>
-                                }
-                            </div>
-                            <div class="form-group input-control">
-                                <input [type]="showConfirm ? 'text' : 'password'" placeholder="Repetir contraseña"
-                                    formControlName="confirmPassword"
-                                    [ngClass]="{'input-error': formularioUsuario.errors?.['passwordsNoMatch']}" />
-                                <i class="fa-solid" [ngClass]="showConfirm ? 'fa-eye' : 'fa-eye-slash'" (click)="toggleConfirm()"></i>
-                                @if (formularioUsuario.get('confirmPassword')?.invalid &&
-                                formularioUsuario.get('confirmPassword')?.touched) {
-                                <div class="error">
-                                    @if (formularioUsuario.get('confirmPassword')?.errors?.['required']) {
-                                    <span>Repetir la contraseña es obligatorio.</span>
-                                    }
-                                    @if (formularioUsuario.errors?.['passwordsNoMatch']) {
-                                    <span>Las contraseñas no coinciden.</span>
-                                    }
-                                </div>
-                                }
-                            </div>
-                        </div>
-                
-                        <button type="submit" [disabled]="formularioUsuario.invalid">Registrar</button>
-                    </form>
-                </section>
+                <h2>falata completar alguna otra configuracion</h2>
             </ng-container>
             }
         </div>
     </section>
 </div>
+
+<app-modal-editar-usuario [mostrarModal]="mostrarModalUsuario" [formGroup]="modalFormGroup" [titulo]="modalTitulo"
+    [campos]="modalCampos" [especialidades]="especialidades" (guardar)="guardarCambiosUsuario()"
+    (cerrar)="cerrarModalUsuario()">
+</app-modal-editar-usuario>

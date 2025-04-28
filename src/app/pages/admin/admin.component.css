@@ -170,6 +170,20 @@
   background: #f3fafd;
 }
 
-.tabla-pacientes tbody tr:hover {
-  background: #e3f2fd;
+td a {
+  color: #2196f3;
+  text-decoration: none;
+  font-weight: 500;
+  border: 1px solid #2196f3;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-left: 8px;
 }
+
+td a:hover {
+  background: #e3f2fd;
+  color: #00324a;
+  border: 1px solid #00324a;
+}
+
+
