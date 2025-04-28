@@ -17,9 +17,11 @@
     <!-- Panel derecho con menú y contenido -->
     <div class="perfil-derecha">
         <div class="menu-opciones">
-            <button [class.active]="vista === 'citas'" (click)="cambiarVista('citas')">Ver citas programadas</button>
-            <button [class.active]="vista === 'agregar'" (click)="cambiarVista('agregar')">Agregar disponibilidad</button>
-            <button [class.active]="vista === 'eliminar'" (click)="cambiarVista('eliminar')">Eliminar disponibilidad</button>
+            <button [class.active]="vista === 'citas'" (click)="cambiarVista('citas')">Ver citas por atender</button>
+            <button [class.active]="vista === 'agregar'" (click)="cambiarVista('agregar')">Agregar disponibilidad de
+                cita</button>
+            <button [class.active]="vista === 'eliminar'" (click)="cambiarVista('eliminar')">Gestionar
+                disponibilidad</button>
         </div>
 
         <div class="contenido">
@@ -47,7 +49,6 @@
                         <th>Fecha</th>
                         <th>Hora</th>
                         <th>Paciente</th>
-
                         <th>Estado de cita</th>
                     </tr>
                 </thead>
@@ -75,6 +76,7 @@
                 <div class="form-row">
                     <label for="dia">Día de la semana:</label>
                     <select id="dia" [(ngModel)]="nuevaDisponibilidad.dia">
+                        <option value="" disabled selected>Seleccione el dia</option>
                         @for (dia of diasSemana; track $index) {
                         <option [value]="dia">{{ dia }}</option>
                         }
@@ -84,6 +86,7 @@
                 <div class="form-row">
                     <label for="hora">Hora:</label>
                     <select id="hora" [(ngModel)]="nuevaDisponibilidad.hora">
+                        <option value="" disabled selected>Seleccione la hora</option>
                         @for (hora of horas; track $index) {
                         <option [value]="hora">{{ hora }}</option>
                         }
@@ -100,14 +103,20 @@
             <!-- Eliminar disponibilidad -->
             @if (vista === 'eliminar') {
             <div class="disponibilidad-eliminar">
-                <h3><i class="fa-solid fa-calendar-xmark"></i> Ver disponibilidad de Citas</h3>
+                <h3><i class="fa-solid fa-calendar-xmark"></i> Disponibilidad de Citas</h3>
                 <ul>
                     @for (dispo of disponibilidades; track $index) {
                     <li>
                         {{ dispo.dia }} - {{ dispo.hora }}
-                        <button (click)="eliminarDisponibilidad(dispo)">
-                            <i class="fa-solid fa-trash"></i>
+                        @if (dispo.activo) {
+                        <button class="visible" (click)="ocultarDisponibilidad(dispo.idHora, dispo.idDia, dispo.activo)">
+                            <i class="fa-solid fa-eye"></i>
                         </button>
+                        }@else {
+                        <button class="hidden" (click)="ocultarDisponibilidad(dispo.idHora, dispo.idDia, dispo.activo)">
+                            <i class="fa-solid fa-eye-slash"></i>
+                        </button>
+                        }
                     </li>
                     }
                 </ul>

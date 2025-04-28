@@ -1,4 +1,4 @@
-import { AsyncPipe, DatePipe, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, Inject, inject } from '@angular/core';
 import { CitasService } from '../../services/citas.service';
 import { MedicoConUsuario } from '../../interface/MedicoConUsuario.interface';
@@ -11,11 +11,14 @@ import { MedicosPorEspecialidadDTO } from '../../DTO/MedicosPorEspecialidad.inte
 import { HorasDispiniblesDTO } from '../../DTO/HorasDispinibles.interface';
 import { obtenerProximaFecha } from '../../utils/utilities';
 import { CitasReservadasPorPacienteResponseDTO } from '../../DTO/CitasReservadasPorPaciente.interface';
+import { DiaSemana } from '../../interface/DiaSemana.interface';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { MedicoService } from '../../services/medico.service';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [AsyncPipe],
+  imports: [AsyncPipe, ReactiveFormsModule, NgClass],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.css',
 })
@@ -23,6 +26,7 @@ export class PerfilComponent {
   authService = inject(AuthService);
   citasService = inject(CitasService)
   especialidadService = inject(EspecialidadService)
+  medicoService = inject(MedicoService)
 
   vista: 'citas' | 'reservar' | 'extra' = 'citas';
 
@@ -35,16 +39,43 @@ export class PerfilComponent {
   especialidadSeleccionada?: Especialidad;
   // medicos = this.citasService.getMedicos();
 
+  showPassword: boolean = false;
+  showConfirm: boolean = false;
+
   medicosFiltrados: MedicosPorEspecialidadDTO[] = [];
-  fechasFiltradas: string[] = [];
+  fechasFiltradas: DiaSemana[] = [];
   horasFiltradas: HorasDispiniblesDTO[] = [];
+  tiposDocumento = [
+    { value: 1, label: 'DNI' },
+    { value: 2, label: 'Carnet de Extranjería' },
+    { value: 3, label: 'Pasaporte' }
+  ];
 
   // especialidadSeleccionada: Especialidad | null = null;
   medicoSeleccionado: MedicosPorEspecialidadDTO | null = null;
-  fechaSeleccionada: string | null = null;
+  diaSeleccionada: string | null = null;
   horaSeleccionada: number | null = null;
+  fechaCitaSeleccionada: string | null = null;
 
-  constructor(private citaService: CitasService) { }
+  formularioUsuario: FormGroup;
+
+  constructor(private fb: FormBuilder, private citaService: CitasService) {
+    this.formularioUsuario = this.fb.group({
+      document_type: ['', Validators.required],
+      dni: ['', [Validators.required, Validators.pattern(/^\d{8}$/)]],
+      last_name: ['', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)]],
+      middle_name: ['', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/)]],
+      first_name: ['', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)]],
+      birth_date: ['', Validators.required],
+      gender: ['', Validators.required],
+      telefono: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
+      email: ['', [Validators.required, Validators.email]],
+      password_hash: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required]
+    }, {
+      validators: [this.passwordsMatchValidator]
+    });
+  }
 
 
   ngOnInit(): void {
@@ -52,14 +83,34 @@ export class PerfilComponent {
     this.listarCitasReservadasPorPaciente();
   }
 
+  registrarUsuario() {
+    if (this.formularioUsuario.valid) {
+      var usuario: UsuarioPacienteRequest = {
+        documentTypeId: Number(this.formularioUsuario.value.document_type),
+        dni: this.formularioUsuario.value.dni,
+        lastName: this.formularioUsuario.value.last_name,
+        middleName: this.formularioUsuario.value.middle_name,
+        firstName: this.formularioUsuario.value.first_name,
+        birthDate: this.formularioUsuario.value.birth_date,
+        gender: this.formularioUsuario.value.gender,
+        telefono: this.formularioUsuario.value.telefono,
+        email: this.formularioUsuario.value.email,
+        password: this.formularioUsuario.value.password_hash,
+      }
+      console.log(usuario);
+      // this.usuarioService.registrarPaciente(usuario)
+      // this.formularioUsuario.reset(this.formularioInicial);
+    }
+  }
+
   seleccionarEspecialidad(esp: Especialidad) {
     this.especialidadSeleccionada = esp;
-    this.citasService.listarMedicosPorEspecialidad(esp.id).then((data) => {
+    this.medicoService.listarMedicosPorEspecialidad(esp.id).then((data) => {
       this.medicosFiltrados = data
       console.log(this.medicosFiltrados);
 
       this.medicoSeleccionado = null;
-      this.fechaSeleccionada = null;
+      this.diaSeleccionada = null;
       this.horaSeleccionada = null;
       this.fechasFiltradas = [];
       this.horasFiltradas = [];
@@ -70,11 +121,11 @@ export class PerfilComponent {
 
   seleccionarMedico(medico: MedicosPorEspecialidadDTO) {
     this.medicoSeleccionado = medico;
-    this.citasService.listarDiasDisponibles(medico.id!).then((datos) => {
-      const dias = datos;
-      this.fechasFiltradas = dias.map(d => d.dia);
+    this.medicoService.listarDiasDisponibles(medico.id!).then((datos) => {
+      // const dias = datos;
+      this.fechasFiltradas = datos;
       console.log(this.fechasFiltradas);
-      this.fechaSeleccionada = null;
+      this.diaSeleccionada = null;
       this.horasFiltradas = [];
     }).catch((error) => {
       console.log(error);
@@ -83,13 +134,18 @@ export class PerfilComponent {
 
   }
 
-  seleccionarFecha(dia: string) {
-    const fecha = obtenerProximaFecha(dia);
-    this.fechaSeleccionada = fecha;
+  seleccionarFecha(fecha: DiaSemana) {
+    console.log(fecha);
+
+    const dia = obtenerProximaFecha(fecha.dia);
+    console.log(dia);
+    this.fechaCitaSeleccionada = dia;
+
+    this.diaSeleccionada = fecha.dia;
     if (this.medicoSeleccionado?.id == undefined)
       return;
 
-    this.citasService.listarHorasDisponibles(this.medicoSeleccionado.id, fecha).then(data => {
+    this.medicoService.listarHorasDisponibles(this.medicoSeleccionado.id, dia).then(data => {
       this.horasFiltradas = data ?? [];
     });
     // } else {
@@ -103,12 +159,12 @@ export class PerfilComponent {
   }
 
   confirmarCita() {
-    if (this.especialidadSeleccionada && this.medicoSeleccionado && this.fechaSeleccionada && this.horaSeleccionada) {
+    if (this.especialidadSeleccionada && this.medicoSeleccionado && this.diaSeleccionada && this.horaSeleccionada) {
 
       const nuevaCita: AgendarCitaMedicaDTO = {
         idMedico: this.medicoSeleccionado.id!,
         idPaciente: this.usuario.id ?? 1,
-        fecha: this.fechaSeleccionada,
+        fecha: this.fechaCitaSeleccionada!,
         idHora: this.horaSeleccionada,
         estado: 1
       }
@@ -118,7 +174,7 @@ export class PerfilComponent {
 
       // this.especialidadSeleccionada = null;
       this.medicoSeleccionado = null;
-      this.fechaSeleccionada = null;
+      this.diaSeleccionada = null;
       this.horaSeleccionada = null;
       this.medicosFiltrados = [];
       this.fechasFiltradas = [];
@@ -162,4 +218,27 @@ export class PerfilComponent {
     })
   }
 
+  cancelarCita(idCita: number) {
+    this.citaService.eliminarCitaReservado(idCita).then(res => {
+      this.listarCitasReservadasPorPaciente();
+    }).catch((error) => {
+      console.log("Error ala eliminar cita " + error);
+
+    })
+  }
+
+
+  passwordsMatchValidator(group: AbstractControl): ValidationErrors | null {
+    const password = group.get('password_hash')?.value;
+    const confirmPassword = group.get('confirmPassword')?.value;
+    return password === confirmPassword ? null : { passwordsNoMatch: true };
+  }
+
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirm(): void {
+    this.showConfirm = !this.showConfirm;
+  }
 }

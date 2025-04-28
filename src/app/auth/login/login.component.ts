@@ -47,7 +47,9 @@ export class LoginComponent {
           } else if (usuario.rol.id == 2) {
             this.router.navigate(['/perfil-medico']);
           } else {
-            this.router.navigate(['/']);
+            this.router.navigate(['/admin']);
+            console.log("Administrador");
+            
           }
 
         }

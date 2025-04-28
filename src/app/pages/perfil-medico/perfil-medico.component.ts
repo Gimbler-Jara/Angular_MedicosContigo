@@ -6,6 +6,10 @@ import { CitasAgendadasResponseDTO } from '../../DTO/CitasAgendada.response.inte
 import { CitasService } from '../../services/citas.service';
 import { RegistrarDisponibilidadCitaDTO } from '../../DTO/RegistrarDisponibilidad.interface';
 import { Especialidad } from '../../interface/Especialidad.interface';
+import { DisponibilidadesResponse } from '../../DTO/DisponibilidadesCitasResponse.interface';
+import { MedicoService } from '../../services/medico.service';
+import { DisponibilidadCitaPorMedicoDTO } from '../../DTO/DisponibilidadCitaPorMedico.interface';
+import { CambiarEstadoDisponibilidadDTO } from '../../DTO/CambiarEstadoDisponibilidad.interface';
 
 @Component({
   selector: 'app-perfil-medico',
@@ -17,18 +21,16 @@ import { Especialidad } from '../../interface/Especialidad.interface';
 export class PerfilMedicoComponent {
   authService = inject(AuthService);
   citasService = inject(CitasService)
+  medicoService = inject(MedicoService)
   vista: 'citas' | 'agregar' | 'eliminar' = 'citas';
 
   citasProgramadas: CitasAgendadasResponseDTO[] = [];
   citasFiltradas = [...this.citasProgramadas];
 
-  disponibilidades = [
-    { dia: 'Lunes', hora: '08:00 AM' },
-    { dia: 'Martes', hora: '10:00 AM' }
-  ];
+  disponibilidades: DisponibilidadCitaPorMedicoDTO[] = [];
 
-  diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   filtroDia = '';
+  diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   horas = ['08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM'];
 
   nuevaDisponibilidad = { dia: '', hora: '' };
@@ -43,11 +45,12 @@ export class PerfilMedicoComponent {
     });
 
     this.listarCitasAgendadas();
+    this.listarDisponiblidadesDeCita();
   }
 
   agregarDisponibilidad() {
     if (this.nuevaDisponibilidad.dia && this.nuevaDisponibilidad.hora) {
-      this.citasService.obtenerEspecialidadPorIdMedico(this.usuario.id!).then(e => {
+      this.medicoService.obtenerEspecialidadPorIdMedico(this.usuario.id!).then(e => {
         var diaIndex = this.diasSemana.findIndex(d => d == this.nuevaDisponibilidad.dia);
         var horaIndex = this.horas.findIndex(d => d == this.nuevaDisponibilidad.hora);
 
@@ -59,12 +62,27 @@ export class PerfilMedicoComponent {
         }
 
         console.log(cita);
-        this.citasService.registrarDisponibilidad(cita).then(() => {
-          console.log('Disponibilidad registrada exitosamente');
-        })
+        this.citasService.registrarDisponibilidad(cita)
+          .then(res => {
+            console.log("Respues " + res);
+
+            if (res.success) {
+              // Éxito: muestra el mensaje y limpia los campos
+              console.log(res.message);
+              this.nuevaDisponibilidad.dia = "";
+              this.nuevaDisponibilidad.hora = "";
+              this.listarDisponiblidadesDeCita();
+            } else {
+              // Error controlado por el backend (por ejemplo: "La disponibilidad ya existe")
+              alert(res.message);
+            }
+          })
           .catch(error => {
-            console.error('Error al registrar disponibilidad:', error);
+            // Error de red o del servidor
+            alert(error?.error?.message || 'Error al registrar disponibilidad');
           });
+
+
 
       }).catch((error) => {
         console.log(error);
@@ -72,8 +90,17 @@ export class PerfilMedicoComponent {
     }
   }
 
-  eliminarDisponibilidad(dispo: any) {
-    this.disponibilidades = this.disponibilidades.filter(d => d !== dispo);
+  ocultarDisponibilidad(idHora: number, idDia: number, disponible: boolean) {
+    const data: CambiarEstadoDisponibilidadDTO = {
+      idMedico: this.usuario.id!,
+      idDiaSemana: idDia,
+      idHora: idHora,
+      activo: !disponible
+    };
+
+    this.medicoService.cambiarEstadoCita(data).then(() => {
+      this.listarDisponiblidadesDeCita();
+    });
   }
 
   filtrarCitasPorDia() {
@@ -99,11 +126,25 @@ export class PerfilMedicoComponent {
 
   async listarCitasAgendadas() {
     this.citasService.listarCitasAgendadas(this.usuario.id!).then(dato => {
-      this.citasProgramadas = dato;
+      this.citasProgramadas = dato ?? [];
       console.log(this.citasProgramadas);
       this.filtrarCitasPorDia()
     }).catch(error => {
       console.log(error);
     });
+  }
+
+  async listarDisponiblidadesDeCita() {
+    this.medicoService.listarPorMedico(this.usuario.id!).then(res => {
+      if (res.success) {
+        console.log(res.data);
+        this.disponibilidades = res.data;
+      } else {
+        alert(res.message);
+      }
+    }).catch(error => {
+      console.log("Ocurrió un error en la consulta" + error);
+
+    })
   }
 }

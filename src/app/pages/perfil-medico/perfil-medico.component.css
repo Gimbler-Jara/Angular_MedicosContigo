@@ -250,17 +250,23 @@
 
 /* Botón de eliminar */
 .disponibilidad-eliminar li button {
-  background: #e74c3c;
   border: none;
   padding: 6px 10px;
   border-radius: 4px;
   color: #fff;
   font-size: 14px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: transform 0.3s ease-in-out;
+}
+
+.hidden {
+  background-color: red;
+}
+
+.visible {
+  background-color: #09c9ce;
 }
 
 .disponibilidad-eliminar li button:hover {
-  background: #c0392b;
+ transform: scale(1.01);
 }
-
