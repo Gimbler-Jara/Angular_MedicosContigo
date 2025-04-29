@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { LoginDTO } from '../../DTO/Login.interface';
+import { LocalStorageService } from '../../services/local-storage.service';
 
 @Component({
   selector: 'app-login',
@@ -14,6 +15,7 @@ import { LoginDTO } from '../../DTO/Login.interface';
 })
 export class LoginComponent {
   authService = inject(AuthService)
+  localStorageService= inject(LocalStorageService);
   router = inject(Router)
   formularioLogin: FormGroup;
   showPassword: boolean = false;
@@ -38,7 +40,7 @@ export class LoginComponent {
       console.log('Datos enviados:', user);
       this.authService.login(user).then(usuario => {
         if (usuario) {
-          this.authService.setUsuario(usuario);
+          this.localStorageService.setUsuario(usuario);
           console.log(usuario);
 
 

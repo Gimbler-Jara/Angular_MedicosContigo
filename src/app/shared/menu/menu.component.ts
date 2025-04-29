@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Subscription } from 'rxjs';
+import { LocalStorageService } from '../../services/local-storage.service';
 
 @Component({
   selector: 'app-menu',
@@ -17,6 +18,8 @@ export class MenuComponent {
 
   rol: number = 0;
 
+  localStorageService = inject(LocalStorageService);
+
   constructor(private router: Router, private authService: AuthService) {
   }
 
@@ -25,7 +28,7 @@ export class MenuComponent {
   }
 
   ngOnInit(): void {
-    this.usuarioSubscription = this.authService.usuario$.subscribe(usuario => {
+    this.usuarioSubscription = this.localStorageService.usuario$.subscribe(usuario => {
       this.isAutentiticared = !!usuario;
       this.rol = usuario?.rol.id!;
     });
@@ -37,7 +40,9 @@ export class MenuComponent {
   }
 
   logOut() {
-    this.authService.logOut();
+    this.authService.logOut().then(() => {
+      this.localStorageService.setUsuario(null);
+    });
     this.router.navigate(['/login']);
   }
 

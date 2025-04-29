@@ -18,6 +18,7 @@ import { PacienteDTO } from '../../DTO/paciente.interface';
 import { PacienteActualizacionDTO } from '../../DTO/PacienteActualizacion.interface';
 import { PacienteService } from '../../services/paciente.service';
 import { ModalEditarUsuarioComponent } from '../modal-editar-usuario/modal-editar-usuario.component';
+import { LocalStorageService } from '../../services/local-storage.service';
 
 @Component({
   selector: 'app-perfil',
@@ -28,6 +29,7 @@ import { ModalEditarUsuarioComponent } from '../modal-editar-usuario/modal-edita
 })
 export class PerfilComponent {
   authService = inject(AuthService);
+  localStorageService = inject(LocalStorageService);
   citasService = inject(CitasService)
   especialidadService = inject(EspecialidadService)
   medicoService = inject(MedicoService)
@@ -35,7 +37,7 @@ export class PerfilComponent {
 
   vista: 'citas' | 'reservar' | 'extra' = 'citas';
 
-  usuario: UsuarioResponse = this.authService.getUsuarioStorage()!;
+  usuario: UsuarioResponse = this.localStorageService.getUsuarioStorage()!;
 
   citasRegistradas: CitasReservadasPorPacienteResponseDTO[] = []
 
@@ -73,7 +75,7 @@ export class PerfilComponent {
   fechaCitaSeleccionada: string | null = null;
 
   formularioUsuario: FormGroup;
-  pacienteForm: FormGroup;
+  // pacienteForm: FormGroup;
 
   constructor(private fb: FormBuilder, private citaService: CitasService) {
     this.formularioUsuario = this.fb.group({
@@ -92,15 +94,15 @@ export class PerfilComponent {
       validators: [this.passwordsMatchValidator]
     });
 
-    this.pacienteForm = this.fb.group({
-      idUsuario: [null],
-      firstName: [''],
-      middleName: [''],
-      lastName: [''],
-      telefono: [''],
-      birthDate: [''],
-      gender: ['']
-    });
+    // this.pacienteForm = this.fb.group({
+    //   idUsuario: [null],
+    //   firstName: [''],
+    //   middleName: [''],
+    //   lastName: [''],
+    //   telefono: [''],
+    //   birthDate: [''],
+    //   gender: ['']
+    // });
   }
 
 
@@ -138,9 +140,7 @@ export class PerfilComponent {
   seleccionarEspecialidad(esp: Especialidad) {
     this.especialidadSeleccionada = esp;
     this.medicoService.listarMedicosPorEspecialidad(esp.id).then((data) => {
-      this.medicosFiltrados = data
-      console.log(this.medicosFiltrados);
-
+      this.medicosFiltrados = data;
       this.medicoSeleccionado = null;
       this.diaSeleccionada = null;
       this.horaSeleccionada = null;
@@ -156,7 +156,6 @@ export class PerfilComponent {
     this.medicoService.listarDiasDisponibles(medico.id!).then((datos) => {
       // const dias = datos;
       this.fechasFiltradas = datos;
-      console.log(this.fechasFiltradas);
       this.diaSeleccionada = null;
       this.horasFiltradas = [];
     }).catch((error) => {
@@ -168,16 +167,18 @@ export class PerfilComponent {
 
   seleccionarFecha(fecha: DiaSemana) {
     console.log(fecha);
-
+    
     const dia = obtenerProximaFecha(fecha.dia);
-    console.log(dia);
     this.fechaCitaSeleccionada = dia;
 
     this.diaSeleccionada = fecha.dia;
     if (this.medicoSeleccionado?.id == undefined)
       return;
-
+  console.log(this.medicoSeleccionado.id, dia);
+  
     this.medicoService.listarHorasDisponibles(this.medicoSeleccionado.id, dia).then(data => {
+      console.log(this.horasFiltradas);
+      
       this.horasFiltradas = data ?? [];
     });
     // } else {
@@ -246,13 +247,13 @@ export class PerfilComponent {
       { name: 'lastName', label: 'Apellido Paterno' },
       { name: 'telefono', label: 'Teléfono' },
       { name: 'birthDate', label: 'Fecha de nacimiento', type: 'date' },
-      {
-        name: 'gender', label: 'Género', type: 'select', options: [
-          { value: 'M', label: 'Masculino' },
-          { value: 'F', label: 'Femenino' },
-          { value: 'O', label: 'Otro' }
-        ]
-      }
+      // {
+      //   name: 'gender', label: 'Género', type: 'select', options: [
+      //     { value: 'M', label: 'Masculino' },
+      //     { value: 'F', label: 'Femenino' },
+      //     { value: 'O', label: 'Otro' }
+      //   ]
+      // }
     ];
     this.mostrarModalUsuario = true;
   }
@@ -270,7 +271,15 @@ export class PerfilComponent {
       this.pacienteService.actualizarPaciente(dto.idUsuario, dto)
         .then(res => {
           if (res.success) {
+            this.usuario.middleName = dto.middleName;
+            this.usuario.firstName = dto.firstName;
+            this.usuario.lastName = dto.lastName;
+            this.usuario.telefono = dto.telefono;
+            this.usuario.birthDate = dto.birthDate;
+            // this.usuario.gender = dto.gender;
+
             alert(res.message);
+            this.localStorageService.setUsuario(this.usuario);
             this.cerrarModalUsuario();
             // this.authService.setUsuario(res.);
           }

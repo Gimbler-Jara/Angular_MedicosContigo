@@ -30,7 +30,4 @@ export class PacienteService {
       this.http.put<{ success: boolean; message: string }>(`${API}/${PACIENTES}/${idUsuario}`, paciente)
     );
   }
-  
-
-
 }

@@ -11,26 +11,14 @@ import { LoginDTO } from '../DTO/Login.interface';
 export class AuthService {
   http = inject(HttpClient)
 
-  private usuarioSubject = new BehaviorSubject<UsuarioResponse | null>(this.getUsuarioStorage());
 
-  usuario$ = this.usuarioSubject.asObservable();
 
-  getUsuarioStorage(): UsuarioResponse | null {
-    const usuarioStr = localStorage.getItem('usuario');
-    return usuarioStr ? JSON.parse(usuarioStr) : null;
-  }
-
-  setUsuario(usuario: UsuarioResponse | null) {
-    if (usuario) {
-      localStorage.setItem('usuario', JSON.stringify(usuario));
-    } else {
-      localStorage.removeItem('usuario');
-    }
-    this.usuarioSubject.next(usuario);
-  }
 
   logOut() {
-    this.setUsuario(null);
+    return new Promise<void>((resolve) => {
+      resolve();
+    });
+    // this.setUsuario(null);
   }
 
 

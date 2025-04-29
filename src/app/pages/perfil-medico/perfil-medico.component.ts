@@ -10,6 +10,7 @@ import { DisponibilidadesResponse } from '../../DTO/DisponibilidadesCitasRespons
 import { MedicoService } from '../../services/medico.service';
 import { DisponibilidadCitaPorMedicoDTO } from '../../DTO/DisponibilidadCitaPorMedico.interface';
 import { CambiarEstadoDisponibilidadDTO } from '../../DTO/CambiarEstadoDisponibilidad.interface';
+import { LocalStorageService } from '../../services/local-storage.service';
 
 @Component({
   selector: 'app-perfil-medico',
@@ -20,6 +21,7 @@ import { CambiarEstadoDisponibilidadDTO } from '../../DTO/CambiarEstadoDisponibi
 })
 export class PerfilMedicoComponent {
   authService = inject(AuthService);
+  localStorageService = inject(LocalStorageService);
   citasService = inject(CitasService)
   medicoService = inject(MedicoService)
   vista: 'citas' | 'agregar' | 'eliminar' = 'citas';
@@ -35,7 +37,7 @@ export class PerfilMedicoComponent {
 
   nuevaDisponibilidad = { dia: '', hora: '' };
 
-  usuario: UsuarioResponse = this.authService.getUsuarioStorage()!;
+  usuario: UsuarioResponse = this.localStorageService.getUsuarioStorage()!;
 
   ngOnInit(): void {
     window.scrollTo(0, 0);

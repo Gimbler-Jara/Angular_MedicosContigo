@@ -14,6 +14,7 @@ import { MedicoActualizacionDTO } from '../../DTO/MedicoActualizacion.interface'
 import { Especialidad } from '../../interface/Especialidad.interface';
 import { EspecialidadService } from '../../services/especialidad.service';
 import { ModalEditarUsuarioComponent } from '../modal-editar-usuario/modal-editar-usuario.component';
+import { LocalStorageService } from '../../services/local-storage.service';
 
 @Component({
   selector: 'app-admin',
@@ -25,6 +26,7 @@ import { ModalEditarUsuarioComponent } from '../modal-editar-usuario/modal-edita
 export class AdminComponent {
 
   medicoService = inject(MedicoService)
+   localStorageService = inject(LocalStorageService);
   pacienteService = inject(PacienteService)
   authService = inject(AuthService);
   especialidadService = inject(EspecialidadService);
@@ -54,7 +56,7 @@ export class AdminComponent {
   pacienteForm: FormGroup;
   medicoForm: FormGroup;
 
-  usuario: UsuarioResponse = this.authService.getUsuarioStorage()!;
+  usuario: UsuarioResponse = this.localStorageService.getUsuarioStorage()!;
 
   modalTipo: 'paciente' | 'medico' | null = null;
   modalTitulo: string = '';
@@ -195,13 +197,6 @@ export class AdminComponent {
       { name: 'lastName', label: 'Apellido Paterno' },
       { name: 'telefono', label: 'Teléfono' },
       { name: 'birthDate', label: 'Fecha de nacimiento', type: 'date' },
-      {
-        name: 'gender', label: 'Género', type: 'select', options: [
-          { value: 'M', label: 'Masculino' },
-          { value: 'F', label: 'Femenino' },
-          { value: 'O', label: 'Otro' }
-        ]
-      },
       { name: 'especialidadId', label: 'Especialidad', type: 'especialidad' }
     ];
     this.modalFormGroup = this.medicoForm;

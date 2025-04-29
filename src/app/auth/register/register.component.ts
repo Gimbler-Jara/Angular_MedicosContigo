@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { UsuarioPacienteRequest } from '../../interface/Usuario/Usuario.interface';
 import { Subscription } from 'rxjs';
+import { LocalStorageService } from '../../services/local-storage.service';
 
 @Component({
   selector: 'app-register',
@@ -17,6 +18,7 @@ export class RegisterComponent {
   private usuarioSubscription!: Subscription;
   usuarioService = inject(AuthService)
   authService = inject(AuthService);
+  localStorageService = inject(LocalStorageService);
 
   formularioUsuario: FormGroup;
   showPassword: boolean = false;
@@ -62,7 +64,7 @@ export class RegisterComponent {
   }
 
   ngOnInit(): void {
-    this.usuarioSubscription = this.authService.usuario$.subscribe(usuario => {
+    this.usuarioSubscription = this.localStorageService.usuario$.subscribe(usuario => {
       this.rol = usuario?.rol.id!;
     });
   }
@@ -97,8 +99,12 @@ export class RegisterComponent {
         password: this.formularioUsuario.value.password_hash,
       }
       console.log(usuario);
-      this.usuarioService.registrarPaciente(usuario)
-      this.formularioUsuario.reset(this.formularioInicial);
+      this.usuarioService.registrarPaciente(usuario).then((response) => {
+        console.log('Registro exitoso:', response);
+        this.formularioUsuario.reset(this.formularioInicial);
+      }).catch((error) => {
+        console.error('Error al registrar paciente:', error.error.message);
+      });
     }
   }
 }

@@ -34,7 +34,7 @@ export const DOCUMENT_TYPE = "document-types"    //** GET
 
 // ! /api/especialidades
 export const ENDPOINT_ESPECIALIDADES = {
-    ESPECIALIDADES: "especialidades"
+    ESPECIALIDADES: "especialidades"       //** GET
 }
 
 // export const MEDICO_POR_ESPECIALIDAD = "medicos-por-especialidad";

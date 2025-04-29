@@ -35,7 +35,21 @@ export class RegistrarMedicoComponent {
     especialidadId: ["", Validators.required],
     password: ['', [Validators.required, Validators.minLength(6)]],
     confirmPassword: ['', Validators.required]
-}, { validators: this.passwordsMatchValidator });
+  }, { validators: this.passwordsMatchValidator });
+
+  private formularioInicial = {
+    document_type: "",
+    dni: '',
+    last_name: '',
+    middle_name: '',
+    first_name: '',
+    birth_date: '',
+    gender: 'M',
+    telefono: '',
+    email: '',
+    password_hash: '',
+    // confirmPassword: ''
+  };
 
 
   // Lista de tipos de documento y especialidades 
@@ -95,6 +109,7 @@ export class RegistrarMedicoComponent {
     console.log(usuario);
     this.usuarioService.registrarMedico(usuario).then(() => {
       console.log("medico registrado");
+      this.formularioMedico.reset(this.formularioInicial);
     }).catch((error) => {
       console.log("error al guardar el medico");
     });

@@ -150,8 +150,8 @@
 </div>
 
 
-
-<app-modal-editar-usuario [mostrarModal]="mostrarModalUsuario" [formGroup]="modalFormGroup" [titulo]="modalTitulo"
-    [campos]="modalCampos" [especialidades]="especialidades" (guardar)="guardarCambiosUsuario()"
-    (cerrar)="cerrarModalUsuario()">
+@if (mostrarModalUsuario) {
+<app-modal-editar-usuario [formGroup]="modalFormGroup" [titulo]="modalTitulo" [campos]="modalCampos"
+    [especialidades]="especialidades" (guardar)="guardarCambiosUsuario()" (cerrar)="cerrarModalUsuario()">
 </app-modal-editar-usuario>
+}

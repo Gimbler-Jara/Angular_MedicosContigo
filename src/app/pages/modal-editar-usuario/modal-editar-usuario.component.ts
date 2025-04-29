@@ -10,7 +10,7 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
   styleUrl: './modal-editar-usuario.component.css'
 })
 export class ModalEditarUsuarioComponent {
-  @Input() mostrarModal: boolean = false;
+  // @Input() mostrarModal: boolean = false;
   @Input() formGroup!: FormGroup;
   @Input() titulo: string = '';
   @Input() campos: { name: string, label: string, type?: string, options?: any[] }[] = [];
