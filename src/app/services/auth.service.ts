@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { UsuarioMedicoRequest, UsuarioPacienteRequest, UsuarioResponse } from '../interface/Usuario/Usuario.interface';
-import { BehaviorSubject, lastValueFrom } from 'rxjs';
-import { API, USUARIO, MEDICOS, PACIENTES } from '../utils/constants';
+import { lastValueFrom } from 'rxjs';
+import { API, USUARIO, MEDICOS, PACIENTES, ENDPOINTS_USUARIO } from '../utils/constants';
 import { LoginDTO } from '../DTO/Login.interface';
 
 @Injectable({
@@ -18,7 +18,15 @@ export class AuthService {
     return new Promise<void>((resolve) => {
       resolve();
     });
-    // this.setUsuario(null);
+  }
+
+  cambiarEstadoUsuario(id: number): Promise<{ success: boolean; message: string }> {
+    var url = `${API}/${USUARIO}/${ENDPOINTS_USUARIO.CAMBIAR_ESTADO}/${id}`;
+    console.log(url);
+
+    return lastValueFrom(
+      this.http.put<{ success: boolean; message: string }>(url, id)
+    );
   }
 
 

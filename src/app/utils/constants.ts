@@ -1,5 +1,6 @@
 
-export const API = "http://localhost:8081/api";
+// export const API = "http://localhost:8081/api";
+export const API = "http://localhost:5254/api";
 
 // ! /api/procedimientos/*** 
 export const CITA_MEDICA = "cita-medica";
@@ -8,13 +9,16 @@ export const ENDPOINTS_CITAS = {
     REGISTRAR_DISPONIBILIDAD: "registrar-disponibilidad",                                                //* POST
     CAMBIAR_ESTADO_DISPONIBILIDAD: "cambiar-estado-disponibilidad",                                      //* PUT
     AGENDAR_CITA: "agendar-cita",                                                                        //* POST
-    // CAMBIAR_ESTADO_CITA_RESERVADO_ATENDIDO: "cambiar-estado-cita-reservado-atendido",                 //* PUT
+    CAMBIAR_ESTADO_CITA_RESERVADO_ATENDIDO: "cambiar-estado-cita-reservado-atendido",                 //* PUT
     ELIMINAR_CITA_RESERVADO: "eliminar-cita",                                                             //* DELETE   
     CITAS_RESERVADAS_POR_PACIENTE: "citas-reservadas-paciente",                                           //* GET
 }
 
 // * /api/usuarios/***
 export const USUARIO = "usuarios";
+export const ENDPOINTS_USUARIO = {
+    CAMBIAR_ESTADO: "cambiar-estado-usuario",                                                     //* PUT
+}
 
 // * /api/medicos
 export const MEDICOS = "medicos"        //** GET

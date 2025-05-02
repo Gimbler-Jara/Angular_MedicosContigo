@@ -7,6 +7,9 @@ import { Especialidad } from '../../interface/Especialidad.interface';
 import { EspecialidadService } from '../../services/especialidad.service';
 import { UsuarioMedicoRequest } from '../../interface/Usuario/Usuario.interface';
 import { AuthService } from '../../services/auth.service';
+import Swal from 'sweetalert2';
+import { EmailService } from '../../services/email.service';
+import { getRegisterTemplateHTML } from '../../utils/template';
 
 @Component({
   selector: 'app-registrar-medico',
@@ -21,6 +24,7 @@ export class RegistrarMedicoComponent {
   typeDocumentService = inject(DocumentTypeService);
   especialidadService = inject(EspecialidadService);
   usuarioService = inject(AuthService);
+  emailService = inject(EmailService);
 
   formularioMedico = this.fb.group({
     documentType: ['', Validators.required],
@@ -48,13 +52,12 @@ export class RegistrarMedicoComponent {
     telefono: '',
     email: '',
     password_hash: '',
-    // confirmPassword: ''
   };
 
-
-  // Lista de tipos de documento y especialidades 
   tiposDocumento: Document_Type[] = [];
   especialidades: Especialidad[] = [];
+  showPassword = false;
+  showConfirm = false;
 
   ngOnInit(): void {
     this.typeDocumentService.listarTiposDeDocumentos().then(doc => {
@@ -70,27 +73,32 @@ export class RegistrarMedicoComponent {
     })
   }
 
-
-  // Mostrar/ocultar contraseña
-  showPassword = false;
-  showConfirm = false;
   togglePassword() { this.showPassword = !this.showPassword; }
   toggleConfirm() { this.showConfirm = !this.showConfirm; }
 
-  // Validador personalizado para contraseñas
   passwordsMatchValidator(group: FormGroup) {
     const pass = group.get('password')?.value;
     const confirm = group.get('confirmPassword')?.value;
     return pass === confirm ? null : { passwordsNoMatch: true };
   }
 
-  // Método para enviar el formulario
   registrarMedico() {
     if (this.formularioMedico.invalid) return;
 
-    // const medico = { ...this.formularioMedico.value };
-    // // Elimina el confirmPassword antes de enviar al backend
-    // delete medico.confirmPassword;
+    const birthDate = new Date(this.formularioMedico.value.birth_date);
+    const today = new Date();
+    var age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    const dayDiff = today.getDate() - birthDate.getDate();
+
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+      age--;
+    }
+
+    if (age > 80) {
+      this.showAlert('error', 'Seleccione correctamente su fecha de nacimiento.');
+      return;
+    }
 
     var usuario: UsuarioMedicoRequest = {
       documentTypeId: Number(this.formularioMedico.value.documentType),
@@ -109,11 +117,36 @@ export class RegistrarMedicoComponent {
     console.log(usuario);
     this.usuarioService.registrarMedico(usuario).then(() => {
       console.log("medico registrado");
+
+      var mensaje = getRegisterTemplateHTML(usuario.firstName, usuario.lastName, usuario.email!, usuario.password)
+      this.emailService.message(usuario.email!, "Bienvenido a la plataforma de citas médicas. Su registro ha sido exitoso.", mensaje).then((value) => { }).catch((error) => { });
+
       this.formularioMedico.reset(this.formularioInicial);
+      this.showAlert('success', 'Registro exitoso. El médico ha sido registrado correctamente.');
     }).catch((error) => {
       console.log("error al guardar el medico");
+      console.error('Error al registrar médico:', error.error.message);
+      this.showAlert('error', error.error.message);
     });
 
+  }
+
+  showAlert(icon: 'warning' | 'error' | 'success', message: string) {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
+    });
+    Toast.fire({
+      icon: icon,
+      title: message
+    });
   }
 
 }

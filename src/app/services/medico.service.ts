@@ -43,18 +43,6 @@ export class MedicoService {
     );
   }
 
-
-  eliminarMedico(id: number): Promise<void> {
-    return lastValueFrom(
-      this.http.delete<{ success: boolean; message: string }>(`${API}/${MEDICOS}/${id}`).pipe(
-        map(() => void 0)
-      )
-    );
-  }
-
-
-
-  // 6. Listar médicos por especialidad
   listarMedicosPorEspecialidad(idEspecialidad: number): Promise<MedicosPorEspecialidadDTO[]> {
     return lastValueFrom(
       this.http.get<MedicosPorEspecialidadDTO[]>(`${API}/${MEDICOS}/${ENDPOINTS_MEDICO.MEDICOS_POR_ESPECIALIDAD}/${idEspecialidad}`)
@@ -64,7 +52,6 @@ export class MedicoService {
     );
   }
 
-  // 7. Listar días disponibles por médico
   listarDiasDisponibles(idMedico: number): Promise<DiaSemana[]> {
     return lastValueFrom(
       this.http.get<DiaSemana[]>(`${API}/${MEDICOS}/${ENDPOINTS_MEDICO.DIAS_DISPONIBLES}/${idMedico}`)
@@ -74,7 +61,6 @@ export class MedicoService {
     );
   }
 
-  // 8. Listar horas disponibles (usa params)
   listarHorasDisponibles(idMedico: number, fecha: string): Promise<HorasDispiniblesDTO[]> {
     let params = new HttpParams()
       .set('idMedico', idMedico)

@@ -85,4 +85,10 @@ export class CitasService {
   }
 
 
+  marcarcitaComoAtendido(idCita: number): Promise<void> {
+    return lastValueFrom(
+      this.http.put<void>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.CAMBIAR_ESTADO_CITA_RESERVADO_ATENDIDO}/${idCita}`, null)
+    );
+  }
+
 }

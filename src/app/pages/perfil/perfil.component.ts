@@ -1,7 +1,6 @@
-import { AsyncPipe, DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
-import { Component, Inject, inject } from '@angular/core';
+import { AsyncPipe, DatePipe } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { CitasService } from '../../services/citas.service';
-import { MedicoConUsuario } from '../../interface/MedicoConUsuario.interface';
 import { Especialidad } from '../../interface/Especialidad.interface';
 import { AgendarCitaMedicaDTO } from '../../DTO/CitaMedica.interface';
 import { UsuarioPacienteRequest, UsuarioResponse } from '../../interface/Usuario/Usuario.interface';
@@ -19,11 +18,14 @@ import { PacienteActualizacionDTO } from '../../DTO/PacienteActualizacion.interf
 import { PacienteService } from '../../services/paciente.service';
 import { ModalEditarUsuarioComponent } from '../modal-editar-usuario/modal-editar-usuario.component';
 import { LocalStorageService } from '../../services/local-storage.service';
+import { EmailService } from '../../services/email.service';
+import { getCancelarCitaTemplaeHTML, getReservarCitaTemplateHTML } from '../../utils/template';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [AsyncPipe, ReactiveFormsModule, ModalEditarUsuarioComponent],
+  imports: [AsyncPipe, ReactiveFormsModule, ModalEditarUsuarioComponent, DatePipe],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.css',
 })
@@ -34,12 +36,14 @@ export class PerfilComponent {
   especialidadService = inject(EspecialidadService)
   medicoService = inject(MedicoService)
   pacienteService = inject(PacienteService)
+  emailService = inject(EmailService);
 
   vista: 'citas' | 'reservar' | 'extra' = 'citas';
 
   usuario: UsuarioResponse = this.localStorageService.getUsuarioStorage()!;
 
   citasRegistradas: CitasReservadasPorPacienteResponseDTO[] = []
+  citasAtendidas: CitasReservadasPorPacienteResponseDTO[] = []
 
 
   especialidades$ = this.especialidadService.listarEspecialidades();
@@ -93,22 +97,12 @@ export class PerfilComponent {
     }, {
       validators: [this.passwordsMatchValidator]
     });
-
-    // this.pacienteForm = this.fb.group({
-    //   idUsuario: [null],
-    //   firstName: [''],
-    //   middleName: [''],
-    //   lastName: [''],
-    //   telefono: [''],
-    //   birthDate: [''],
-    //   gender: ['']
-    // });
   }
 
 
   ngOnInit(): void {
     window.scrollTo(0, 0);
-    this.listarCitasReservadasPorPaciente();
+    this.listarCitasPorPaciente();
 
     this.especialidadService.listarEspecialidades().then(data => {
       this.especialidades = data ?? [];
@@ -117,30 +111,10 @@ export class PerfilComponent {
     });
   }
 
-  registrarUsuario() {
-    if (this.formularioUsuario.valid) {
-      var usuario: UsuarioPacienteRequest = {
-        documentTypeId: Number(this.formularioUsuario.value.document_type),
-        dni: this.formularioUsuario.value.dni,
-        lastName: this.formularioUsuario.value.last_name,
-        middleName: this.formularioUsuario.value.middle_name,
-        firstName: this.formularioUsuario.value.first_name,
-        birthDate: this.formularioUsuario.value.birth_date,
-        gender: this.formularioUsuario.value.gender,
-        telefono: this.formularioUsuario.value.telefono,
-        email: this.formularioUsuario.value.email,
-        password: this.formularioUsuario.value.password_hash,
-      }
-      console.log(usuario);
-      // this.usuarioService.registrarPaciente(usuario)
-      // this.formularioUsuario.reset(this.formularioInicial);
-    }
-  }
-
   seleccionarEspecialidad(esp: Especialidad) {
     this.especialidadSeleccionada = esp;
     this.medicoService.listarMedicosPorEspecialidad(esp.id).then((data) => {
-      this.medicosFiltrados = data;
+      this.medicosFiltrados = data ?? [];
       this.medicoSeleccionado = null;
       this.diaSeleccionada = null;
       this.horaSeleccionada = null;
@@ -155,7 +129,7 @@ export class PerfilComponent {
     this.medicoSeleccionado = medico;
     this.medicoService.listarDiasDisponibles(medico.id!).then((datos) => {
       // const dias = datos;
-      this.fechasFiltradas = datos;
+      this.fechasFiltradas = datos ?? [];
       this.diaSeleccionada = null;
       this.horasFiltradas = [];
     }).catch((error) => {
@@ -166,24 +140,18 @@ export class PerfilComponent {
   }
 
   seleccionarFecha(fecha: DiaSemana) {
-    console.log(fecha);
-    
     const dia = obtenerProximaFecha(fecha.dia);
     this.fechaCitaSeleccionada = dia;
 
     this.diaSeleccionada = fecha.dia;
     if (this.medicoSeleccionado?.id == undefined)
       return;
-  console.log(this.medicoSeleccionado.id, dia);
-  
+    console.log(fecha);
+
+    console.log(dia);
     this.medicoService.listarHorasDisponibles(this.medicoSeleccionado.id, dia).then(data => {
-      console.log(this.horasFiltradas);
-      
       this.horasFiltradas = data ?? [];
     });
-    // } else {
-    //   console.error('El ID del médico seleccionado es undefined');
-    // }
     this.horaSeleccionada = null;
   }
 
@@ -202,34 +170,39 @@ export class PerfilComponent {
         estado: 1
       }
 
-      console.log(nuevaCita);
-      this.citaService.agendarCita(nuevaCita)
+      this.citaService.agendarCita(nuevaCita).then(() => {
 
-      // this.especialidadSeleccionada = null;
-      this.medicoSeleccionado = null;
-      this.diaSeleccionada = null;
-      this.horaSeleccionada = null;
-      this.medicosFiltrados = [];
-      this.fechasFiltradas = [];
-      this.horasFiltradas = [];
+        this.showAlert('success', 'Cita médica agendada correctamente.');
+        var mensaje = getReservarCitaTemplateHTML(this.usuario.firstName, this.usuario.lastName, nuevaCita.fecha, this.getHoraTexto(this.horaSeleccionada!), this.medicoSeleccionado?.medico!, "", this.especialidadSeleccionada?.especialidad!);
+        this.emailService.message(this.usuario.email!, "Cita médica agendada", mensaje).then((value) => { }).catch((error) => { });
+
+        // this.especialidadSeleccionada = null;
+        this.medicoSeleccionado = null;
+        this.diaSeleccionada = null;
+        this.horaSeleccionada = null;
+        this.medicosFiltrados = [];
+        this.fechasFiltradas = [];
+        this.horasFiltradas = [];
+      }).catch((error) => {
+        this.showAlert('error', 'Error al agendar la cita médica.');
+      });
+
     }
   }
 
-  // Cuando quieres abrir el modal de edición:
   abrirModalEditarPacienteDesdePerfil() {
-    // Crea un DTO compatible:
     const pacienteFake: PacienteDTO = {
-      idUsuario: this.usuario.id!, // Usa el id de usuario
-      usuario: this.usuario        // Pasa el objeto de usuario
+      idUsuario: this.usuario.id!,
+      usuario: this.usuario
     };
-    // Ahora sí puedes usar tu modal genérico
+
     this.abrirModalEditarPaciente(pacienteFake);
   }
 
 
   abrirModalEditarPaciente(paciente: PacienteDTO) {
     this.modalFormGroup = this.fb.group({
-      idUsuario: [paciente.idUsuario], // <--- SIEMPRE estará presente en el dto
+      idUsuario: [paciente.idUsuario],
       firstName: [paciente.usuario.firstName || '', Validators.required],
       middleName: [paciente.usuario.middleName || ''],
       lastName: [paciente.usuario.lastName || '', Validators.required],
@@ -245,15 +218,7 @@ export class PerfilComponent {
       { name: 'firstName', label: 'Nombre' },
       { name: 'middleName', label: 'Apellido Materno' },
       { name: 'lastName', label: 'Apellido Paterno' },
-      { name: 'telefono', label: 'Teléfono' },
-      { name: 'birthDate', label: 'Fecha de nacimiento', type: 'date' },
-      // {
-      //   name: 'gender', label: 'Género', type: 'select', options: [
-      //     { value: 'M', label: 'Masculino' },
-      //     { value: 'F', label: 'Femenino' },
-      //     { value: 'O', label: 'Otro' }
-      //   ]
-      // }
+      { name: 'telefono', label: 'Teléfono' }
     ];
     this.mostrarModalUsuario = true;
   }
@@ -262,7 +227,7 @@ export class PerfilComponent {
   guardarCambiosUsuario() {
     if (this.modalTipo === 'paciente' && this.pacienteEditado) {
       const dto: PacienteActualizacionDTO = {
-        idUsuario: this.pacienteEditado.idUsuario, // Asegura el ID aquí
+        idUsuario: this.pacienteEditado.idUsuario,
         ...this.modalFormGroup.value
       };
 
@@ -275,16 +240,15 @@ export class PerfilComponent {
             this.usuario.firstName = dto.firstName;
             this.usuario.lastName = dto.lastName;
             this.usuario.telefono = dto.telefono;
-            this.usuario.birthDate = dto.birthDate;
-            // this.usuario.gender = dto.gender;
 
-            alert(res.message);
             this.localStorageService.setUsuario(this.usuario);
             this.cerrarModalUsuario();
-            // this.authService.setUsuario(res.);
+            this.showAlert('success', "Datos actualizados correctamente");
           }
         })
-        .catch(() => alert('Error al actualizar paciente'));
+        .catch(() =>
+          this.showAlert('error', 'Error al actualizar paciente')
+        );
     }
   }
 
@@ -295,54 +259,60 @@ export class PerfilComponent {
     this.modalFormGroup.reset();
   }
 
-
-
-
-
-
-  // obtenerIdHora(hora: number): number {
-  //   const todasHoras = this.citaService.getHorasDisponibles(this.fechaSeleccionada!);
-  //   return todasHoras.indexOf(hora) + 1; // simulado, reemplazar por ID real si tienes mapeo
-  // }
-
   getHoraTexto(id: number): string {
     return this.citaService.getHoraById(id);
   }
 
-
-
-  // getNombreMedico(id: number): string {
-  //   const medico = this.citaService.getMedicos().find(m => m.usuario.id === id);
-  //   return medico ? `${medico.usuario.firstName} ${medico.usuario.lastName}` : 'Desconocido';
-  // }
-
-  // getEspecialidadMedico(id: number): string {
-  //   const medico = this.citaService.getMedicos().find(m => m.usuario.id === id);
-  //   const esp = this.citaService.getEspecialidades().find(e => e.id === medico?.especialidad_id);
-  //   return esp ? esp.especialidad : 'Especialidad no registrada';
-  // }
-
-
   cambiarVista(nuevaVista: 'citas' | 'reservar' | 'extra') {
     this.vista = nuevaVista;
     if (nuevaVista === 'citas') {
-      this.listarCitasReservadasPorPaciente();
+      this.listarCitasPorPaciente();
     }
   }
 
-  async listarCitasReservadasPorPaciente() {
+  async listarCitasPorPaciente() {
     this.citaService.listarCitasReservadasPorPaciente(this.usuario.id!).then((data) => {
-      this.citasRegistradas = data ?? [];
+      console.log(data);
+
+      this.citasRegistradas = [];
+      this.citasAtendidas = [];
+
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].estado.toLocaleLowerCase() != "atendido") {
+          this.citasRegistradas.push(data[i]);
+        }else{
+          this.citasAtendidas.push(data[i]);
+        }
+      }
     })
   }
 
   cancelarCita(idCita: number) {
-    this.citaService.eliminarCitaReservado(idCita).then(res => {
-      this.listarCitasReservadasPorPaciente();
-    }).catch((error) => {
-      console.log("Error ala eliminar cita " + error);
+    Swal.fire({
+      title: "¿Estas Seguro?",
+      text: "Cancelaras la cita médica",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, borrar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.citaService.eliminarCitaReservado(idCita).then(() => {
+          this.listarCitasPorPaciente();
+          var citaEncontrada = this.citasRegistradas.find(c => c.id == idCita);
+          var formattedFecha = new Date(citaEncontrada!.fecha).toISOString().split('T')[0];
 
-    })
+          var mensaje = getCancelarCitaTemplaeHTML(this.usuario.firstName, this.usuario.lastName, formattedFecha, this.getHoraTexto(citaEncontrada?.idHora!), citaEncontrada?.medico!, "", citaEncontrada?.especialidad!);
+          this.emailService.message(this.usuario.email!, "Cita médica cancelada", mensaje).then((value) => { }).catch((error) => { });
+          this.showAlert('success', "Cita cancelada correctamente");
+        }).catch((error) => {
+          console.log("Error ala eliminar cita " + error);
+          this.showAlert('error', "Error al cancelar la cita");
+        })
+      }
+    });
   }
 
 
@@ -358,5 +328,23 @@ export class PerfilComponent {
 
   toggleConfirm(): void {
     this.showConfirm = !this.showConfirm;
+  }
+
+  showAlert(icon: 'warning' | 'error' | 'success', message: string) {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
+    });
+    Toast.fire({
+      icon: icon,
+      title: message
+    });
   }
 }

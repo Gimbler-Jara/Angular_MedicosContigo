@@ -45,4 +45,6 @@ export interface UsuarioResponse {
     email?: string;
     passwordHash: string;
     rol: Rol;
+    activo?: boolean;
+
 }

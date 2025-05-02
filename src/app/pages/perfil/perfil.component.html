@@ -22,7 +22,7 @@
             <button [class.active]="vista === 'citas'" (click)="cambiarVista('citas')">Mostrar citas
                 Programadas</button>
             <button [class.active]="vista === 'reservar'" (click)="cambiarVista('reservar')">Reservar cita</button>
-            <!-- <button [class.active]="vista === 'extra'" (click)="cambiarVista('extra')">Editar Perfil</button> -->
+            <button [class.active]="vista === 'extra'" (click)="cambiarVista('extra')">Ver citas atendidas</button>
         </div>
 
         <!-- Contenido dinámico -->
@@ -37,7 +37,8 @@
                         @for (cita of citasRegistradas; track $index) {
                         <li>
                             <div>
-                                <strong>{{ cita.fecha }}</strong> - {{ getHoraTexto(cita.idHora) }}<br>
+                                <strong>{{ cita.fecha | date:'yyyy-MM-dd' }}</strong> - {{ getHoraTexto(cita.idHora)
+                                }}<br>
                                 <span>
                                     <i class="fa-solid fa-user-doctor"></i> {{ cita.medico }}
                                     ({{ cita.especialidad }})
@@ -49,7 +50,7 @@
                     </ul>
                 </div>
                 }@else {
-                <h2>Aún no tiene atenciones realizadas</h2>
+                <h2>No tienes citas programadas</h2>
                 }
 
             </ng-container>
@@ -136,16 +137,36 @@
 
             @if (vista === 'extra') {
             <ng-container>
-                <h2>falata completar alguna otra configuracion</h2>
+                @if (citasAtendidas.length) {
+                <div class="step">
+                    <h3><i class="fa-solid fa-calendar-check"></i> Citas Atendidas</h3>
+                    <ul class="citas-lista">
+                        @for (cita of citasAtendidas; track $index) {
+                        <li>
+                            <div>
+                                <strong>{{ cita.fecha | date:'yyyy-MM-dd' }}</strong> - {{ getHoraTexto(cita.idHora)
+                                }}<br>
+                                <span>
+                                    <i class="fa-solid fa-user-doctor"></i> {{ cita.medico }}
+                                    ({{ cita.especialidad }})
+                                </span>
+                            </div>
+                            <!-- <a (click)="cancelarCita(cita.id!)"><i class="fa-solid fa-trash"></i>Cancelar Cita</a> -->
+                        </li>
+                        }
+                    </ul>
+                </div>
+                }@else {
+                <h2>Aún no tiene atenciones realizadas</h2>
+                }
             </ng-container>
             }
         </div>
     </section>
 </div>
 
- @if (mostrarModalUsuario) {
-<app-modal-editar-usuario  [formGroup]="modalFormGroup" [titulo]="modalTitulo"
-    [campos]="modalCampos" [especialidades]="especialidades" (guardar)="guardarCambiosUsuario()"
-    (cerrar)="cerrarModalUsuario()">
+@if (mostrarModalUsuario) {
+<app-modal-editar-usuario [formGroup]="modalFormGroup" [titulo]="modalTitulo" [campos]="modalCampos"
+    [especialidades]="especialidades" (guardar)="guardarCambiosUsuario()" (cerrar)="cerrarModalUsuario()">
 </app-modal-editar-usuario>
- }
+}

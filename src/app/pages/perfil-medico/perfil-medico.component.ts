@@ -5,17 +5,17 @@ import { UsuarioResponse } from '../../interface/Usuario/Usuario.interface';
 import { CitasAgendadasResponseDTO } from '../../DTO/CitasAgendada.response.interface';
 import { CitasService } from '../../services/citas.service';
 import { RegistrarDisponibilidadCitaDTO } from '../../DTO/RegistrarDisponibilidad.interface';
-import { Especialidad } from '../../interface/Especialidad.interface';
-import { DisponibilidadesResponse } from '../../DTO/DisponibilidadesCitasResponse.interface';
 import { MedicoService } from '../../services/medico.service';
 import { DisponibilidadCitaPorMedicoDTO } from '../../DTO/DisponibilidadCitaPorMedico.interface';
 import { CambiarEstadoDisponibilidadDTO } from '../../DTO/CambiarEstadoDisponibilidad.interface';
 import { LocalStorageService } from '../../services/local-storage.service';
+import { DatePipe } from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-perfil-medico',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, DatePipe],
   templateUrl: './perfil-medico.component.html',
   styleUrl: './perfil-medico.component.css'
 })
@@ -33,7 +33,7 @@ export class PerfilMedicoComponent {
 
   filtroDia = '';
   diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-  horas = ['08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM'];
+  horas = ['08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM'];
 
   nuevaDisponibilidad = { dia: '', hora: '' };
 
@@ -63,29 +63,22 @@ export class PerfilMedicoComponent {
           idEspecialidad: e.id
         }
 
-        console.log(cita);
         this.citasService.registrarDisponibilidad(cita)
           .then(res => {
-            console.log("Respues " + res);
 
             if (res.success) {
-              // Éxito: muestra el mensaje y limpia los campos
-              console.log(res.message);
               this.nuevaDisponibilidad.dia = "";
               this.nuevaDisponibilidad.hora = "";
               this.listarDisponiblidadesDeCita();
+              this.showAlert('success', res.message);
             } else {
-              // Error controlado por el backend (por ejemplo: "La disponibilidad ya existe")
-              alert(res.message);
+              this.showAlert('error', res.message);
             }
           })
           .catch(error => {
-            // Error de red o del servidor
+            this.showAlert('error', error?.error?.message || 'Error al registrar disponibilidad');
             alert(error?.error?.message || 'Error al registrar disponibilidad');
           });
-
-
-
       }).catch((error) => {
         console.log(error);
       });
@@ -102,6 +95,7 @@ export class PerfilMedicoComponent {
 
     this.medicoService.cambiarEstadoCita(data).then(() => {
       this.listarDisponiblidadesDeCita();
+      this.showAlert('success', 'Disponibilidad actualizada correctamente');
     });
   }
 
@@ -111,7 +105,7 @@ export class PerfilMedicoComponent {
       return;
     }
 
-    var diaIndex = this.diasSemana.findIndex(d => d == this.filtroDia);
+    var diaIndex = this.diasSemana.findIndex(d => d == this.filtroDia) + 1;
 
     this.citasFiltradas = this.citasProgramadas.filter(cita => {
       let diaSemana = new Date(cita.fecha).getDay();
@@ -128,8 +122,12 @@ export class PerfilMedicoComponent {
 
   async listarCitasAgendadas() {
     this.citasService.listarCitasAgendadas(this.usuario.id!).then(dato => {
-      this.citasProgramadas = dato ?? [];
-      console.log(this.citasProgramadas);
+      this.citasProgramadas = [];
+      for (let i = 0; i < dato.length; i++) {
+        if (dato[i].estado.toLocaleLowerCase() == "reservado") {
+          this.citasProgramadas.push(dato[i]);
+        }
+      }
       this.filtrarCitasPorDia()
     }).catch(error => {
       console.log(error);
@@ -139,14 +137,39 @@ export class PerfilMedicoComponent {
   async listarDisponiblidadesDeCita() {
     this.medicoService.listarPorMedico(this.usuario.id!).then(res => {
       if (res.success) {
-        console.log(res.data);
         this.disponibilidades = res.data;
       } else {
         alert(res.message);
       }
     }).catch(error => {
       console.log("Ocurrió un error en la consulta" + error);
-
     })
+  }
+
+  marcarcitaComoAtendido(idCita: number) {
+    this.citasService.marcarcitaComoAtendido(idCita).then(() => {
+      this.listarCitasAgendadas();
+      this.showAlert('success', 'Cita marcada como atendida');
+    }).catch(error => {
+      console.log("Error al marcar la cita como atendida " + error);
+    });
+  }
+
+  showAlert(icon: 'warning' | 'error' | 'success', message: string) {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
+    });
+    Toast.fire({
+      icon: icon,
+      title: message
+    });
   }
 }

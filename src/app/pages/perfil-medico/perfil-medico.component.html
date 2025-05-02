@@ -46,19 +46,25 @@
             <table class="tabla-citas">
                 <thead>
                     <tr>
-                        <th>Fecha</th>
-                        <th>Hora</th>
-                        <th>Paciente</th>
-                        <th>Estado de cita</th>
+                        <th style="text-align: center;">Fecha</th>
+                        <th style="text-align: center;">Hora</th>
+                        <th style="text-align: center;">Paciente</th>
+                        <th style="text-align: center;">Estado de cita</th>
+                        <th style="text-align: center;">Marcar como atendido</th>
                     </tr>
                 </thead>
                 <tbody>
                     @for (cita of citasFiltradas; track $index) {
                     <tr>
-                        <td>{{ cita.fecha }}</td>
-                        <td>{{ cita.hora }}</td>
-                        <td>{{ cita.pacienteNombre }}</td>
-                        <td><span class="estado {{ cita.estado }}">{{ cita.estado }}</span></td>
+                        <td style="text-align: center;">{{ cita.fecha | date:'yyyy-MM-dd' }}</td>
+                        <td style="text-align: center;">{{ cita.hora }}</td>
+                        <td style="text-align: center;">{{ cita.pacienteNombre }}</td>
+                        <td style="text-align: center;"><span class="estado {{ cita.estado }}">{{ cita.estado }}</span>
+                        </td>
+                        <td style="text-align: center;">
+                            <a (click)="marcarcitaComoAtendido(cita.id)" class=" btn-atendido">Atendido<i
+                                    class="fa-solid fa-check-to-slot"></i></a>
+                        </td>
                     </tr>
                     }
                 </tbody>
@@ -105,11 +111,13 @@
             <div class="disponibilidad-eliminar">
                 <h3><i class="fa-solid fa-calendar-xmark"></i> Disponibilidad de Citas</h3>
                 <ul>
+                    @if (disponibilidades.length) {
                     @for (dispo of disponibilidades; track $index) {
                     <li>
                         {{ dispo.dia }} - {{ dispo.hora }}
                         @if (dispo.activo) {
-                        <button class="visible" (click)="ocultarDisponibilidad(dispo.idHora, dispo.idDia, dispo.activo)">
+                        <button class="visible"
+                            (click)="ocultarDisponibilidad(dispo.idHora, dispo.idDia, dispo.activo)">
                             <i class="fa-solid fa-eye"></i>
                         </button>
                         }@else {
@@ -118,6 +126,9 @@
                         </button>
                         }
                     </li>
+                    }
+                    }@else {
+                    <p>No hay disponiblidad de horarios registrada.</p>
                     }
                 </ul>
             </div>

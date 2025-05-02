@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { LoginDTO } from '../../DTO/Login.interface';
 import { LocalStorageService } from '../../services/local-storage.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,7 @@ import { LocalStorageService } from '../../services/local-storage.service';
 })
 export class LoginComponent {
   authService = inject(AuthService)
-  localStorageService= inject(LocalStorageService);
+  localStorageService = inject(LocalStorageService);
   router = inject(Router)
   formularioLogin: FormGroup;
   showPassword: boolean = false;
@@ -41,8 +42,6 @@ export class LoginComponent {
       this.authService.login(user).then(usuario => {
         if (usuario) {
           this.localStorageService.setUsuario(usuario);
-          console.log(usuario);
-
 
           if (usuario.rol.id == 1) {
             this.router.navigate(['/perfil']);
@@ -50,16 +49,33 @@ export class LoginComponent {
             this.router.navigate(['/perfil-medico']);
           } else {
             this.router.navigate(['/admin']);
-            console.log("Administrador");
-            
           }
-
+          this.formularioLogin.reset();
+          this.showAlert('success', 'Inicio de sesión exitoso');
         }
+      }).catch(error => {
+        console.error('Error al iniciar sesión:', error)
+        this.showAlert('error', error?.error?.message || 'Error al iniciar sesión');
       });
-
-
-      // Aquí puedes enviar los datos al backend
-      this.formularioLogin.reset();
+      
     }
+  }
+
+  showAlert(icon:'warning'| 'error'| 'success',message: string) {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
+    });
+    Toast.fire({
+      icon: icon,
+      title: message
+    });
   }
 }

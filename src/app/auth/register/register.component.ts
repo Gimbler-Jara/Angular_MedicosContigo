@@ -6,6 +6,9 @@ import { AuthService } from '../../services/auth.service';
 import { UsuarioPacienteRequest } from '../../interface/Usuario/Usuario.interface';
 import { Subscription } from 'rxjs';
 import { LocalStorageService } from '../../services/local-storage.service';
+import { EmailService } from '../../services/email.service';
+import { getRegisterTemplateHTML } from '../../utils/template';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-register',
@@ -19,6 +22,7 @@ export class RegisterComponent {
   usuarioService = inject(AuthService)
   authService = inject(AuthService);
   localStorageService = inject(LocalStorageService);
+  emailService = inject(EmailService);
 
   formularioUsuario: FormGroup;
   showPassword: boolean = false;
@@ -86,7 +90,23 @@ export class RegisterComponent {
 
   registrarUsuario() {
     if (this.formularioUsuario.valid) {
-      var usuario: UsuarioPacienteRequest = {
+
+      const birthDate = new Date(this.formularioUsuario.value.birth_date);
+      const today = new Date();
+      var age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      const dayDiff = today.getDate() - birthDate.getDate();
+
+      if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age--;
+      }
+
+      if (age > 80) {
+        this.showAlert('error', 'Seleccione correctamente su fecha de nacimiento.');
+        return;
+      }
+
+      var usuario: UsuarioPacienteRequest = { 
         documentTypeId: Number(this.formularioUsuario.value.document_type),
         dni: this.formularioUsuario.value.dni,
         lastName: this.formularioUsuario.value.last_name,
@@ -98,13 +118,38 @@ export class RegisterComponent {
         email: this.formularioUsuario.value.email,
         password: this.formularioUsuario.value.password_hash,
       }
-      console.log(usuario);
+
       this.usuarioService.registrarPaciente(usuario).then((response) => {
         console.log('Registro exitoso:', response);
+
+        var mensaje = getRegisterTemplateHTML(usuario.firstName, usuario.lastName, usuario.email!, usuario.password)
+        this.emailService.message(usuario.email!, "Bienvenido a la plataforma de citas médicas. Su registro ha sido exitoso.", mensaje).then((value) => { }).catch((error) => { });
+
         this.formularioUsuario.reset(this.formularioInicial);
+        this.showAlert('success', 'Registro exitoso. Por favor verifica tu correo electrónico para más detalles.');
       }).catch((error) => {
         console.error('Error al registrar paciente:', error.error.message);
+        this.showAlert('error', error.error.message);
       });
     }
+  }
+
+
+  showAlert(icon: 'warning' | 'error' | 'success', message: string) {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
+    });
+    Toast.fire({
+      icon: icon,
+      title: message
+    });
   }
 }

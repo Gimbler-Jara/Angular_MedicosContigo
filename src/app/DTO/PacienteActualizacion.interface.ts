@@ -4,6 +4,4 @@ export interface PacienteActualizacionDTO {
     middleName: string;
     lastName: string;
     telefono: string;
-    birthDate: string;
-    gender: string;
 }

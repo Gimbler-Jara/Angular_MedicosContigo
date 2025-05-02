@@ -60,6 +60,7 @@
                             <th>Email</th>
                             <th>Género</th>
                             <th>Fecha de Nacimiento</th>
+                            <th>Avtivo</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -75,10 +76,16 @@
                             <td>{{ medico.usuario.telefono }}</td>
                             <td>{{ medico.usuario.email }}</td>
                             <td>{{ medico.usuario.gender === 'M' ? 'Masculino' : 'Femenino' }}</td>
-                            <td>{{ medico.usuario.birthDate }}</td>
+                            <td>{{ medico.usuario.birthDate | date:'yyyy-MM-dd'}}</td>
+                            <td>{{medico.usuario.activo ? "SI":"NO"}}</td>
                             <td>
                                 <a (click)="abrirModalEditarMedico(medico)"><i class="fa-solid fa-user-pen"></i></a>
-                                <a (click)="eliminarMedico(medico.usuario.id!)"><i class="fa-solid fa-trash"></i></a>
+                                @if (medico.usuario.activo) {
+                                <a (click)="cambiarEstadoActivo(medico.usuario.id!)"><i class="fa-solid fa-eye"></i></a>
+                                }@else {
+                                <a (click)="cambiarEstadoActivo(medico.usuario.id!)"><i
+                                        class="fa-solid fa-eye-slash"></i></a>
+                                }
                             </td>
                         </tr>
                         }
@@ -120,12 +127,18 @@
                             <td>{{ paciente.usuario.lastName }} {{ paciente.usuario.middleName || '' }}</td>
                             <td>{{ paciente.usuario.firstName }} </td>
                             <td>{{ paciente.usuario.gender === 'F' ? 'Femenino' : 'Masculino' }}</td>
-                            <td>{{ paciente.usuario.birthDate }}</td>
+                            <td>{{ paciente.usuario.birthDate | date:'yyyy-MM-dd' }}</td>
                             <td>{{ paciente.usuario.telefono }}</td>
                             <td>{{ paciente.usuario.email }}</td>
                             <td>
                                 <a (click)="abrirModalEditarPaciente(paciente)"><i class="fa-solid fa-user-pen"></i></a>
-                                <a (click)="eliminarUsuario(paciente.usuario.id!)"><i class="fa-solid fa-trash"></i></a>
+                                @if (paciente.usuario.activo) {
+                                <a (click)="cambiarEstadoActivo(paciente.usuario.id!)"><i
+                                        class="fa-solid fa-eye"></i></a>
+                                }@else {
+                                <a (click)="cambiarEstadoActivo(paciente.usuario.id!)"><i
+                                        class="fa-solid fa-eye-slash"></i></a>
+                                }
                             </td>
                         </tr>
                         }
