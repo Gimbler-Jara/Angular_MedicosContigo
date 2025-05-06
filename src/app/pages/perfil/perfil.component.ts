@@ -135,8 +135,6 @@ export class PerfilComponent {
     }).catch((error) => {
       console.log(error);
     });
-
-
   }
 
   seleccionarFecha(fecha: DiaSemana) {
@@ -153,6 +151,10 @@ export class PerfilComponent {
       this.horasFiltradas = data ?? [];
     });
     this.horaSeleccionada = null;
+  }
+
+  obtenerProximaFecha(diaSemana: string): string {
+    return obtenerProximaFecha(diaSemana);
   }
 
   seleccionarHora(hora: number) {
@@ -277,11 +279,13 @@ export class PerfilComponent {
       this.citasRegistradas = [];
       this.citasAtendidas = [];
 
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].estado.toLocaleLowerCase() != "atendido") {
-          this.citasRegistradas.push(data[i]);
-        }else{
-          this.citasAtendidas.push(data[i]);
+      if (data && data.length > 0) {
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].estado.toLocaleLowerCase() != "atendido") {
+            this.citasRegistradas.push(data[i]);
+          } else {
+            this.citasAtendidas.push(data[i]);
+          }
         }
       }
     })

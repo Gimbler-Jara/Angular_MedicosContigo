@@ -101,7 +101,7 @@
                             @for (fecha of fechasFiltradas; track $index) {
                             <div class="card-option" (click)="seleccionarFecha(fecha)"
                                 [class.active]="diaSeleccionada === fecha.dia">
-                                {{ fecha.dia }}
+                                {{ fecha.dia }} {{obtenerProximaFecha(fecha.dia) | date:'dd/MM/yyyy' }}
                             </div>
                             }
                         </div>

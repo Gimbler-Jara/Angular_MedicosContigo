@@ -179,3 +179,9 @@
         <button type="submit" [disabled]="formularioMedico.invalid">Registrar</button>
     </form>
 </section>
+
+@if (isLoading) {
+<div class="loading">
+    <app-loading></app-loading>
+</div>
+}

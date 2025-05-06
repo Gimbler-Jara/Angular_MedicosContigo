@@ -10,11 +10,12 @@ import { AuthService } from '../../services/auth.service';
 import Swal from 'sweetalert2';
 import { EmailService } from '../../services/email.service';
 import { getRegisterTemplateHTML } from '../../utils/template';
+import { LoadingComponent } from '../../pages/loading/loading.component';
 
 @Component({
   selector: 'app-registrar-medico',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass],
+  imports: [ReactiveFormsModule, NgClass, LoadingComponent],
   templateUrl: './registrar-medico.component.html',
   styleUrl: './registrar-medico.component.css'
 })
@@ -58,6 +59,7 @@ export class RegistrarMedicoComponent {
   especialidades: Especialidad[] = [];
   showPassword = false;
   showConfirm = false;
+  isLoading: boolean = false;
 
   ngOnInit(): void {
     this.typeDocumentService.listarTiposDeDocumentos().then(doc => {
@@ -84,7 +86,7 @@ export class RegistrarMedicoComponent {
 
   registrarMedico() {
     if (this.formularioMedico.invalid) return;
-
+    this.isLoading = true;
     const birthDate = new Date(this.formularioMedico.value.birth_date);
     const today = new Date();
     var age = today.getFullYear() - birthDate.getFullYear();
@@ -117,13 +119,14 @@ export class RegistrarMedicoComponent {
     console.log(usuario);
     this.usuarioService.registrarMedico(usuario).then(() => {
       console.log("medico registrado");
-
+      this.isLoading = false;
       var mensaje = getRegisterTemplateHTML(usuario.firstName, usuario.lastName, usuario.email!, usuario.password)
       this.emailService.message(usuario.email!, "Bienvenido a la plataforma de citas médicas. Su registro ha sido exitoso.", mensaje).then((value) => { }).catch((error) => { });
 
       this.formularioMedico.reset(this.formularioInicial);
       this.showAlert('success', 'Registro exitoso. El médico ha sido registrado correctamente.');
     }).catch((error) => {
+      this.isLoading = false;
       console.log("error al guardar el medico");
       console.error('Error al registrar médico:', error.error.message);
       this.showAlert('error', error.error.message);

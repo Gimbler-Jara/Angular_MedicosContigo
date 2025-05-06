@@ -1,7 +1,7 @@
 import { CommonModule, NgStyle } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, NgModel, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { UsuarioPacienteRequest } from '../../interface/Usuario/Usuario.interface';
 import { Subscription } from 'rxjs';
@@ -9,11 +9,14 @@ import { LocalStorageService } from '../../services/local-storage.service';
 import { EmailService } from '../../services/email.service';
 import { getRegisterTemplateHTML } from '../../utils/template';
 import Swal from 'sweetalert2';
+import { Document_Type } from '../../interface/DocumentType.interface';
+import { DocumentTypeService } from '../../services/document-type.service';
+import { LoadingComponent } from '../../pages/loading/loading.component';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink, LoadingComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
@@ -23,17 +26,16 @@ export class RegisterComponent {
   authService = inject(AuthService);
   localStorageService = inject(LocalStorageService);
   emailService = inject(EmailService);
+  router = inject(Router);
+  typeDocumentService = inject(DocumentTypeService);
 
   formularioUsuario: FormGroup;
   showPassword: boolean = false;
   showConfirm: boolean = false;
+  isLoading: boolean = false;
   rol: number = 0
 
-  tiposDocumento = [
-    { value: 1, label: 'DNI' },
-    { value: 2, label: 'Carnet de Extranjería' },
-    { value: 3, label: 'Pasaporte' }
-  ];
+  tiposDocumento: Document_Type[] = [];
 
   private formularioInicial = {
     document_type: "",
@@ -71,6 +73,12 @@ export class RegisterComponent {
     this.usuarioSubscription = this.localStorageService.usuario$.subscribe(usuario => {
       this.rol = usuario?.rol.id!;
     });
+
+    this.typeDocumentService.listarTiposDeDocumentos().then(doc => {
+      this.tiposDocumento = doc
+    }).catch((error) => {
+      console.log("Error al listar los documentos " + error);
+    });
   }
 
   togglePassword(): void {
@@ -90,7 +98,7 @@ export class RegisterComponent {
 
   registrarUsuario() {
     if (this.formularioUsuario.valid) {
-
+      this.isLoading = true;
       const birthDate = new Date(this.formularioUsuario.value.birth_date);
       const today = new Date();
       var age = today.getFullYear() - birthDate.getFullYear();
@@ -106,7 +114,7 @@ export class RegisterComponent {
         return;
       }
 
-      var usuario: UsuarioPacienteRequest = { 
+      var usuario: UsuarioPacienteRequest = {
         documentTypeId: Number(this.formularioUsuario.value.document_type),
         dni: this.formularioUsuario.value.dni,
         lastName: this.formularioUsuario.value.last_name,
@@ -121,13 +129,18 @@ export class RegisterComponent {
 
       this.usuarioService.registrarPaciente(usuario).then((response) => {
         console.log('Registro exitoso:', response);
-
+        this.isLoading = false;
         var mensaje = getRegisterTemplateHTML(usuario.firstName, usuario.lastName, usuario.email!, usuario.password)
         this.emailService.message(usuario.email!, "Bienvenido a la plataforma de citas médicas. Su registro ha sido exitoso.", mensaje).then((value) => { }).catch((error) => { });
 
         this.formularioUsuario.reset(this.formularioInicial);
         this.showAlert('success', 'Registro exitoso. Por favor verifica tu correo electrónico para más detalles.');
+
+        if (!this.authService.isAuthenticated()) {
+          this.router.navigate(['/login']);
+        }
       }).catch((error) => {
+        this.isLoading = false;
         console.error('Error al registrar paciente:', error.error.message);
         this.showAlert('error', error.error.message);
       });

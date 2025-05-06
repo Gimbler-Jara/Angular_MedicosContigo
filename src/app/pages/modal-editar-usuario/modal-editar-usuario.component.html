@@ -1,4 +1,3 @@
-
 <div class="modal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -32,11 +31,28 @@
                                 </select>
                             </div>
                             <!-- Input normal -->
-                            <div *ngSwitchDefault>
+                            <!-- Input normal -->
+                            <div *ngSwitchDefault class="mb-3">
                                 <label>{{ campo.label }}</label>
-                                <input [type]="campo.type || 'text'" class="form-control"
-                                    [formControlName]="campo.name" />
+                                <input [type]="campo.type || 'text'" class="form-control" [formControlName]="campo.name"
+                                    [ngClass]="{'is-invalid': formGroup.get(campo.name)?.invalid && formGroup.get(campo.name)?.touched}" />
+
+                                <!-- Mensajes de error -->
+                                <div *ngIf="formGroup.get(campo.name)?.invalid && formGroup.get(campo.name)?.touched">
+                                    <small class="text-danger" *ngIf="formGroup.get(campo.name)?.errors?.['required']">
+                                        El campo {{ campo.label.toLowerCase() }} es obligatorio.
+                                    </small>
+                                    <small class="text-danger"
+                                        *ngIf="formGroup.get(campo.name)?.errors?.['pattern'] && campo.name === 'telefono'">
+                                        Ingrese un teléfono válido de 9 dígitos.
+                                    </small>
+                                    <small class="text-danger"
+                                        *ngIf="formGroup.get(campo.name)?.errors?.['pattern'] && campo.name !== 'telefono'">
+                                        El valor ingresado no es válido.
+                                    </small>
+                                </div>
                             </div>
+
                         </ng-container>
                     </ng-container>
                     }
@@ -46,6 +62,3 @@
         </div>
     </div>
 </div>
-
-
-

@@ -35,7 +35,6 @@ export class CitasService {
   }
 
 
-  // 1. Listar citas agendadas por médico
   listarCitasAgendadas(idMedico: number): Promise<CitasAgendadasResponseDTO[]> {
     return lastValueFrom(this.http.get<CitasAgendadasResponseDTO[]>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.CITAS_AGENDADAS}/${idMedico}`).pipe(
       catchError(error => {
@@ -44,7 +43,6 @@ export class CitasService {
     ))
   }
 
-  // 2. Registrar disponibilidad
   registrarDisponibilidad(req: RegistrarDisponibilidadCitaDTO): Promise<EstructuraDisponibilidadCitaResponse> {
     const url = `${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.REGISTRAR_DISPONIBILIDAD}`;
     return lastValueFrom(
@@ -54,7 +52,7 @@ export class CitasService {
     );
   }
 
-  // 4. Agendar cita
+
   agendarCita(req: AgendarCitaMedicaDTO): Promise<void> {
     return lastValueFrom(
       this.http.post<void>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.AGENDAR_CITA}`, req)
@@ -64,7 +62,6 @@ export class CitasService {
     );
   }
 
-  // 10. Eliminar cita reservada desde perfil de paciente
   eliminarCitaReservado(idCita: number): Promise<void> {
     return lastValueFrom(
       this.http.delete<void>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.ELIMINAR_CITA_RESERVADO}/${idCita}`)
@@ -74,7 +71,6 @@ export class CitasService {
     );
   }
 
-  // 11. Listar citas reservadas por paciente
   listarCitasReservadasPorPaciente(idPaciente: number): Promise<CitasReservadasPorPacienteResponseDTO[]> {
     return lastValueFrom(
       this.http.get<CitasReservadasPorPacienteResponseDTO[]>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.CITAS_RESERVADAS_POR_PACIENTE}/${idPaciente}`)

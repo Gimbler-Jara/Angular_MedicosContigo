@@ -22,7 +22,7 @@ export class MedicoService {
     return lastValueFrom(this.http.get<MedicoDTO[]>(`${API}/${MEDICOS}`));
   }
 
-  listarPorMedico(idMedico: number): Promise<DisponibilidadesResponse> {
+  listarHorariosDeTranajoPorMedico(idMedico: number): Promise<DisponibilidadesResponse> {
     return lastValueFrom(this.http.get<DisponibilidadesResponse>(`${API}/${MEDICOS}/${ENDPOINTS_MEDICO.HORARIO_TRABAJO_MEDICO}/${idMedico}`));
   }
 

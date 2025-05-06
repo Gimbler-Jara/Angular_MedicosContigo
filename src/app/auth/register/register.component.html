@@ -8,7 +8,9 @@
                 <select formControlName="document_type">
                     <option value="" disabled selected>Tipo de Documento</option>
                     @for (tipo of tiposDocumento; track $index) {
-                    <option [value]="tipo.value">{{ tipo.label }}</option>
+                    <ng-container>
+                        <option [value]="tipo.id">{{ tipo.doc }}</option>
+                    </ng-container>
                     }
                 </select>
             </div>
@@ -169,3 +171,9 @@
     </span>
     }
 </section>
+
+@if (isLoading) {
+<div class="loading">
+    <app-loading></app-loading>
+</div>
+}

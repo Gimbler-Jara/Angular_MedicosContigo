@@ -88,12 +88,9 @@ export class AdminComponent {
     });
   }
 
-
-
-
   ngOnInit(): void {
-    this.listarMedicos();
-    this.listarPacientes();
+    // this.listarMedicos();
+    // this.listarPacientes();
     this.especialidadService.listarEspecialidades().then(data => {
       this.especialidades = data ?? [];
     }).catch((error) => {
@@ -112,6 +109,14 @@ export class AdminComponent {
 
   selectTab(tabKey: string) {
     this.selectedTab = tabKey;
+
+    if (this.selectedGestion === 'medico' && tabKey === 'listar') {
+      this.listarMedicos();
+    }
+
+    if (this.selectedGestion === 'paciente' && tabKey === 'listar') {
+      this.listarPacientes();
+    }
   }
 
   listarPacientes() {
@@ -126,16 +131,16 @@ export class AdminComponent {
   listarMedicos() {
     this.medicoService.listarMedicos().then(_medicos => {
       this.medicos = _medicos;
-
     }).catch((error) => {
       console.log("Error al listar los medicos " + error);
     })
   }
 
   cambiarEstadoActivo(id: number) {
-    this.authService.cambiarEstadoUsuario(id).then(() => {
+    this.authService.cambiarEstadoUsuario(id).then((data) => {
       this.listarMedicos();
       this.listarPacientes();
+      console.log(data.message);
     }).catch((error) => {
       console.log("Error al ocultar el paciente " + error);
     });
@@ -144,12 +149,10 @@ export class AdminComponent {
   abrirModalEditarPaciente(paciente: PacienteDTO) {
     this.modalFormGroup = this.fb.group({
       idUsuario: [paciente.idUsuario],
-      firstName: [paciente.usuario.firstName || '', Validators.required],
-      middleName: [paciente.usuario.middleName || ''],
-      lastName: [paciente.usuario.lastName || '', Validators.required],
-      telefono: [paciente.usuario.telefono || ''],
-      birthDate: [paciente.usuario.birthDate || '', Validators.required],
-      gender: [paciente.usuario.gender || '', Validators.required]
+      firstName: [paciente.usuario.firstName || '', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)]],
+      middleName: [paciente.usuario.middleName || '', [Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/)]],
+      lastName: [paciente.usuario.lastName || '', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)]],
+      telefono: [paciente.usuario.telefono || '', [Validators.required, Validators.pattern(/^\d{9}$/)]]
     });
 
     this.pacienteEditado = JSON.parse(JSON.stringify(paciente));
@@ -165,7 +168,17 @@ export class AdminComponent {
   }
 
 
+
   abrirModalEditarMedico(medico: MedicoDTO) {
+    this.medicoForm = this.fb.group({
+      firstName: ['', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)]],
+      middleName: ['', [Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/)]],
+      lastName: ['', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)]],
+      telefono: ['', [Validators.pattern(/^\d{9}$/)]],
+      especialidadId: [null, Validators.required]
+    });
+
+
     this.medicoEditado = JSON.parse(JSON.stringify(medico));
     this.modalTipo = 'medico';
     this.modalTitulo = 'Editar Médico';
@@ -185,9 +198,16 @@ export class AdminComponent {
   }
 
   guardarCambiosUsuario() {
+    if (!this.modalFormGroup.valid) {
+      this.showAlert('warning', 'Por favor, complete todos los campos correctamente.');
+      console.log(this.modalFormGroup.errors);
+      
+      return;
+    }
+
     if (this.modalTipo === 'paciente' && this.pacienteEditado) {
       const dto: PacienteActualizacionDTO = {
-        idUsuario: this.pacienteEditado.idUsuario, // Asegura el ID aquí
+        idUsuario: this.pacienteEditado.idUsuario,
         ...this.modalFormGroup.value
       };
 
@@ -199,7 +219,9 @@ export class AdminComponent {
             this.listarPacientes();
           }
         })
-        .catch(() => this.showAlert('error', 'Error al actualizar paciente'));
+        .catch(() => {
+          this.showAlert('error', 'Error al actualizar paciente')
+        });
     }
 
     if (this.modalTipo === 'medico' && this.medicoEditado) {
@@ -215,7 +237,10 @@ export class AdminComponent {
             this.listarMedicos();
           }
         })
-        .catch(() => this.showAlert('error', 'Error al actualizar médico'));
+        .catch((error) => {
+          this.showAlert('error', 'Error al actualizar médico')
+          console.log("Error al actualizar médico " + error.error.message);
+        });
     }
   }
 

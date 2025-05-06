@@ -11,9 +11,6 @@ import { LoginDTO } from '../DTO/Login.interface';
 export class AuthService {
   http = inject(HttpClient)
 
-
-
-
   logOut() {
     return new Promise<void>((resolve) => {
       resolve();

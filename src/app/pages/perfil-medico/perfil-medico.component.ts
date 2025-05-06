@@ -11,6 +11,7 @@ import { CambiarEstadoDisponibilidadDTO } from '../../DTO/CambiarEstadoDisponibi
 import { LocalStorageService } from '../../services/local-storage.service';
 import { DatePipe } from '@angular/common';
 import Swal from 'sweetalert2';
+import { Especialidad } from '../../interface/Especialidad.interface';
 
 @Component({
   selector: 'app-perfil-medico',
@@ -36,7 +37,7 @@ export class PerfilMedicoComponent {
   horas = ['08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM'];
 
   nuevaDisponibilidad = { dia: '', hora: '' };
-
+  especialidad: Especialidad = { id: 0, especialidad: '' };
   usuario: UsuarioResponse = this.localStorageService.getUsuarioStorage()!;
 
   ngOnInit(): void {
@@ -45,6 +46,9 @@ export class PerfilMedicoComponent {
     this.citasProgramadas.sort((a, b) => {
       return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
     });
+    this.medicoService.obtenerEspecialidadPorIdMedico(this.usuario.id!).then(e => {
+      this.especialidad = e;
+    }).catch((error) => {});
 
     this.listarCitasAgendadas();
     this.listarDisponiblidadesDeCita();
@@ -135,7 +139,7 @@ export class PerfilMedicoComponent {
   }
 
   async listarDisponiblidadesDeCita() {
-    this.medicoService.listarPorMedico(this.usuario.id!).then(res => {
+    this.medicoService.listarHorariosDeTranajoPorMedico(this.usuario.id!).then(res => {
       if (res.success) {
         this.disponibilidades = res.data;
       } else {
@@ -154,6 +158,18 @@ export class PerfilMedicoComponent {
       console.log("Error al marcar la cita como atendida " + error);
     });
   }
+
+  // componente.ts
+  esCitaPasada(fecha: string, hora: string): boolean {
+    const ahora = new Date();
+    console.log(ahora);
+    
+
+    const fechaHoraCita = new Date(`${fecha}T${hora}:00`);
+
+    return ahora >= fechaHoraCita;
+  }
+
 
   showAlert(icon: 'warning' | 'error' | 'success', message: string) {
     const Toast = Swal.mixin({

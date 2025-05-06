@@ -52,7 +52,7 @@
                         <tr>
                             <th>#</th>
                             <th>Documento</th>
-                            <th>N°</th>
+                            <th>N° Doc.</th>
                             <th>Apellidos</th>
                             <th>Nombres</th>
                             <th>Especialidad</th>
@@ -60,7 +60,7 @@
                             <th>Email</th>
                             <th>Género</th>
                             <th>Fecha de Nacimiento</th>
-                            <th>Avtivo</th>
+                            <th>Activo</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -108,13 +108,14 @@
                         <tr>
                             <th>#</th>
                             <th>Tipo Doc</th>
-                            <th>DNI</th>
+                            <th>N° Doc.</th>
                             <th>Apellidos</th>
                             <th>Nombres</th>
                             <th>Género</th>
                             <th>Fecha Nacimiento</th>
                             <th>Teléfono</th>
                             <th>Email</th>
+                            <th>Activo</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -130,6 +131,7 @@
                             <td>{{ paciente.usuario.birthDate | date:'yyyy-MM-dd' }}</td>
                             <td>{{ paciente.usuario.telefono }}</td>
                             <td>{{ paciente.usuario.email }}</td>
+                            <td>{{paciente.usuario.activo ? "SI":"NO"}}</td>
                             <td>
                                 <a (click)="abrirModalEditarPaciente(paciente)"><i class="fa-solid fa-user-pen"></i></a>
                                 @if (paciente.usuario.activo) {

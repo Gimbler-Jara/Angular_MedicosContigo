@@ -6,11 +6,12 @@ import { AuthService } from '../../services/auth.service';
 import { LoginDTO } from '../../DTO/Login.interface';
 import { LocalStorageService } from '../../services/local-storage.service';
 import Swal from 'sweetalert2';
+import { LoadingComponent } from '../../pages/loading/loading.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [NgClass, ReactiveFormsModule, RouterLink],
+  imports: [NgClass, ReactiveFormsModule, RouterLink, LoadingComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -20,6 +21,7 @@ export class LoginComponent {
   router = inject(Router)
   formularioLogin: FormGroup;
   showPassword: boolean = false;
+  isLoading: boolean = false;
 
   constructor(private fb: FormBuilder) {
     this.formularioLogin = this.fb.group({
@@ -34,6 +36,7 @@ export class LoginComponent {
 
   iniciarSesion(): void {
     if (this.formularioLogin.valid) {
+      this.isLoading = true;
       var user: LoginDTO = {
         email: this.formularioLogin.value.email,
         password: this.formularioLogin.value.password
@@ -51,13 +54,15 @@ export class LoginComponent {
             this.router.navigate(['/admin']);
           }
           this.formularioLogin.reset();
+          this.isLoading = false;
           this.showAlert('success', 'Inicio de sesión exitoso');
         }
       }).catch(error => {
         console.error('Error al iniciar sesión:', error)
+        console.log(error?.error?.message);
+        this.isLoading = false;
         this.showAlert('error', error?.error?.message || 'Error al iniciar sesión');
       });
-      
     }
   }
 
