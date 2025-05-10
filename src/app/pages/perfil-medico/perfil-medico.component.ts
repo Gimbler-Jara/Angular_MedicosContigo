@@ -128,6 +128,7 @@ export class PerfilMedicoComponent {
     this.citasService.listarCitasAgendadas(this.usuario.id!).then(dato => {
       this.citasProgramadas = [];
       for (let i = 0; i < dato.length; i++) {
+
         if (dato[i].estado.toLocaleLowerCase() == "reservado") {
           this.citasProgramadas.push(dato[i]);
         }
@@ -162,8 +163,6 @@ export class PerfilMedicoComponent {
   // componente.ts
   esCitaPasada(fecha: string, hora: string): boolean {
     const ahora = new Date();
-    console.log(ahora);
-    
 
     const fechaHoraCita = new Date(`${fecha}T${hora}:00`);
 

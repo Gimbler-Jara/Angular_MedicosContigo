@@ -86,20 +86,39 @@ export class RegistrarMedicoComponent {
 
   registrarMedico() {
     if (this.formularioMedico.invalid) return;
+
     this.isLoading = true;
-    const birthDate = new Date(this.formularioMedico.value.birth_date);
-    const today = new Date();
-    var age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    const dayDiff = today.getDate() - birthDate.getDate();
+    const birthDateRaw = this.formularioMedico.value.birthDate;
+    console.log('Raw birthDate:', birthDateRaw);
 
-    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-      age--;
-    }
+    if (birthDateRaw) {
+      const birthDate = new Date(birthDateRaw);
+      if (!isNaN(birthDate.getTime())) {
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        const dayDiff = today.getDate() - birthDate.getDate();
 
-    if (age > 80) {
-      this.showAlert('error', 'Seleccione correctamente su fecha de nacimiento.');
-      return;
+        if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+          age--;
+        }
+
+        console.log('Edad:', age);
+
+        if (age < 18) {
+          this.showAlert('error', 'El médico debe ser mayor de edad.');
+          this.isLoading = false;
+          return;
+        }
+
+        if (age > 80) {
+          this.showAlert('error', 'Seleccione correctamente su fecha de nacimiento.');
+          this.isLoading = false;
+          return;
+        }
+      } else {
+        console.error('Fecha de nacimiento inválida');
+      }
     }
 
     var usuario: UsuarioMedicoRequest = {

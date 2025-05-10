@@ -211,3 +211,4 @@ export function getCancelarCitaTemplaeHTML(nombrePaciente: string, apellidoPacie
 
     return message;
 }
+ 

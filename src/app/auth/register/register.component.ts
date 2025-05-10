@@ -109,8 +109,15 @@ export class RegisterComponent {
         age--;
       }
 
+      if (age < 18) {
+        this.showAlert('error', 'Debe ser mayor de edad para registrarse.');
+        this.isLoading = false;
+        return;
+      }
+
       if (age > 80) {
         this.showAlert('error', 'Seleccione correctamente su fecha de nacimiento.');
+        this.isLoading = false;
         return;
       }
 
