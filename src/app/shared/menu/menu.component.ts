@@ -1,8 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, NgModule } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Subscription } from 'rxjs';
 import { LocalStorageService } from '../../services/local-storage.service';
+import { NgModel } from '@angular/forms';
 
 @Component({
   selector: 'app-menu',

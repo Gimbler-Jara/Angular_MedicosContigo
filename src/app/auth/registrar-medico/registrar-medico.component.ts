@@ -89,35 +89,29 @@ export class RegistrarMedicoComponent {
 
     this.isLoading = true;
     const birthDateRaw = this.formularioMedico.value.birthDate;
-    console.log('Raw birthDate:', birthDateRaw);
 
     if (birthDateRaw) {
       const birthDate = new Date(birthDateRaw);
-      if (!isNaN(birthDate.getTime())) {
-        const today = new Date();
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const monthDiff = today.getMonth() - birthDate.getMonth();
-        const dayDiff = today.getDate() - birthDate.getDate();
 
-        if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-          age--;
-        }
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      const dayDiff = today.getDate() - birthDate.getDate();
 
-        console.log('Edad:', age);
+      if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age--;
+      }
 
-        if (age < 18) {
-          this.showAlert('error', 'El médico debe ser mayor de edad.');
-          this.isLoading = false;
-          return;
-        }
+      if (age < 18) {
+        this.showAlert('error', 'El médico debe ser mayor de edad.');
+        this.isLoading = false;
+        return;
+      }
 
-        if (age > 80) {
-          this.showAlert('error', 'Seleccione correctamente su fecha de nacimiento.');
-          this.isLoading = false;
-          return;
-        }
-      } else {
-        console.error('Fecha de nacimiento inválida');
+      if (age > 80) {
+        this.showAlert('error', 'Seleccione correctamente su fecha de nacimiento.');
+        this.isLoading = false;
+        return;
       }
     }
 

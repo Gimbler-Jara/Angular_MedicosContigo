@@ -7,7 +7,7 @@
 
 /* Panel izquierdo */
 .perfil-panel {
-  width: 280px;
+  max-width: 280px;
   background: #f8f9fa;
   border-radius: 10px;
   padding: 20px;
@@ -286,6 +286,98 @@
   color: #004d73;
 }
 
-.btn-atendido i{
+.btn-atendido i {
   padding-left: 10px;
+}
+
+/* *================================================= */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background: white;
+  padding: 25px 30px;
+  border-radius: 12px;
+  width: 500px;
+  max-width: 90%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h2 {
+  margin-bottom: 15px;
+  font-size: 20px;
+  color: #333;
+}
+
+textarea,
+input[type="text"] {
+  width: 100%;
+  margin: 8px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.medicamento-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.medicamento-group input {
+  flex: 1;
+}
+
+.btn-eliminar {
+  background-color: transparent;
+  border: none;
+  font-size: 18px;
+  color: red;
+  cursor: pointer;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.btn-principal {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-secundario {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-cancelar {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
 }

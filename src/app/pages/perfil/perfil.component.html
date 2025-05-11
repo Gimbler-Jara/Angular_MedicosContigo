@@ -10,9 +10,9 @@
         </div>
 
         <br>
-        <div class="btn">
+        <!-- <div class="btn">
             <a class="btn-edit" (click)="abrirModalEditarPacienteDesdePerfil()">Editar datos</a>
-        </div>
+        </div> -->
     </aside>
 
     <!-- Contenido principal -->
@@ -44,7 +44,8 @@
                                     ({{ cita.especialidad }})
                                 </span>
                             </div>
-                            <a (click)="cancelarCita(cita.id!)"><i class="fa-solid fa-trash"></i>Cancelar Cita</a>
+                            <a class="eliminar-cita" (click)="cancelarCita(cita.id!)"><i
+                                    class="fa-solid fa-trash"></i>Cancelar Cita</a>
                         </li>
                         }
                     </ul>
@@ -151,7 +152,8 @@
                                     ({{ cita.especialidad }})
                                 </span>
                             </div>
-                            <!-- <a (click)="cancelarCita(cita.id!)"><i class="fa-solid fa-trash"></i>Cancelar Cita</a> -->
+                            <a class="ver-receta" (click)="verDiagnosticoYReceta(cita.id!)"><i
+                                    class="fa-solid fa-eye"></i>Ver Diagnostico y Receta</a>
                         </li>
                         }
                     </ul>
@@ -170,3 +172,62 @@
     [especialidades]="especialidades" (guardar)="guardarCambiosUsuario()" (cerrar)="cerrarModalUsuario()">
 </app-modal-editar-usuario>
 }
+
+
+<!-- *======================= -->
+<!-- @if (mostrarModalDiagnosticoPaciente) {
+<div class="modal-overlay">
+    <div class="modal-content">
+        <h2>Detalles de atención médica</h2>
+
+        <p><strong>Paciente:</strong> {{ detalleCita.paciente }}</p>
+        <p><strong>Médico:</strong> {{ detalleCita.medico }}</p>
+        <p><strong>Fecha:</strong> {{ detalleCita.fecha }} a las {{ detalleCita.hora }}</p>
+
+        <hr>
+
+        <p><strong>Diagnóstico:</strong></p>
+        <p>{{ detalleCita.diagnostico }}</p>
+
+        <p><strong>Receta médica:</strong></p> 
+        <ul>
+            @for (item of detalleCita.receta.split(';'); track $index) {
+            <li>{{ item }}</li>
+            }
+        </ul>
+
+        <button class="btn-cancelar" (click)="mostrarModalDiagnosticoPaciente = false">Cerrar</button>
+    </div>
+</div>
+} -->
+
+<div class="modal-overlay" *ngIf="mostrarModalDiagnosticoPaciente">
+    <div class="modal-content elegante">
+        <div class="modal-header">
+            <h2><i class="fas fa-file-medical-alt"></i> Detalles de atención médica</h2>
+        </div>
+
+        <div class="modal-body">
+            <p><strong>🩺 Médico:</strong> {{ detalleCita.medico }}</p>
+            <p><strong>👤 Paciente:</strong> {{ detalleCita.paciente }}</p>
+            <p><strong>📅 Fecha:</strong> {{ detalleCita.fecha }}</p>
+            <p><strong>🕘 Hora:</strong> {{ detalleCita.hora }}</p>
+
+            <hr>
+
+            <p><strong>📝 Diagnóstico:</strong></p>
+            <blockquote>{{ detalleCita.diagnostico }}</blockquote>
+
+            <p><strong>💊 Receta médica:</strong></p>
+            <ul class="receta-lista">
+                <li *ngFor="let item of detalleCita.receta.split(';')">{{ item }}</li>
+            </ul>
+        </div>
+
+        <div class="modal-footer no-print">
+            <button class="btn-guardar" (click)="guardarPDF()">💾 Guardar PDF</button>
+            <button class="btn-imprimir" (click)="imprimirDetalleCita()">🖨 Imprimir</button>
+            <button class="btn-cerrar" (click)="mostrarModalDiagnosticoPaciente = false">Cerrar</button>
+        </div>
+    </div>
+</div>

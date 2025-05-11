@@ -12,6 +12,7 @@ import { LocalStorageService } from '../../services/local-storage.service';
 import { DatePipe } from '@angular/common';
 import Swal from 'sweetalert2';
 import { Especialidad } from '../../interface/Especialidad.interface';
+import { MedicamentoInputDTO } from '../../DTO/MedicamentoInput.interface';
 
 @Component({
   selector: 'app-perfil-medico',
@@ -40,6 +41,14 @@ export class PerfilMedicoComponent {
   especialidad: Especialidad = { id: 0, especialidad: '' };
   usuario: UsuarioResponse = this.localStorageService.getUsuarioStorage()!;
 
+  diagnostico: string = '';
+  medicamentos: MedicamentoInputDTO[] = [
+    { medicamento: '', indicaciones: '' }
+  ];
+
+  idCitaSeleccionada: number = 0;
+  mostrarModalDiagnostico: boolean = false;
+
   ngOnInit(): void {
     window.scrollTo(0, 0);
 
@@ -48,7 +57,7 @@ export class PerfilMedicoComponent {
     });
     this.medicoService.obtenerEspecialidadPorIdMedico(this.usuario.id!).then(e => {
       this.especialidad = e;
-    }).catch((error) => {});
+    }).catch((error) => { });
 
     this.listarCitasAgendadas();
     this.listarDisponiblidadesDeCita();
@@ -152,13 +161,40 @@ export class PerfilMedicoComponent {
   }
 
   marcarcitaComoAtendido(idCita: number) {
-    this.citasService.marcarcitaComoAtendido(idCita).then(() => {
+    //abrir modal para registrar el diagbostico y receta
+    this.idCitaSeleccionada = idCita;
+    this.mostrarModalDiagnostico = true;
+  }
+
+  confirmarAtencionCita() {
+    const request = {
+      diagnostico: this.diagnostico,
+      medicamentos: this.medicamentos
+    };
+
+    this.citasService.marcarcitaComoAtendido(this.idCitaSeleccionada, request).then(() => {
       this.listarCitasAgendadas();
       this.showAlert('success', 'Cita marcada como atendida');
+      this.mostrarModalDiagnostico = false;
+      this.resetFormulario();
     }).catch(error => {
       console.log("Error al marcar la cita como atendida " + error);
     });
   }
+
+  agregarMedicamento() {
+    this.medicamentos.push({ medicamento: '', indicaciones: '' });
+  }
+
+  eliminarMedicamento(index: number) {
+    this.medicamentos.splice(index, 1);
+  }
+
+  resetFormulario() {
+    this.diagnostico = '';
+    this.medicamentos = [{ medicamento: '', indicaciones: '' }];
+  }
+
 
   // componente.ts
   esCitaPasada(fecha: string, hora: string): boolean {

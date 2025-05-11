@@ -1,4 +1,4 @@
-import { AsyncPipe, DatePipe } from '@angular/common';
+import { AsyncPipe, CommonModule, DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { CitasService } from '../../services/citas.service';
 import { Especialidad } from '../../interface/Especialidad.interface';
@@ -21,11 +21,13 @@ import { LocalStorageService } from '../../services/local-storage.service';
 import { EmailService } from '../../services/email.service';
 import { getCancelarCitaTemplaeHTML, getReservarCitaTemplateHTML } from '../../utils/template';
 import Swal from 'sweetalert2';
+import { DetalleCitaAtendidaDTO } from '../../DTO/DetalleCitaAtendida.interface';
+
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [AsyncPipe, ReactiveFormsModule, ModalEditarUsuarioComponent, DatePipe],
+  imports: [AsyncPipe, ReactiveFormsModule, ModalEditarUsuarioComponent, DatePipe, CommonModule],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.css',
 })
@@ -77,6 +79,9 @@ export class PerfilComponent {
   diaSeleccionada: string | null = null;
   horaSeleccionada: number | null = null;
   fechaCitaSeleccionada: string | null = null;
+
+  mostrarModalDiagnosticoPaciente: boolean = false;
+  detalleCita!: DetalleCitaAtendidaDTO;
 
   formularioUsuario: FormGroup;
   // pacienteForm: FormGroup;
@@ -318,6 +323,101 @@ export class PerfilComponent {
       }
     });
   }
+
+
+  verDiagnosticoYReceta(idCita: number) {
+    this.citaService.verDetallesDeCitaAtendida(idCita).then((data) => {
+      this.detalleCita = data;
+      console.log(data);
+      this.mostrarModalDiagnosticoPaciente = true;
+    }).catch((error) => {
+      console.error("Error al obtener los detalles:", error);
+    });
+  }
+
+  imprimirDetalleCita() {
+    const original = document.querySelector('.modal-content');
+    const copia = original?.cloneNode(true) as HTMLElement;
+
+    // Elimina elementos con clase no-print del contenido clonado
+    copia?.querySelectorAll('.no-print').forEach(el => el.remove());
+
+    const ventana = window.open('', '_blank', 'width=800,height=600');
+    ventana?.document.write(`
+      <html>
+        <head>
+          <title>Receta médica</title>
+          <style>
+            body {
+              font-family: 'Segoe UI', sans-serif;
+              padding: 40px;
+              background: #fff;
+              color: #333;
+            }
+
+            h2 {
+              font-size: 22px;
+              color: #2d2d2d;
+              margin-bottom: 20px;
+              border-bottom: 1px solid #eaeaea;
+              padding-bottom: 10px;
+              text-align: center;
+            }
+
+            p {
+              font-size: 15px;
+              margin: 15px 0;
+            }
+
+            blockquote {
+              background: #f9f9f9;
+              padding: 10px 15px;
+              border-left: 4px solid #007bff;
+              margin: 10px 0;
+              font-style: italic;
+              color: #444;
+            }
+
+            ul {
+              padding-left: 40px;
+              margin-top: 10px;
+            }
+
+            li {
+              margin-bottom: 6px;
+              font-size: 14px;
+              color: #2b2b2b;
+            }
+
+            hr {
+              margin: 20px 0;
+              border: none;
+              border-top: 1px solid #ddd;
+            }
+
+            .section-title {
+              font-weight: bold;
+              margin-top: 20px;
+              margin-bottom: 8px;
+              display: block;
+            }
+          </style>
+        </head>
+        <body>
+          ${copia?.innerHTML}
+        </body>
+      </html>
+    `);
+    ventana?.document.close();
+    ventana?.print();
+
+  }
+
+  guardarPDF() {
+
+  }
+
+
 
 
   passwordsMatchValidator(group: AbstractControl): ValidationErrors | null {

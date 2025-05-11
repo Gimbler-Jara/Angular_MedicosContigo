@@ -33,7 +33,7 @@
             <h3>Citas programadas</h3>
 
             <!-- Filtro -->
-            <div class="filtro-citas">
+            <!-- <div class="filtro-citas">
                 <label for="filtroDia"><i class="fa-solid fa-filter"></i> Filtrar por día:</label>
                 <select id="filtroDia" [(ngModel)]="filtroDia" (change)="filtrarCitasPorDia()">
                     <option value="">-- Todos --</option>
@@ -41,7 +41,7 @@
                     <option [value]="dia">{{ dia }}</option>
                     }
                 </select>
-            </div>
+            </div> -->
 
 
             @if (citasFiltradas.length) {
@@ -64,16 +64,16 @@
                         <td style="text-align: center;"><span class="estado {{ cita.estado }}">{{ cita.estado }}</span>
                         </td>
                         <td style="text-align: center;">
-                            <a (click)=" marcarcitaComoAtendido(cita.id) " class="btn-atendido"
+                            <!-- <a (click)=" marcarcitaComoAtendido(cita.id) " class="btn-atendido"
                                 [style.pointerEvents]="!esCitaPasada(cita.fecha, cita.hora) ? 'none' : 'auto'"
                                 [style.opacity]="!esCitaPasada(cita.fecha, cita.hora) ? 0.5 : 1">
                                 Atendido
                                 <i class="fa-solid fa-check-to-slot"></i>
-                            </a>
-                            <!-- <a (click)=" marcarcitaComoAtendido(cita.id) " class="btn-atendido">
+                            </a> -->
+                            <a (click)=" marcarcitaComoAtendido(cita.id) " class="btn-atendido">
                                 Atendido
                                 <i class="fa-solid fa-check-to-slot"></i>
-                            </a> -->
+                            </a>
                         </td>
 
                     </tr>
@@ -148,3 +148,29 @@
         </div>
     </div>
 </div>
+
+
+@if (mostrarModalDiagnostico) {
+<div class="modal-overlay">
+    <div class="modal-content">
+        <h2>Registrar atención médica</h2>
+
+        <label for="diagnostico">Diagnóstico:</label>
+        <textarea id="diagnostico" [(ngModel)]="diagnostico" rows="3" placeholder="Describa el diagnóstico"></textarea>
+
+        @for (m of medicamentos; track $index) {
+        <div class="medicamento-group">
+            <input type="text" placeholder="Medicamento" [(ngModel)]="m.medicamento" />
+            <input type="text" placeholder="Indicaciones" [(ngModel)]="m.indicaciones" />
+            <button class="btn-eliminar" (click)="eliminarMedicamento($index)"><i class="fa-solid fa-trash"></i></button>
+        </div>
+        }
+
+        <div class="modal-buttons">
+            <button class="btn-secundario" (click)="agregarMedicamento()">➕ Agregar medicamento</button>
+            <button class="btn-principal" (click)="confirmarAtencionCita()">✅ Confirmar</button>
+            <button class="btn-cancelar" (click)="mostrarModalDiagnostico = false">Cancelar</button>
+        </div>
+    </div>
+</div>
+}

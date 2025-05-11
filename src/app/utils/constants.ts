@@ -13,6 +13,7 @@ export const ENDPOINTS_CITAS = {
     CAMBIAR_ESTADO_CITA_RESERVADO_ATENDIDO: "cambiar-estado-cita-reservado-atendido",                     //* PUT
     ELIMINAR_CITA_RESERVADO: "eliminar-cita",                                                             //* DELETE   
     CITAS_RESERVADAS_POR_PACIENTE: "citas-reservadas-paciente",                                           //* GET
+    HISTORIAL: "historial",                                                                               //* GET
 }
 
 // * /api/usuarios/***

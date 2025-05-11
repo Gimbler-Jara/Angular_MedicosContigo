@@ -9,6 +9,8 @@ import { CitasReservadasPorPacienteResponseDTO } from '../DTO/CitasReservadasPor
 import { RegistrarDisponibilidadCitaDTO } from '../DTO/RegistrarDisponibilidad.interface';
 import { EstructuraDisponibilidadCitaResponse } from '../DTO/disponibilidadCitaResponse.interface'
 import { DiaSemana } from '../interface/DiaSemana.interface';
+import { DiagnosticoRequestDTO } from '../DTO/DiagnosticoRequest.interface';
+import { DetalleCitaAtendidaDTO } from '../DTO/DetalleCitaAtendida.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -81,10 +83,18 @@ export class CitasService {
   }
 
 
-  marcarcitaComoAtendido(idCita: number): Promise<void> {
+  marcarcitaComoAtendido(idCita: number, request: DiagnosticoRequestDTO): Promise<void> {
     return lastValueFrom(
-      this.http.put<void>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.CAMBIAR_ESTADO_CITA_RESERVADO_ATENDIDO}/${idCita}`, null)
+      this.http.post<void>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.CAMBIAR_ESTADO_CITA_RESERVADO_ATENDIDO}/${idCita}`, request)
     );
+  }
+
+  verDetallesDeCitaAtendida(idcita: number): Promise<DetalleCitaAtendidaDTO> {
+    return lastValueFrom(this.http.get<DetalleCitaAtendidaDTO>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.HISTORIAL}/${idcita}`).pipe(
+      catchError(error => {
+        return throwError(() => error);
+      })
+    ))
   }
 
 }

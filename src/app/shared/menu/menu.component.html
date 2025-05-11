@@ -82,11 +82,28 @@
         </div>
     </div>
 
-    <div class="registrate">
+    <!-- <div class="registrate">
         <a [routerLink]="isLoggedIn ? ['/perfil'] : ['/login']" class="telefono-btn">
             <i class="fa-regular fa-calendar-plus"></i> Agendar cita
         </a>
+    </div> -->
+
+    @if (isLoggedIn && rol === 1) {
+    <div class="registrate">
+        <a [routerLink]="['/perfil']" class="telefono-btn">
+            <i class="fa-regular fa-calendar-plus"></i> Agendar cita
+        </a>
     </div>
+    }
+
+    @if (!isLoggedIn) {
+    <div class="registrate">
+        <a [routerLink]="['/login']" class="telefono-btn">
+            <i class="fa-regular fa-calendar-plus"></i> Agendar cita
+        </a>
+    </div>
+    }
+
 
 
     <div class="whatsapp">
