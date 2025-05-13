@@ -13,6 +13,8 @@ import { DatePipe } from '@angular/common';
 import Swal from 'sweetalert2';
 import { Especialidad } from '../../interface/Especialidad.interface';
 import { MedicamentoInputDTO } from '../../DTO/MedicamentoInput.interface';
+import { DiasSemanaService } from '../../services/dias-semana.service';
+import { DiaSemana } from '../../interface/DiaSemana.interface';
 
 @Component({
   selector: 'app-perfil-medico',
@@ -26,6 +28,7 @@ export class PerfilMedicoComponent {
   localStorageService = inject(LocalStorageService);
   citasService = inject(CitasService)
   medicoService = inject(MedicoService)
+  diasSemanaService = inject(DiasSemanaService);
   vista: 'citas' | 'agregar' | 'eliminar' = 'citas';
 
   citasProgramadas: CitasAgendadasResponseDTO[] = [];
@@ -33,11 +36,11 @@ export class PerfilMedicoComponent {
 
   disponibilidades: DisponibilidadCitaPorMedicoDTO[] = [];
 
-  filtroDia = '';
-  diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+  filtroDia = 0;
+  diasSemana: DiaSemana[] = [];
   horas = ['08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM'];
 
-  nuevaDisponibilidad = { dia: '', hora: '' };
+  nuevaDisponibilidad = { dia: 0, hora: '' };
   especialidad: Especialidad = { id: 0, especialidad: '' };
   usuario: UsuarioResponse = this.localStorageService.getUsuarioStorage()!;
 
@@ -56,8 +59,15 @@ export class PerfilMedicoComponent {
       return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
     });
     this.medicoService.obtenerEspecialidadPorIdMedico(this.usuario.id!).then(e => {
-      this.especialidad = e;
+      this.especialidad = e ?? [];
     }).catch((error) => { });
+
+    this.diasSemanaService.listarDiasSemana().then(dias => {
+      this.diasSemana = this.ordenarDiasSemana(dias);
+    }).catch((error) => {
+      console.log(error);
+    });
+
 
     this.listarCitasAgendadas();
     this.listarDisponiblidadesDeCita();
@@ -66,7 +76,7 @@ export class PerfilMedicoComponent {
   agregarDisponibilidad() {
     if (this.nuevaDisponibilidad.dia && this.nuevaDisponibilidad.hora) {
       this.medicoService.obtenerEspecialidadPorIdMedico(this.usuario.id!).then(e => {
-        var diaIndex = this.diasSemana.findIndex(d => d == this.nuevaDisponibilidad.dia);
+        var diaIndex = this.diasSemana.findIndex(d => d.id == this.nuevaDisponibilidad.dia);
         var horaIndex = this.horas.findIndex(d => d == this.nuevaDisponibilidad.hora);
 
         var cita: RegistrarDisponibilidadCitaDTO = {
@@ -76,11 +86,14 @@ export class PerfilMedicoComponent {
           idEspecialidad: e.id
         }
 
+        console.log(cita);
+
+
         this.citasService.registrarDisponibilidad(cita)
           .then(res => {
 
             if (res.success) {
-              this.nuevaDisponibilidad.dia = "";
+              this.nuevaDisponibilidad.dia = 0;
               this.nuevaDisponibilidad.hora = "";
               this.listarDisponiblidadesDeCita();
               this.showAlert('success', res.message);
@@ -113,18 +126,27 @@ export class PerfilMedicoComponent {
   }
 
   filtrarCitasPorDia() {
-    if (!this.filtroDia) {
+    if (this.filtroDia == 0) {
       this.citasFiltradas = this.citasProgramadas;
       return;
     }
 
-    var diaIndex = this.diasSemana.findIndex(d => d == this.filtroDia) + 1;
+    var diaIndex = this.diasSemana.findIndex(d => d.id == this.filtroDia);
 
     this.citasFiltradas = this.citasProgramadas.filter(cita => {
       let diaSemana = new Date(cita.fecha).getDay();
       return diaSemana == diaIndex;
     });
   }
+
+  ordenarDiasSemana(dias: { id: number, dia: string }[]): { id: number, dia: string }[] {
+    const ordenCorrecto = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+
+    return dias.sort((a, b) => {
+      return ordenCorrecto.indexOf(a.dia) - ordenCorrecto.indexOf(b.dia);
+    });
+  }
+
 
   async cambiarVista(nuevaVista: 'citas' | 'agregar' | 'eliminar') {
     this.vista = nuevaVista;
@@ -161,7 +183,6 @@ export class PerfilMedicoComponent {
   }
 
   marcarcitaComoAtendido(idCita: number) {
-    //abrir modal para registrar el diagbostico y receta
     this.idCitaSeleccionada = idCita;
     this.mostrarModalDiagnostico = true;
   }

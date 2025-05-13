@@ -42,3 +42,6 @@ export const DOCUMENT_TYPE = "document-types"                                  /
 export const ENDPOINT_ESPECIALIDADES = {
     ESPECIALIDADES: "especialidades"                                           //** GET
 }
+
+//DIAS SEMANA
+export const DIAS_SEMANA = "diasSemana";

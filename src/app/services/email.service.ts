@@ -22,9 +22,9 @@ export class EmailService {
     return new Promise<EmailJSResponseStatus>((resolve, reject) => {
       const templateParams = { email: email, subject, message };
 
-      emailjs.send(this.webServiceID, this.webTemplateID, templateParams, this.userID).then((value: EmailJSResponseStatus) => {
-        resolve(value);
-      });
+      // emailjs.send(this.webServiceID, this.webTemplateID, templateParams, this.userID).then((value: EmailJSResponseStatus) => {
+      //   resolve(value);
+      // });
     });
   } 
 
@@ -36,9 +36,9 @@ export class EmailService {
           cellphone: data.telefono,
           message: data.mensaje
         }
-        emailjs.send(this.contactanosServiceID, this.contactanosTemplateID, params, this.userID).then((value: EmailJSResponseStatus) => {
-          resolve(value);
-        });
+        // emailjs.send(this.contactanosServiceID, this.contactanosTemplateID, params, this.userID).then((value: EmailJSResponseStatus) => {
+        //   resolve(value);
+        // });
     });
   }
 }

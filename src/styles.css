@@ -15,3 +15,27 @@ html {
   scroll-behavior: smooth;
 }
 
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #printableArea,
+  #printableArea * {
+    visibility: visible;
+  }
+
+  #printableArea {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 30px;
+    background: white;
+    z-index: 9999;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}

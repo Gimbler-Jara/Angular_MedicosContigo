@@ -165,7 +165,7 @@ export class AdminComponent {
       { name: 'telefono', label: 'Teléfono' }
     ];
     this.mostrarModalUsuario = true;
-  }
+  } 
 
 
 

@@ -22,6 +22,8 @@ import { EmailService } from '../../services/email.service';
 import { getCancelarCitaTemplaeHTML, getReservarCitaTemplateHTML } from '../../utils/template';
 import Swal from 'sweetalert2';
 import { DetalleCitaAtendidaDTO } from '../../DTO/DetalleCitaAtendida.interface';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 
 @Component({
@@ -85,6 +87,8 @@ export class PerfilComponent {
 
   formularioUsuario: FormGroup;
   // pacienteForm: FormGroup;
+
+  fechaActual: Date = new Date();
 
   constructor(private fb: FormBuilder, private citaService: CitasService) {
     this.formularioUsuario = this.fb.group({
@@ -210,12 +214,10 @@ export class PerfilComponent {
   abrirModalEditarPaciente(paciente: PacienteDTO) {
     this.modalFormGroup = this.fb.group({
       idUsuario: [paciente.idUsuario],
-      firstName: [paciente.usuario.firstName || '', Validators.required],
-      middleName: [paciente.usuario.middleName || ''],
-      lastName: [paciente.usuario.lastName || '', Validators.required],
-      telefono: [paciente.usuario.telefono || ''],
-      birthDate: [paciente.usuario.birthDate || '', Validators.required],
-      gender: [paciente.usuario.gender || '', Validators.required]
+       firstName: [paciente.usuario.firstName || '', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)]],
+      middleName: [paciente.usuario.middleName || '', [Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/)]],
+      lastName: [paciente.usuario.lastName || '', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)]],
+      telefono: [paciente.usuario.telefono || '', [Validators.required, Validators.pattern(/^\d{9}$/)]]
     });
 
     this.pacienteEditado = JSON.parse(JSON.stringify(paciente));
@@ -336,88 +338,46 @@ export class PerfilComponent {
   }
 
   imprimirDetalleCita() {
-    const original = document.querySelector('.modal-content');
-    const copia = original?.cloneNode(true) as HTMLElement;
+    const originalTitle = document.title;
+    document.title = `Receta médica - ${this.detalleCita.paciente}`;
 
-    // Elimina elementos con clase no-print del contenido clonado
-    copia?.querySelectorAll('.no-print').forEach(el => el.remove());
+    window.print();
 
-    const ventana = window.open('', '_blank', 'width=800,height=600');
-    ventana?.document.write(`
-      <html>
-        <head>
-          <title>Receta médica</title>
-          <style>
-            body {
-              font-family: 'Segoe UI', sans-serif;
-              padding: 40px;
-              background: #fff;
-              color: #333;
-            }
-
-            h2 {
-              font-size: 22px;
-              color: #2d2d2d;
-              margin-bottom: 20px;
-              border-bottom: 1px solid #eaeaea;
-              padding-bottom: 10px;
-              text-align: center;
-            }
-
-            p {
-              font-size: 15px;
-              margin: 15px 0;
-            }
-
-            blockquote {
-              background: #f9f9f9;
-              padding: 10px 15px;
-              border-left: 4px solid #007bff;
-              margin: 10px 0;
-              font-style: italic;
-              color: #444;
-            }
-
-            ul {
-              padding-left: 40px;
-              margin-top: 10px;
-            }
-
-            li {
-              margin-bottom: 6px;
-              font-size: 14px;
-              color: #2b2b2b;
-            }
-
-            hr {
-              margin: 20px 0;
-              border: none;
-              border-top: 1px solid #ddd;
-            }
-
-            .section-title {
-              font-weight: bold;
-              margin-top: 20px;
-              margin-bottom: 8px;
-              display: block;
-            }
-          </style>
-        </head>
-        <body>
-          ${copia?.innerHTML}
-        </body>
-      </html>
-    `);
-    ventana?.document.close();
-    ventana?.print();
-
+    setTimeout(() => {
+      document.title = originalTitle;
+    }, 1000);
   }
 
   guardarPDF() {
+    const element = document.querySelector('.downland') as HTMLElement;
 
+    if (!element) return;
+
+    html2canvas(element, { scale: 2 }).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const margin = 20;
+
+      const usableWidth = pageWidth - 2 * margin;
+
+      const ratio = usableWidth / canvas.width;
+      const imgWidth = usableWidth;
+      const imgHeight = canvas.height * ratio;
+
+      const x = margin;
+      const y = 20;
+
+      pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
+      pdf.save(`Receta-medica-${this.detalleCita.paciente}.pdf`);
+    });
   }
-
-
 
 
   passwordsMatchValidator(group: AbstractControl): ValidationErrors | null {

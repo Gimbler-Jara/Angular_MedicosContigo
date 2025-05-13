@@ -33,15 +33,15 @@
             <h3>Citas programadas</h3>
 
             <!-- Filtro -->
-            <!-- <div class="filtro-citas">
+            <div class="filtro-citas">
                 <label for="filtroDia"><i class="fa-solid fa-filter"></i> Filtrar por día:</label>
                 <select id="filtroDia" [(ngModel)]="filtroDia" (change)="filtrarCitasPorDia()">
-                    <option value="">-- Todos --</option>
+                    <option value=0>-- Todos --</option>
                     @for (dia of diasSemana; track $index) {
-                    <option [value]="dia">{{ dia }}</option>
+                    <option [value]="dia.id">{{ dia.dia }}</option>
                     }
                 </select>
-            </div> -->
+            </div>
 
 
             @if (citasFiltradas.length) {
@@ -64,16 +64,16 @@
                         <td style="text-align: center;"><span class="estado {{ cita.estado }}">{{ cita.estado }}</span>
                         </td>
                         <td style="text-align: center;">
-                            <!-- <a (click)=" marcarcitaComoAtendido(cita.id) " class="btn-atendido"
+                            <a (click)=" marcarcitaComoAtendido(cita.id) " class="btn-atendido"
                                 [style.pointerEvents]="!esCitaPasada(cita.fecha, cita.hora) ? 'none' : 'auto'"
                                 [style.opacity]="!esCitaPasada(cita.fecha, cita.hora) ? 0.5 : 1">
                                 Atendido
                                 <i class="fa-solid fa-check-to-slot"></i>
-                            </a> -->
-                            <a (click)=" marcarcitaComoAtendido(cita.id) " class="btn-atendido">
+                            </a>
+                            <!-- <a (click)=" marcarcitaComoAtendido(cita.id) " class="btn-atendido">
                                 Atendido
                                 <i class="fa-solid fa-check-to-slot"></i>
-                            </a>
+                            </a> -->
                         </td>
 
                     </tr>
@@ -93,9 +93,9 @@
                 <div class="form-row">
                     <label for="dia">Día de la semana:</label>
                     <select id="dia" [(ngModel)]="nuevaDisponibilidad.dia">
-                        <option value="" disabled selected>Seleccione el dia</option>
+                        <option value=0 disabled selected>Seleccione el dia</option>
                         @for (dia of diasSemana; track $index) {
-                        <option [value]="dia">{{ dia }}</option>
+                        <option [value]="dia.id">{{ dia.dia }}</option>
                         }
                     </select>
                 </div>
@@ -162,7 +162,8 @@
         <div class="medicamento-group">
             <input type="text" placeholder="Medicamento" [(ngModel)]="m.medicamento" />
             <input type="text" placeholder="Indicaciones" [(ngModel)]="m.indicaciones" />
-            <button class="btn-eliminar" (click)="eliminarMedicamento($index)"><i class="fa-solid fa-trash"></i></button>
+            <button class="btn-eliminar" (click)="eliminarMedicamento($index)"><i
+                    class="fa-solid fa-trash"></i></button>
         </div>
         }
 
