@@ -374,6 +374,38 @@ DELIMITER ;
 
 
 -- ==========================================================
+DELIMITER //
+CREATE PROCEDURE sp_obtener_historial_por_paciente(
+    IN idPaciente INT
+)
+BEGIN
+    SELECT 
+        c.id AS id_cita,
+        c.id_paciente,
+        CONCAT(up.first_name, ' ', up.last_name, ' ', up.middle_name) AS paciente,
+        c.id_medico,
+        CONCAT(um.first_name, ' ', um.last_name, ' ', um.middle_name) AS medico,
+        c.fecha,
+        h.hora,
+        d.descripcion AS diagnostico,
+        GROUP_CONCAT(CONCAT(m.medicamento, ' (', m.indicaciones, ')') SEPARATOR '; ') AS receta
+    FROM tb_cita_medica c
+    JOIN tb_diagnostico d ON c.id = d.id_cita
+    JOIN tb_receta_medica r ON d.id = r.id_diagnostico
+    JOIN tb_medicamento_receta m ON m.id_receta = r.id
+    JOIN tb_medico md ON md.id_usuario = c.id_medico
+    JOIN tb_especialidad es ON es.id = md.especialidad_id
+    JOIN tb_usuario up ON up.id = c.id_paciente
+    JOIN tb_usuario um ON um.id = c.id_medico
+    JOIN tb_hora h ON h.id = c.idHora
+    WHERE up.id = idPaciente
+    GROUP BY 
+        c.id, c.id_medico, c.id_paciente, c.fecha, d.descripcion;
+END //
+DELIMITER ;
+
+
+-- ==========================================================
 -- ================= PACIENTE =========================================
 -- CALL sp_listar_especialidades();
 
@@ -413,6 +445,7 @@ DELIMITER ;
 -- CALL sp_agregar_medicamento_a_receta(@receta_id, 'Ibuprofeno 400mg', 'Cada 8h por 5 días si hay dolor');
 
 -- CALL sp_obtener_historial_por_cita(10);
+-- CALL sp_obtener_historial_por_paciente(2);
 
 
 

@@ -579,11 +579,26 @@ blockquote {
   font-size: 14px;
 }
 
+.qr-sello{
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  align-items: end;
+}
+
 .firma-medico {
   margin-top: 40px;
   text-align: center;
   font-size: 14px;
   font-style: italic;
+}
+
+.qr{
+  text-align: center;
+}
+
+.qr p{
+  font-size: 12px;
 }
 
 .modal-footer {

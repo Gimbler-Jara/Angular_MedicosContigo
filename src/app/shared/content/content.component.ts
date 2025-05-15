@@ -11,5 +11,5 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './content.component.css'
 })
 export class ContentComponent {
-
+  
 }

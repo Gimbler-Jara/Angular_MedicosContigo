@@ -1,0 +1,56 @@
+<!-- Verificacion de receta (solo vista de lectura) -->
+<div class="modal-overlay">
+    <div class="modal-content elegante">
+        <div class="downland" id="printableArea">
+            <!-- Encabezado -->
+            <div class="receta-header">
+                @if (detalleCita) {
+                <h3 class="titulo">Receta Médica Electrónica</h3>
+                <p><strong>Fecha de emisión:</strong> {{ fechaActual | date:'dd-MM-yyyy' }}</p>
+                <br>
+                <p class="titulo"><strong>RECETA AUTÉNTICA</strong></p>
+                }@else {
+                <p><strong class="titulo">RECETA NO REGISTRADA EN LA CLÍNICA</strong></p>
+                }
+            </div>
+
+            @if (detalleCita) {
+            <!-- Datos del paciente -->
+            <div class="datos-paciente">
+                <p><strong>🩺 Médico:</strong> {{ detalleCita.medico }}</p>
+                <p><strong>👤 Paciente:</strong> {{ detalleCita.paciente }}</p>
+                <p><strong>📅 Fecha de atención:</strong> {{ detalleCita.fecha | date:'dd-MM-yyyy' }}</p>
+                <p><strong>🕓 Hora de atención:</strong> {{ detalleCita.hora }}</p>
+            </div>
+
+            <hr />
+            <br>
+
+            <!-- Diagnóstico -->
+            <div class="diagnostico">
+                <p><strong>📝 Diagnóstico:</strong></p>
+                <blockquote>{{ detalleCita.diagnostico }}</blockquote>
+            </div>
+
+            <br>
+
+            <!-- Receta -->
+            <div class="receta">
+                <p><strong>💊 Receta médica:</strong></p>
+                <ul class="receta-lista">
+                    <li *ngFor="let item of detalleCita.receta.split(';')">{{ item }}</li>
+                </ul>
+            </div>
+
+            <br><br>
+
+            <!-- Firma médica -->
+            <div class="firma-medico">
+                <p>__________________________</p>
+                <p><strong>{{ detalleCita.medico }}</strong></p>
+                <p><em>Médico tratante</em></p>
+            </div>
+            }
+        </div>
+    </div>
+</div>

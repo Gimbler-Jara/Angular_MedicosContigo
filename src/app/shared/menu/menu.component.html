@@ -43,22 +43,22 @@
 
 
             @if (isAutentiticared) {
-            @switch (rol) {
-            @case (1){
+            @switch (rolUsuario) {
+            @case ("Paciente"){
             <div class="contacto">
                 <a [routerLink]="['/perfil']" class="telefono-btn">
                     <i class="fa-solid fa-user-tie"></i>
                 </a>
             </div>
             }
-            @case (2){
+            @case ("Médico"){
             <div class="contacto">
                 <a [routerLink]="['/perfil-medico']" class="telefono-btn">
                     <i class="fa-solid fa-user-tie"></i>
                 </a>
             </div>
             }
-            @case (3){
+            @case ("Administrador"){
             <div class="contacto">
                 <a [routerLink]="['/admin']" class="telefono-btn">
                     <i class="fa-solid fa-user-tie"></i>
@@ -88,7 +88,7 @@
         </a>
     </div> -->
 
-    @if (isLoggedIn && rol === 1) {
+    @if (isLoggedIn && rolUsuario === "Paciente") {
     <div class="registrate">
         <a [routerLink]="['/perfil']" class="telefono-btn">
             <i class="fa-regular fa-calendar-plus"></i> Agendar cita

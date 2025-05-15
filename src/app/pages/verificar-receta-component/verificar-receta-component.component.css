@@ -1,0 +1,94 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgb(0, 0, 0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content.elegante {
+  background: #fff;
+  padding: 25px 30px;
+  border-radius: 16px;
+  width: 500px;
+  max-width: 95%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.receta-header {
+  text-align: center;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.receta-header .titulo {
+  color: #007bff;
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.datos-paciente {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.diagnostico,
+.receta {
+  margin-bottom: 20px;
+}
+
+blockquote {
+  background: #f9f9f9;
+  padding: 10px 15px;
+  border-left: 4px solid #007bff;
+  margin: 10px 0;
+  font-style: italic;
+  color: #444;
+}
+
+.receta-lista {
+  padding-left: 20px;
+  margin-top: 5px;
+}
+
+.receta-lista li {
+  margin-left: 20px;
+  margin-bottom: 5px;
+  color: #2b2b2b;
+  font-size: 14px;
+}
+
+.qr-sello{
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  align-items: end;
+}
+
+.firma-medico {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 14px;
+  font-style: italic;
+}
+
+.qr{
+  text-align: center;
+}
+
+.qr p{
+  font-size: 12px;
+}
+
+.modal-footer {
+  text-align: right;
+  margin-top: 20px;
+}

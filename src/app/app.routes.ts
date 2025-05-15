@@ -14,6 +14,7 @@ import { PerfilMedicoComponent } from './pages/perfil-medico/perfil-medico.compo
 import { RegistrarMedicoComponent } from './auth/registrar-medico/registrar-medico.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { authGuard } from './guard/auth.guard';
+import { VerificarRecetaComponentComponent } from './pages/verificar-receta-component/verificar-receta-component.component';
 
 export const routes: Routes = [
     {
@@ -70,10 +71,15 @@ export const routes: Routes = [
                 path: "perfil-medico",
                 component: PerfilMedicoComponent,
                 canActivate: [authGuard],
-            }, {
+            },
+            {
                 path: "admin",
                 component: AdminComponent,
                 canActivate: [authGuard],
+            },
+            {
+                path: "verificar-receta/:id",
+                component: VerificarRecetaComponentComponent,
             }
         ]
     },

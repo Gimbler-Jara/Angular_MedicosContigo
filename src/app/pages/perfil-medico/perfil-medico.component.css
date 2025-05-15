@@ -290,7 +290,27 @@
   padding-left: 10px;
 }
 
-/* *================================================= */
+.btn-historial {
+  padding: 5px 15px;
+  color: #0B446E;
+  border-radius: 10px;
+  background-color: #e0f7fa;
+  border: 1px solid #b2ebf2;
+  text-decoration: none;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.btn-historial:hover {
+  background-color: #b2ebf2;
+  color: #004d73;
+}
+
+.btn-historial i {
+  padding-left: 10px;
+}
+
+/* *====================  MODAL MARCAR COMO ATENDIDO ============================= */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -381,4 +401,94 @@ input[type="text"] {
   padding: 10px 14px;
   border-radius: 8px;
   cursor: pointer;
+}
+
+/* *================ modal historial paciente */
+.modal-content.elegante {
+  background: #fff;
+  padding: 25px 30px;
+  border-radius: 12px;
+  max-width: 90%;
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
+}
+
+.modal-body{
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.historial-modal {
+  width: 700px;
+  max-height: 80vh;
+  overflow-y: auto;
+  border-radius: 16px;
+  padding: 30px;
+}
+
+.modal-header {
+  margin-bottom: 20px;
+}
+
+.modal-header h2 {
+  font-size: 20px;
+  margin: 0;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #007bff;
+  color: #007bff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.historial-item {
+  margin-bottom: 25px;
+}
+
+.fecha-hora p {
+  margin: 4px 0;
+  font-size: 14px;
+  margin: 10px 0;
+}
+
+blockquote {
+  background: #f9f9f9;
+  padding: 10px 15px;
+  border-left: 4px solid #007bff;
+  margin: 10px 0;
+  font-style: italic;
+  color: #444;
+}
+
+.receta-lista {
+  padding-left: 20px;
+  margin-top: 10px;
+}
+
+.receta-lista li {
+  margin-bottom: 5px;
+  margin-top: 5px;
+  font-size: 14px;
+  color: #2b2b2b;
+}
+
+.separador {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin-top: 25px;
+}
+
+.btn-cerrar {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-cerrar:hover {
+  background-color: #c82333;
 }

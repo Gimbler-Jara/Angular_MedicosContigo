@@ -8,7 +8,7 @@
             <p><i class="fa-solid fa-envelope"></i> {{usuario.email}}</p>
             <p><i class="fa-solid fa-phone"></i> +51 {{usuario.telefono}}</p>
             <p><i class="fa-solid fa-id-badge"></i> CMP: 123456</p>
-            <p><i class="fas fa-user-shield"></i> {{ usuario.rol.rol }}</p>
+            <p><i class="fas fa-user-shield"></i> {{ rol }}</p>
         </div>
     </aside>
 
@@ -58,7 +58,7 @@
                 <tbody>
                     @for (cita of citasFiltradas; track $index) {
                     <tr>
-                        <td style="text-align: center;">{{ cita.fecha | date:'yyyy-MM-dd' }}</td>
+                        <td style="text-align: center;">{{obtenerDiaSemana(cita.fecha)}} {{ cita.fecha | date:'dd-MM-yyyy' }}</td>
                         <td style="text-align: center;">{{ cita.hora }}</td>
                         <td style="text-align: center;">{{ cita.pacienteNombre }}</td>
                         <td style="text-align: center;"><span class="estado {{ cita.estado }}">{{ cita.estado }}</span>
@@ -74,6 +74,10 @@
                                 Atendido
                                 <i class="fa-solid fa-check-to-slot"></i>
                             </a> -->
+                            <a (click)=" listarHistorialPaciente(cita.pacienteID) " class="btn-historial">
+                                Ver Historial
+                                <i class="fa-solid fa-list-ul"></i>
+                            </a>
                         </td>
 
                     </tr>
@@ -175,3 +179,41 @@
     </div>
 </div>
 }
+
+
+
+<!-- *======================================================== mostrar historial -->
+<div class="modal-overlay" *ngIf="mostrarHistorial">
+    <div class="modal-content elegante historial-modal">
+        <div class="modal-header">
+            <h2><i class="fas fa-history"></i> Historial de citas del paciente</h2>
+        </div>
+
+        <div class="modal-body">
+            <div *ngFor="let item of historialPaciente" class="historial-item">
+                <div class="fecha-hora">
+                    <p><i class="fas fa-calendar-alt"></i> <strong>Fecha:</strong> {{ item.fecha }}</p>
+                    <p><i class="fas fa-clock"></i> <strong>Hora:</strong> {{ item.hora }}</p>
+                </div>
+
+                <p><i class="fas fa-notes-medical"></i> <strong>Diagnóstico:</strong></p>
+                <blockquote>{{ item.diagnostico }}</blockquote>
+
+                <p><i class="fas fa-capsules"></i> <strong>Receta:</strong></p>
+                <ul class="receta-lista">
+                    <li *ngFor="let med of item.receta.split(';')">{{ med.trim() }}</li>
+                </ul>
+
+                <hr class="separador" />
+            </div>
+
+            <div *ngIf="historialPaciente.length === 0" class="text-center">
+                <p>No hay historial disponible.</p>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-cerrar" (click)="cerrarHistorial()">Cerrar</button>
+        </div>
+    </div>
+</div>

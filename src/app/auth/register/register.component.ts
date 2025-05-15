@@ -71,7 +71,7 @@ export class RegisterComponent {
 
   ngOnInit(): void {
     this.usuarioSubscription = this.localStorageService.usuario$.subscribe(usuario => {
-      this.rol = usuario?.rol.id!;
+      // this.rol = usuario?.rol.id!;
     });
 
     this.typeDocumentService.listarTiposDeDocumentos().then(doc => {

@@ -3,7 +3,7 @@ export interface CitasAgendadasResponseDTO {
     fecha: string,
     hora: string,
     estado: string,
-    pacienteID: string,
+    pacienteID: number,
     pacienteNombre: string,
     medicoId: number,
     medicoNombre: string;

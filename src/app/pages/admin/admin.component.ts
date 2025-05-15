@@ -16,6 +16,7 @@ import { EspecialidadService } from '../../services/especialidad.service';
 import { ModalEditarUsuarioComponent } from '../modal-editar-usuario/modal-editar-usuario.component';
 import { LocalStorageService } from '../../services/local-storage.service';
 import Swal from 'sweetalert2';
+import { UsuarioStorage } from '../../DTO/UsuarioStorage.interface';
 
 @Component({
   selector: 'app-admin',
@@ -35,6 +36,7 @@ export class AdminComponent {
   selectedGestion: 'medico' | 'paciente' | 'admin' = 'medico';
   selectedTab: string = 'registrar';
   especialidades: Especialidad[] = [];
+  rol: string = "";
 
   tabs = {
     medico: [
@@ -57,7 +59,7 @@ export class AdminComponent {
   pacienteForm: FormGroup;
   medicoForm: FormGroup;
 
-  usuario: UsuarioResponse = this.localStorageService.getUsuarioStorage()!;
+  usuario: UsuarioStorage = this.localStorageService.getUsuario()!;
 
   modalTipo: 'paciente' | 'medico' | null = null;
   modalTitulo: string = '';
@@ -96,6 +98,8 @@ export class AdminComponent {
     }).catch((error) => {
       console.log("Error al listar las especialidades " + error);
     });
+
+    this.rol = this.authService.getUserRole() ?? '';
   }
 
   get currentTabs() {
@@ -165,7 +169,7 @@ export class AdminComponent {
       { name: 'telefono', label: 'Teléfono' }
     ];
     this.mostrarModalUsuario = true;
-  } 
+  }
 
 
 
@@ -201,7 +205,7 @@ export class AdminComponent {
     if (!this.modalFormGroup.valid) {
       this.showAlert('warning', 'Por favor, complete todos los campos correctamente.');
       console.log(this.modalFormGroup.errors);
-      
+
       return;
     }
 

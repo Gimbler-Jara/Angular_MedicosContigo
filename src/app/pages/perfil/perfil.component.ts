@@ -24,12 +24,15 @@ import Swal from 'sweetalert2';
 import { DetalleCitaAtendidaDTO } from '../../DTO/DetalleCitaAtendida.interface';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { UsuarioStorage } from '../../DTO/UsuarioStorage.interface';
+import { QRCodeComponent } from 'angularx-qrcode';
+
 
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [AsyncPipe, ReactiveFormsModule, ModalEditarUsuarioComponent, DatePipe, CommonModule],
+  imports: [AsyncPipe, ReactiveFormsModule, ModalEditarUsuarioComponent, DatePipe, CommonModule, QRCodeComponent],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.css',
 })
@@ -44,7 +47,7 @@ export class PerfilComponent {
 
   vista: 'citas' | 'reservar' | 'extra' = 'citas';
 
-  usuario: UsuarioResponse = this.localStorageService.getUsuarioStorage()!;
+  usuario: UsuarioStorage = this.localStorageService.getUsuario()!;
 
   citasRegistradas: CitasReservadasPorPacienteResponseDTO[] = []
   citasAtendidas: CitasReservadasPorPacienteResponseDTO[] = []
@@ -53,6 +56,8 @@ export class PerfilComponent {
   especialidades$ = this.especialidadService.listarEspecialidades();
   especialidadSeleccionada?: Especialidad;
   // medicos = this.citasService.getMedicos();
+  rol: string = "";
+  qrData: string = '';
 
   showPassword: boolean = false;
   showConfirm: boolean = false;
@@ -118,6 +123,8 @@ export class PerfilComponent {
     }).catch((error) => {
       console.log("Error al listar las especialidades " + error);
     });
+
+    this.rol = this.authService.getUserRole() ?? '';
   }
 
   seleccionarEspecialidad(esp: Especialidad) {
@@ -153,9 +160,9 @@ export class PerfilComponent {
     this.diaSeleccionada = fecha.dia;
     if (this.medicoSeleccionado?.id == undefined)
       return;
-    console.log(fecha);
+    // console.log(fecha);
 
-    console.log(dia);
+    // console.log(dia);
     this.medicoService.listarHorasDisponibles(this.medicoSeleccionado.id, dia).then(data => {
       this.horasFiltradas = data ?? [];
     });
@@ -202,19 +209,21 @@ export class PerfilComponent {
   }
 
   abrirModalEditarPacienteDesdePerfil() {
-    const pacienteFake: PacienteDTO = {
-      idUsuario: this.usuario.id!,
-      usuario: this.usuario
-    };
+    this.authService.getPerfilUsuario().subscribe(usuario => {
+      const pacienteFake: PacienteDTO = {
+        idUsuario: usuario.id!,
+        usuario: usuario
+      };
 
-    this.abrirModalEditarPaciente(pacienteFake);
+      this.abrirModalEditarPaciente(pacienteFake);
+    });
   }
 
 
   abrirModalEditarPaciente(paciente: PacienteDTO) {
     this.modalFormGroup = this.fb.group({
       idUsuario: [paciente.idUsuario],
-       firstName: [paciente.usuario.firstName || '', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)]],
+      firstName: [paciente.usuario.firstName || '', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)]],
       middleName: [paciente.usuario.middleName || '', [Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/)]],
       lastName: [paciente.usuario.lastName || '', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)]],
       telefono: [paciente.usuario.telefono || '', [Validators.required, Validators.pattern(/^\d{9}$/)]]
@@ -240,8 +249,6 @@ export class PerfilComponent {
         ...this.modalFormGroup.value
       };
 
-      console.log(dto);
-
       this.pacienteService.actualizarPaciente(dto.idUsuario, dto)
         .then(res => {
           if (res.success) {
@@ -250,7 +257,15 @@ export class PerfilComponent {
             this.usuario.lastName = dto.lastName;
             this.usuario.telefono = dto.telefono;
 
-            this.localStorageService.setUsuario(this.usuario);
+            var u: UsuarioStorage = {
+              id: this.usuario.id,
+              firstName: this.usuario.firstName,
+              lastName: this.usuario.lastName,
+              middleName: this.usuario.middleName!,
+              email: this.usuario.email!,
+              telefono: this.usuario.telefono!
+            }
+            this.localStorageService.setUsuario(u);
             this.cerrarModalUsuario();
             this.showAlert('success', "Datos actualizados correctamente");
           }
@@ -281,7 +296,6 @@ export class PerfilComponent {
 
   async listarCitasPorPaciente() {
     this.citaService.listarCitasReservadasPorPaciente(this.usuario.id!).then((data) => {
-      console.log(data);
 
       this.citasRegistradas = [];
       this.citasAtendidas = [];
@@ -295,6 +309,8 @@ export class PerfilComponent {
           }
         }
       }
+
+      this.citasAtendidas.reverse();
     })
   }
 
@@ -330,7 +346,7 @@ export class PerfilComponent {
   verDiagnosticoYReceta(idCita: number) {
     this.citaService.verDetallesDeCitaAtendida(idCita).then((data) => {
       this.detalleCita = data;
-      console.log(data);
+      this.qrData = `https://xzqnmbqb-4200.brs.devtunnels.ms/verificar-receta/${this.detalleCita.idCita}`;
       this.mostrarModalDiagnosticoPaciente = true;
     }).catch((error) => {
       console.error("Error al obtener los detalles:", error);

@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { LoginDTO } from '../../DTO/Login.interface';
-import { LocalStorageService } from '../../services/local-storage.service';
 import Swal from 'sweetalert2';
 import { LoadingComponent } from '../../pages/loading/loading.component';
 
@@ -17,7 +16,6 @@ import { LoadingComponent } from '../../pages/loading/loading.component';
 })
 export class LoginComponent {
   authService = inject(AuthService)
-  localStorageService = inject(LocalStorageService);
   router = inject(Router)
   formularioLogin: FormGroup;
   showPassword: boolean = false;
@@ -44,15 +42,16 @@ export class LoginComponent {
       console.log('Datos enviados:', user);
       this.authService.login(user).then(usuario => {
         if (usuario) {
-          this.localStorageService.setUsuario(usuario);
-
-          if (usuario.rol.id == 1) {
+          if (usuario.rol?.id === 1) {
             this.router.navigate(['/perfil']);
-          } else if (usuario.rol.id == 2) {
+          } else if (usuario.rol?.id === 2) {
             this.router.navigate(['/perfil-medico']);
-          } else {
+          } else if (usuario.rol?.id === 3) {
             this.router.navigate(['/admin']);
+          } else {
+            this.showAlert('error', 'Rol de usuario no reconocido');
           }
+
           this.formularioLogin.reset();
           this.isLoading = false;
           this.showAlert('success', 'Inicio de sesión exitoso');
@@ -66,7 +65,7 @@ export class LoginComponent {
     }
   }
 
-  showAlert(icon:'warning'| 'error'| 'success',message: string) {
+  showAlert(icon: 'warning' | 'error' | 'success', message: string) {
     const Toast = Swal.mixin({
       toast: true,
       position: "top-end",

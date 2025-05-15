@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PacienteDTO } from '../DTO/paciente.interface';
-import { lastValueFrom, map } from 'rxjs';
-import { API, PACIENTES } from '../utils/constants';
+import { catchError, lastValueFrom, map, throwError } from 'rxjs';
+import { API, CITA_MEDICA, ENDPOINTS_CITAS, PACIENTES } from '../utils/constants';
 import { PacienteActualizacionDTO } from '../DTO/PacienteActualizacion.interface';
+import { DetalleCitaAtendidaDTO } from '../DTO/DetalleCitaAtendida.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -21,4 +22,13 @@ export class PacienteService {
       this.http.put<{ success: boolean; message: string }>(`${API}/${PACIENTES}/${idUsuario}`, paciente)
     );
   }
+
+   verDetallesDeCitaAtendidaPorpaciente(idPaciente: number): Promise<DetalleCitaAtendidaDTO[]> {
+      return lastValueFrom(this.http.get<DetalleCitaAtendidaDTO[]>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.HISTORIAL_PACIENTE}/${idPaciente}`).pipe(
+        catchError(error => {
+          return throwError(() => error);
+        })
+      ))
+    }
+  
 }

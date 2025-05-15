@@ -14,10 +14,12 @@ import { NgModel } from '@angular/forms';
 })
 export class MenuComponent {
 
+
   isAutentiticared: boolean = false;
   private usuarioSubscription!: Subscription;
 
-  rol: number = 0;
+  // rol: number = 0;
+  rolUsuario: string = "";
 
   localStorageService = inject(LocalStorageService);
 
@@ -30,9 +32,11 @@ export class MenuComponent {
 
   ngOnInit(): void {
     this.usuarioSubscription = this.localStorageService.usuario$.subscribe(usuario => {
-      this.isAutentiticared = !!usuario;
-      this.rol = usuario?.rol.id!;
+      this.isAutentiticared = this.authService.isAuthenticated();
+      // this.rol = usuario?.rol.id!;
     });
+
+    this.rolUsuario = this.authService.getUserRole()!;
   }
 
   ngOnDestroy(): void {
@@ -42,7 +46,7 @@ export class MenuComponent {
 
   logOut() {
     this.authService.logOut().then(() => {
-      this.localStorageService.setUsuario(null);
+      this.localStorageService.logOut();
     });
     this.router.navigate(['/login']);
   }

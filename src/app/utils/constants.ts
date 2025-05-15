@@ -14,6 +14,7 @@ export const ENDPOINTS_CITAS = {
     ELIMINAR_CITA_RESERVADO: "eliminar-cita",                                                             //* DELETE   
     CITAS_RESERVADAS_POR_PACIENTE: "citas-reservadas-paciente",                                           //* GET
     HISTORIAL: "historial",                                                                               //* GET
+    HISTORIAL_PACIENTE: "historial-paciente",                                                             //* GET
 }
 
 // * /api/usuarios/***

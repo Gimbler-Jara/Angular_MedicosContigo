@@ -6,7 +6,7 @@
             <h3>{{ usuario.firstName }} {{ usuario.lastName }} {{usuario.middleName}}</h3>
             <p><i class="fas fa-envelope"></i> {{ usuario.email }}</p>
             <p><i class="fas fa-phone"></i> {{ usuario.telefono }}</p>
-            <p><i class="fas fa-user-shield"></i> {{ usuario.rol.rol }}</p>
+            <p><i class="fas fa-user-shield"></i> {{ rol }}</p>
         </div>
 
         <br>
@@ -214,10 +214,17 @@
             <br><br>
 
             <!-- Firma médica -->
-            <div class="firma-medico">
-                <p>__________________________</p>
-                <p><strong>{{ detalleCita.medico }}</strong></p>
-                <p><em>Médico tratante</em></p>
+            <div class="qr-sello">
+                 <div class="qr">
+                    <qrcode [qrdata]="qrData" [width]="120" [errorCorrectionLevel]="'M'"></qrcode>
+                    <p><em>Verificación de autenticidad</em></p>
+                </div>
+
+                <div class="firma-medico">
+                    <p>__________________________</p>
+                    <p><strong>{{ detalleCita.medico }}</strong></p>
+                    <p><em>Médico tratante</em></p>
+                </div>
             </div>
         </div>
 

@@ -9,17 +9,21 @@ import { MedicoService } from '../../services/medico.service';
 import { DisponibilidadCitaPorMedicoDTO } from '../../DTO/DisponibilidadCitaPorMedico.interface';
 import { CambiarEstadoDisponibilidadDTO } from '../../DTO/CambiarEstadoDisponibilidad.interface';
 import { LocalStorageService } from '../../services/local-storage.service';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import Swal from 'sweetalert2';
 import { Especialidad } from '../../interface/Especialidad.interface';
 import { MedicamentoInputDTO } from '../../DTO/MedicamentoInput.interface';
 import { DiasSemanaService } from '../../services/dias-semana.service';
 import { DiaSemana } from '../../interface/DiaSemana.interface';
+import { DetalleCitaAtendidaDTO } from '../../DTO/DetalleCitaAtendida.interface';
+import { PacienteService } from '../../services/paciente.service';
+import { UsuarioStorage } from '../../DTO/UsuarioStorage.interface';
+import { obtenerDiaSemana } from '../../utils/utilities';
 
 @Component({
   selector: 'app-perfil-medico',
   standalone: true,
-  imports: [FormsModule, DatePipe],
+  imports: [FormsModule, DatePipe, CommonModule],
   templateUrl: './perfil-medico.component.html',
   styleUrl: './perfil-medico.component.css'
 })
@@ -29,12 +33,15 @@ export class PerfilMedicoComponent {
   citasService = inject(CitasService)
   medicoService = inject(MedicoService)
   diasSemanaService = inject(DiasSemanaService);
+  pacienteService = inject(PacienteService);
   vista: 'citas' | 'agregar' | 'eliminar' = 'citas';
 
   citasProgramadas: CitasAgendadasResponseDTO[] = [];
   citasFiltradas = [...this.citasProgramadas];
 
   disponibilidades: DisponibilidadCitaPorMedicoDTO[] = [];
+  historialPaciente: DetalleCitaAtendidaDTO[] = [];
+  mostrarHistorial: boolean = false;
 
   filtroDia = 0;
   diasSemana: DiaSemana[] = [];
@@ -42,7 +49,7 @@ export class PerfilMedicoComponent {
 
   nuevaDisponibilidad = { dia: 0, hora: '' };
   especialidad: Especialidad = { id: 0, especialidad: '' };
-  usuario: UsuarioResponse = this.localStorageService.getUsuarioStorage()!;
+  usuario: UsuarioStorage = this.localStorageService.getUsuario()!;
 
   diagnostico: string = '';
   medicamentos: MedicamentoInputDTO[] = [
@@ -51,6 +58,7 @@ export class PerfilMedicoComponent {
 
   idCitaSeleccionada: number = 0;
   mostrarModalDiagnostico: boolean = false;
+  rol: string = "";
 
   ngOnInit(): void {
     window.scrollTo(0, 0);
@@ -68,6 +76,7 @@ export class PerfilMedicoComponent {
       console.log(error);
     });
 
+    this.rol = this.authService.getUserRole() ?? '';
 
     this.listarCitasAgendadas();
     this.listarDisponiblidadesDeCita();
@@ -216,6 +225,20 @@ export class PerfilMedicoComponent {
     this.medicamentos = [{ medicamento: '', indicaciones: '' }];
   }
 
+  listarHistorialPaciente(idPaciente: number) {
+    this.pacienteService.verDetallesDeCitaAtendidaPorpaciente(idPaciente).then(res => {
+      this.historialPaciente = res.reverse();
+      console.log(this.historialPaciente);
+      this.mostrarHistorial = true;
+
+    }).catch(error => {
+      console.log("Error al listar el historial del paciente " + error);
+    });
+  }
+
+  cerrarHistorial() {
+    this.mostrarHistorial = false;
+  }
 
   // componente.ts
   esCitaPasada(fecha: string, hora: string): boolean {
@@ -224,6 +247,10 @@ export class PerfilMedicoComponent {
     const fechaHoraCita = new Date(`${fecha}T${hora}:00`);
 
     return ahora >= fechaHoraCita;
+  }
+
+  obtenerDiaSemana(fecha:string) {
+    return obtenerDiaSemana(fecha);
   }
 
 
