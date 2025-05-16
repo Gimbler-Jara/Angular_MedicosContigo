@@ -141,6 +141,18 @@
             </div>
         </div>
 
+        <div class="file-upload">
+            <label for="firma" class="file-label">
+                @if (selectedFile) {
+                <span class="file-name">Firma seleccionada: {{ selectedFile.name }}</span>
+                }@else {
+                Seleccionar firma digital
+                }
+                <input type="file" id="firma" (change)="onFileSelected($event)" hidden />
+            </label>
+        </div>
+
+
         <!-- Password y Confirm Password -->
         <div class="input-group-password">
             <div class="form-group input-control">

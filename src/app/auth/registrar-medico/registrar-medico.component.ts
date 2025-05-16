@@ -1,4 +1,4 @@
-import { NgClass } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 import { Component, Inject, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Document_Type } from '../../interface/DocumentType.interface';
@@ -15,7 +15,7 @@ import { LoadingComponent } from '../../pages/loading/loading.component';
 @Component({
   selector: 'app-registrar-medico',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass, LoadingComponent],
+  imports: [ReactiveFormsModule, NgClass, LoadingComponent, CommonModule],
   templateUrl: './registrar-medico.component.html',
   styleUrl: './registrar-medico.component.css'
 })
@@ -43,17 +43,20 @@ export class RegistrarMedicoComponent {
   }, { validators: this.passwordsMatchValidator });
 
   private formularioInicial = {
-    document_type: "",
+    documentType: "",
     dni: '',
     last_name: '',
     middle_name: '',
     first_name: '',
     birth_date: '',
-    gender: 'M',
+    gender: '',
     telefono: '',
     email: '',
     password_hash: '',
+    especialidadId: ""
   };
+
+  selectedFile: File | null = null;
 
   tiposDocumento: Document_Type[] = [];
   especialidades: Especialidad[] = [];
@@ -84,10 +87,18 @@ export class RegistrarMedicoComponent {
     return pass === confirm ? null : { passwordsNoMatch: true };
   }
 
-  registrarMedico() {
-    if (this.formularioMedico.invalid) return;
+  onFileSelected(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      this.selectedFile = target.files[0];
+    }
+  }
 
-    this.isLoading = true;
+  registrarMedico() {
+    if (this.formularioMedico.invalid || !this.selectedFile) {
+      this.showAlert('error', 'Debe completar todos los campos y adjuntar una firma.');
+      return;
+    }
     const birthDateRaw = this.formularioMedico.value.birthDate;
 
     if (birthDateRaw) {
@@ -115,34 +126,54 @@ export class RegistrarMedicoComponent {
       }
     }
 
-    var usuario: UsuarioMedicoRequest = {
-      documentTypeId: Number(this.formularioMedico.value.documentType),
-      dni: this.formularioMedico.value.dni,
-      lastName: this.formularioMedico.value.lastName,
-      middleName: this.formularioMedico.value.middleName,
-      firstName: this.formularioMedico.value.firstName,
-      birthDate: this.formularioMedico.value.birthDate,
-      gender: this.formularioMedico.value.gender,
-      telefono: this.formularioMedico.value.telefono,
-      email: this.formularioMedico.value.email,
-      password: this.formularioMedico.value.password,
-      especialidadId: Number(this.formularioMedico.value.especialidadId)
-    }
+    this.isLoading = true;
 
-    console.log(usuario);
-    this.usuarioService.registrarMedico(usuario).then(() => {
-      console.log("medico registrado");
+    // var usuario: UsuarioMedicoRequest = {
+    //   documentTypeId: Number(this.formularioMedico.value.documentType),
+    //   dni: this.formularioMedico.value.dni,
+    //   lastName: this.formularioMedico.value.lastName,
+    //   middleName: this.formularioMedico.value.middleName,
+    //   firstName: this.formularioMedico.value.firstName,
+    //   birthDate: this.formularioMedico.value.birthDate,
+    //   gender: this.formularioMedico.value.gender,
+    //   telefono: this.formularioMedico.value.telefono,
+    //   email: this.formularioMedico.value.email,
+    //   password: this.formularioMedico.value.password,
+    //   especialidadId: Number(this.formularioMedico.value.especialidadId)
+    // }
+
+    const formData = new FormData();
+
+    formData.append('documentTypeId', this.formularioMedico.value.documentType);
+    formData.append('dni', this.formularioMedico.value.dni);
+    formData.append('lastName', this.formularioMedico.value.lastName);
+    formData.append('middleName', this.formularioMedico.value.middleName);
+    formData.append('firstName', this.formularioMedico.value.firstName);
+    formData.append('birthDate', this.formularioMedico.value.birthDate);
+    formData.append('gender', this.formularioMedico.value.gender);
+    formData.append('telefono', this.formularioMedico.value.telefono);
+    formData.append('email', this.formularioMedico.value.email);
+    formData.append('password', this.formularioMedico.value.password);
+    formData.append('especialidadId', this.formularioMedico.value.especialidadId);
+
+    // ✅ Agrega el archivo
+    formData.append('archivoFirmaDigital', this.selectedFile);
+
+    var usuario = this.formularioMedico.value;
+
+    console.log(formData);
+    this.usuarioService.registrarMedico(formData).then(() => {
       this.isLoading = false;
       var mensaje = getRegisterTemplateHTML(usuario.firstName, usuario.lastName, usuario.email!, usuario.password)
       this.emailService.message(usuario.email!, "Bienvenido a la plataforma de citas médicas. Su registro ha sido exitoso.", mensaje).then((value) => { }).catch((error) => { });
 
       this.formularioMedico.reset(this.formularioInicial);
       this.showAlert('success', 'Registro exitoso. El médico ha sido registrado correctamente.');
+      this.selectedFile = null;
     }).catch((error) => {
       this.isLoading = false;
-      console.log("error al guardar el medico");
-      console.error('Error al registrar médico:', error.error.message);
-      this.showAlert('error', error.error.message);
+      console.error('Error al registrar médico:', error);
+      this.showAlert('error', error?.error?.message || 'Error desconocido.');
     });
 
   }

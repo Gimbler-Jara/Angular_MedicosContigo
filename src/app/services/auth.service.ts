@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { UsuarioMedicoRequest, UsuarioPacienteRequest, UsuarioResponse } from '../interface/Usuario/Usuario.interface';
-import { lastValueFrom, map, Observable } from 'rxjs';
+import { catchError, lastValueFrom, map, Observable, throwError } from 'rxjs';
 import { API, USUARIO, MEDICOS, PACIENTES, ENDPOINTS_USUARIO } from '../utils/constants';
 import { LoginDTO } from '../DTO/Login.interface';
 import { LocalStorageService } from './local-storage.service';
@@ -34,9 +34,17 @@ export class AuthService {
   }
 
 
-  registrarMedico(usuario: UsuarioMedicoRequest): Promise<UsuarioMedicoRequest> {
-    return lastValueFrom(this.http.post<UsuarioMedicoRequest>(`${API}/${MEDICOS}`, usuario));
+  // registrarMedico(usuario: UsuarioMedicoRequest): Promise<UsuarioMedicoRequest> {
+  //   return lastValueFrom(this.http.post<UsuarioMedicoRequest>(`${API}/${MEDICOS}`, usuario));
+  // }
+
+  registrarMedico(formData: FormData): Promise<any> {
+    return lastValueFrom(
+      this.http.post(`${API}/${MEDICOS}`, formData)
+        .pipe(catchError(error => throwError(() => error)))
+    );
   }
+
 
   async login(user: LoginDTO): Promise<UsuarioResponse> {
     return lastValueFrom(this.http.post<any>(`${API}/${USUARIO}/login`, user)).then(res => {
