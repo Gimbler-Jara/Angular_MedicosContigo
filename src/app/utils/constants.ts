@@ -31,6 +31,7 @@ export const ENDPOINTS_MEDICO = {
     DIAS_DISPONIBLES: "dias-disponibles",                                      //* GET
     HORAS_DISPONIBLES: "horas-disponibles",                                    //* GET
     HORARIO_TRABAJO_MEDICO: "horario-trabajo-medico",                          //* GET
+    OBTENER_FIRMA:"obtnerFirma"
 }
 
 // * /api/pacientes

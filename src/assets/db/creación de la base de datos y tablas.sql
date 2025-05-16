@@ -69,6 +69,7 @@ CREATE TABLE tb_paciente (
 CREATE TABLE tb_medico (
     id_usuario INT PRIMARY KEY,
     especialidad_id INT NOT NULL,
+    url_firma_digital VARCHAR(255),
     FOREIGN KEY (id_usuario) REFERENCES tb_usuario(id) ON DELETE CASCADE,
     FOREIGN KEY (especialidad_id) REFERENCES tb_especialidad(id)
 );

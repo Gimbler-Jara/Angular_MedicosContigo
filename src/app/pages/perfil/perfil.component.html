@@ -211,16 +211,17 @@
                 </ul>
             </div>
 
-            <br><br>
+            <!-- <br><br> -->
 
             <!-- Firma médica -->
             <div class="qr-sello">
-                 <div class="qr">
+                <div class="qr">
                     <qrcode [qrdata]="qrData" [width]="120" [errorCorrectionLevel]="'M'"></qrcode>
                     <p><em>Verificación de autenticidad</em></p>
                 </div>
 
                 <div class="firma-medico">
+                    <img [src]="urlFirma" alt="" class="firma">
                     <p>__________________________</p>
                     <p><strong>{{ detalleCita.medico }}</strong></p>
                     <p><em>Médico tratante</em></p>

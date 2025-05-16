@@ -42,6 +42,8 @@ export class LoginComponent {
       console.log('Datos enviados:', user);
       this.authService.login(user).then(usuario => {
         if (usuario) {
+          console.log(usuario);
+          
           if (usuario.rol?.id === 1) {
             this.router.navigate(['/perfil']);
           } else if (usuario.rol?.id === 2) {

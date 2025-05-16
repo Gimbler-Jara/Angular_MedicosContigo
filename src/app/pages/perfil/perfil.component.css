@@ -370,7 +370,7 @@ select.ng-invalid.ng-touched {
 
 /* *========================================= */
 /* *================================================= */
- /* .modal-overlay {
+/* .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -510,7 +510,6 @@ select.ng-invalid.ng-touched {
   }
 }  */
 
-
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -579,7 +578,7 @@ blockquote {
   font-size: 14px;
 }
 
-.qr-sello{
+.qr-sello {
   display: flex;
   justify-content: center;
   gap: 50px;
@@ -593,11 +592,17 @@ blockquote {
   font-style: italic;
 }
 
-.qr{
+.firma-medico .firma {
+  width: 200px;
+  height: auto;
+  transform: translateY(40px);
+}
+
+.qr {
   text-align: center;
 }
 
-.qr p{
+.qr p {
   font-size: 12px;
 }
 
@@ -652,4 +657,3 @@ blockquote {
 .btn-guardar:hover {
   background-color: #138496;
 }
-

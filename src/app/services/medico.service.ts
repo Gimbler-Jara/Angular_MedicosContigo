@@ -22,6 +22,10 @@ export class MedicoService {
     return lastValueFrom(this.http.get<MedicoDTO[]>(`${API}/${MEDICOS}`));
   }
 
+  obtenerMedico(idMedico: number): Promise<MedicoDTO> {
+    return lastValueFrom(this.http.get<MedicoDTO>(`${API}/${MEDICOS}/${idMedico}`));
+  }
+
   listarHorariosDeTranajoPorMedico(idMedico: number): Promise<DisponibilidadesResponse> {
     return lastValueFrom(this.http.get<DisponibilidadesResponse>(`${API}/${MEDICOS}/${ENDPOINTS_MEDICO.HORARIO_TRABAJO_MEDICO}/${idMedico}`));
   }
@@ -79,6 +83,18 @@ export class MedicoService {
         .pipe(
           catchError(error => throwError(() => error))
         )
+    );
+  }
+
+  obtenerUrlFirmaDigital(path: string): Promise<string> {
+    let params = new HttpParams().set('path', path)
+    return lastValueFrom(this.http.get<string>(`${API}/${MEDICOS}/${ENDPOINTS_MEDICO.OBTENER_FIRMA}`, {
+      params,
+      responseType: 'text' as 'json'
+    })
+      .pipe(
+        catchError(error => throwError(() => error))
+      )
     );
   }
 

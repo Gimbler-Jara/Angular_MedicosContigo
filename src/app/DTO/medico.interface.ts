@@ -5,4 +5,5 @@ export interface MedicoDTO {
     idUsuario: number;
     usuario: UsuarioResponse;
     especialidad: Especialidad;
+    urlFirmaDigital: string
 }

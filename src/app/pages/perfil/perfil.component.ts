@@ -58,6 +58,7 @@ export class PerfilComponent {
   // medicos = this.citasService.getMedicos();
   rol: string = "";
   qrData: string = '';
+  urlFirma: string = "";
 
   showPassword: boolean = false;
   showConfirm: boolean = false;
@@ -344,10 +345,21 @@ export class PerfilComponent {
 
 
   verDiagnosticoYReceta(idCita: number) {
+    this.urlFirma = "";
     this.citaService.verDetallesDeCitaAtendida(idCita).then((data) => {
       this.detalleCita = data;
       this.qrData = `https://xzqnmbqb-4200.brs.devtunnels.ms/verificar-receta/${this.detalleCita.idCita}`;
-      this.mostrarModalDiagnosticoPaciente = true;
+
+      this.medicoService.obtenerMedico(data.idMedico).then((medico) => {
+        this.medicoService.obtenerUrlFirmaDigital(medico.urlFirmaDigital).then((url) => {
+          this.urlFirma = url;
+          this.mostrarModalDiagnosticoPaciente = true;
+        }).catch((error) => {
+          console.log("Error al obtener la url: " + JSON.stringify(error));
+        });
+
+      }).catch(() => { });
+      
     }).catch((error) => {
       console.error("Error al obtener los detalles:", error);
     });
