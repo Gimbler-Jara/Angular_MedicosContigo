@@ -14,7 +14,7 @@
 
         <br>
         <br>
- 
+
 
 
         <button [ngClass]="{active: selectedGestion === 'medico'}" (click)="selectGestion('medico')">
@@ -164,9 +164,14 @@
     </div>
 </div>
 
+@if (isLoading) {
+<app-loading></app-loading>
+}
+
 
 @if (mostrarModalUsuario) {
 <app-modal-editar-usuario [formGroup]="modalFormGroup" [titulo]="modalTitulo" [campos]="modalCampos"
-    [especialidades]="especialidades" (guardar)="guardarCambiosUsuario()" (cerrar)="cerrarModalUsuario()">
+    [modalTipo]="modalTipo" [especialidades]="especialidades" (guardar)="guardarCambiosUsuario($event)"
+    (cerrar)="cerrarModalUsuario()">
 </app-modal-editar-usuario>
 }

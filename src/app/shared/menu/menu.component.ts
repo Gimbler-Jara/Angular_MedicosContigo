@@ -34,9 +34,11 @@ export class MenuComponent {
     this.usuarioSubscription = this.localStorageService.usuario$.subscribe(usuario => {
       this.isAutentiticared = this.authService.isAuthenticated();
       // this.rol = usuario?.rol.id!;
+      this.rolUsuario = this.authService.getUserRole()!;
+      console.log(this.rolUsuario);
+      
     });
 
-    this.rolUsuario = this.authService.getUserRole()!;
   }
 
   ngOnDestroy(): void {

@@ -9,56 +9,74 @@
 
             <div class="modal-body">
                 <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-                    @for (campo of campos; track $index) {
-                    <ng-container>
-                        <ng-container [ngSwitch]="campo.type">
-                            <!-- Select especialidad -->
-                            <div *ngSwitchCase="'especialidad'">
-                                <label>{{ campo.label }}</label>
-                                <select class="form-control" formControlName="especialidadId">
-                                    @for (esp of especialidades; track $index) {
-                                    <option [value]="esp.id">{{ esp.especialidad }}</option>
-                                    }
-                                </select>
-                            </div>
-                            <!-- Select simple -->
-                            <div *ngSwitchCase="'select'">
-                                <label>{{ campo.label }}</label>
-                                <select class="form-control" [formControlName]="campo.name">
-                                    @for (opt of campo.options; track $index) {
-                                    <option [value]="opt.value">{{ opt.label }}</option>
-                                    }
-                                </select>
-                            </div>
-                            <!-- Input normal -->
-                            <!-- Input normal -->
-                            <div *ngSwitchDefault class="mb-3">
-                                <label>{{ campo.label }}</label>
-                                <input [type]="campo.type || 'text'" class="form-control" [formControlName]="campo.name"
-                                    [ngClass]="{'is-invalid': formGroup.get(campo.name)?.invalid && formGroup.get(campo.name)?.touched}" />
+                    <div class="form-columns">
+                        @for (campo of campos; track $index) {
+                        <div class="form-column">
+                            <ng-container>
+                                <ng-container [ngSwitch]="campo.type">
+                                    <!-- Especialidad -->
+                                    <div *ngSwitchCase="'especialidad'">
+                                        <label>{{ campo.label }}</label>
+                                        <select class="form-control" formControlName="especialidadId">
+                                            @for (esp of especialidades; track $index) {
+                                            <option [value]="esp.id">{{ esp.especialidad }}</option>
+                                            }
+                                        </select>
+                                    </div>
 
-                                <!-- Mensajes de error -->
-                                <div *ngIf="formGroup.get(campo.name)?.invalid && formGroup.get(campo.name)?.touched">
-                                    <small class="text-danger" *ngIf="formGroup.get(campo.name)?.errors?.['required']">
-                                        El campo {{ campo.label.toLowerCase() }} es obligatorio.
-                                    </small>
-                                    <small class="text-danger"
-                                        *ngIf="formGroup.get(campo.name)?.errors?.['pattern'] && campo.name === 'telefono'">
-                                        Ingrese un teléfono válido de 9 dígitos.
-                                    </small>
-                                    <small class="text-danger"
-                                        *ngIf="formGroup.get(campo.name)?.errors?.['pattern'] && campo.name !== 'telefono'">
-                                        El valor ingresado no es válido.
-                                    </small>
-                                </div>
-                            </div>
+                                    <!-- Select simple -->
+                                    <div *ngSwitchCase="'select'">
+                                        <label>{{ campo.label }}</label>
+                                        <select class="form-control" [formControlName]="campo.name">
+                                            @for (opt of campo.options; track $index) {
+                                            <option [value]="opt.value">{{ opt.label }}</option>
+                                            }
+                                        </select>
+                                    </div>
 
-                        </ng-container>
-                    </ng-container>
-                    }
-                    <button type="submit" class="btn btn-primary" [disabled]="!formGroup.valid">Guardar Cambios</button>
+                                    <!-- Input simple -->
+                                    <div *ngSwitchDefault>
+                                        <label>{{ campo.label }}</label>
+                                        <input [type]="campo.type || 'text'" class="form-control"
+                                            [formControlName]="campo.name"
+                                            [ngClass]="{'is-invalid': formGroup.get(campo.name)?.invalid && formGroup.get(campo.name)?.touched}" />
+                                        <div
+                                            *ngIf="formGroup.get(campo.name)?.invalid && formGroup.get(campo.name)?.touched">
+                                            <small class="text-danger"
+                                                *ngIf="formGroup.get(campo.name)?.errors?.['required']">
+                                                El campo {{ campo.label.toLowerCase() }} es obligatorio.
+                                            </small>
+                                            <small class="text-danger"
+                                                *ngIf="formGroup.get(campo.name)?.errors?.['pattern'] && campo.name === 'telefono'">
+                                                Ingrese un teléfono válido de 9 dígitos.
+                                            </small>
+                                            <small class="text-danger"
+                                                *ngIf="formGroup.get(campo.name)?.errors?.['pattern'] && campo.name !== 'telefono'">
+                                                El valor ingresado no es válido.
+                                            </small>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+                        </div>
+                        }
+                    </div>
+
+                    <!-- Firma Digital -->
+                    <div style="margin-top: 5px;"  *ngIf="modalTipo === 'medico'">
+                        <label>Firma Digital (opcional)</label>
+                        <input type="file" class="form-control" (change)="onFileSelected($event)">
+                    </div>
+
+                    <!-- Botón -->
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary" [disabled]="!formGroup.valid">Guardar
+                            Cambios</button>
+                    </div>
                 </form>
+
             </div>
+
         </div>
     </div>
 </div>

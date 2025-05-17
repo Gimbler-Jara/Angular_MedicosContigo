@@ -17,11 +17,12 @@ import { ModalEditarUsuarioComponent } from '../modal-editar-usuario/modal-edita
 import { LocalStorageService } from '../../services/local-storage.service';
 import Swal from 'sweetalert2';
 import { UsuarioStorage } from '../../DTO/UsuarioStorage.interface';
+import { LoadingComponent } from '../loading/loading.component';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [NgClass, RegistrarMedicoComponent, RegisterComponent, ReactiveFormsModule, ModalEditarUsuarioComponent, DatePipe],
+  imports: [NgClass, RegistrarMedicoComponent, RegisterComponent, ReactiveFormsModule, ModalEditarUsuarioComponent, DatePipe, LoadingComponent],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css'
 })
@@ -32,6 +33,8 @@ export class AdminComponent {
   pacienteService = inject(PacienteService)
   authService = inject(AuthService);
   especialidadService = inject(EspecialidadService);
+
+  isLoading: boolean = false;
 
   selectedGestion: 'medico' | 'paciente' | 'admin' = 'medico';
   selectedTab: string = 'registrar';
@@ -61,7 +64,7 @@ export class AdminComponent {
 
   usuario: UsuarioStorage = this.localStorageService.getUsuario()!;
 
-  modalTipo: 'paciente' | 'medico' | null = null;
+  modalTipo: 'paciente' | 'medico' = 'paciente';
   modalTitulo: string = '';
   modalCampos: any[] = [];
   modalFormGroup!: FormGroup;
@@ -69,7 +72,6 @@ export class AdminComponent {
 
   pacienteEditado: PacienteDTO | null = null;
   medicoEditado: MedicoDTO | null = null;
-
 
   constructor(private fb: FormBuilder) {
     this.pacienteForm = this.fb.group({
@@ -156,18 +158,43 @@ export class AdminComponent {
       firstName: [paciente.usuario.firstName || '', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)]],
       middleName: [paciente.usuario.middleName || '', [Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/)]],
       lastName: [paciente.usuario.lastName || '', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)]],
-      telefono: [paciente.usuario.telefono || '', [Validators.required, Validators.pattern(/^\d{9}$/)]]
+      telefono: [paciente.usuario.telefono || '', [Validators.required, Validators.pattern(/^\d{9}$/)]],
+      birthDate: [paciente.usuario.birthDate || '', Validators.required],
+      gender: [paciente.usuario.gender || '', Validators.required],
+      dni: [paciente.usuario.dni || '', Validators.required],
+      email: [paciente.usuario.email || '', [Validators.required, Validators.email]],
+      password: [''],
+      documentTypeId: [paciente.usuario.documentType?.id || null, Validators.required]
     });
 
     this.pacienteEditado = JSON.parse(JSON.stringify(paciente));
     this.modalTipo = 'paciente';
     this.modalTitulo = 'Editar Paciente';
+
     this.modalCampos = [
+      {
+        name: 'documentTypeId', label: 'Tipo de Documento', type: 'select', options: [
+          { value: 1, label: 'DNI' },
+          { value: 2, label: 'Carnet de Extranjería' },
+          { value: 3, label: 'Pasaporte' },
+        ]
+      },
+      { name: 'dni', label: 'DNI' },
       { name: 'firstName', label: 'Nombre' },
-      { name: 'middleName', label: 'Apellido Materno' },
       { name: 'lastName', label: 'Apellido Paterno' },
-      { name: 'telefono', label: 'Teléfono' }
+      { name: 'middleName', label: 'Apellido Materno' },
+      { name: 'telefono', label: 'Teléfono' },
+      { name: 'birthDate', label: 'Fecha de Nacimiento', type: 'date' },
+      {
+        name: 'gender', label: 'Género', type: 'select', options: [
+          { value: 'M', label: 'Masculino' },
+          { value: 'F', label: 'Femenino' }
+        ]
+      },
+      { name: 'email', label: 'Correo Electrónico' },
+      { name: 'password', label: 'Nueva Contraseña', type: 'password' },
     ];
+
     this.mostrarModalUsuario = true;
   }
 
@@ -179,29 +206,63 @@ export class AdminComponent {
       middleName: ['', [Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/)]],
       lastName: ['', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)]],
       telefono: ['', [Validators.pattern(/^\d{9}$/)]],
+      birthDate: ['', Validators.required],
+      gender: ['', Validators.required],
+      dni: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: [''], // opcional
+      documentTypeId: [null, Validators.required],
       especialidadId: [null, Validators.required]
     });
 
+    this.modalFormGroup = this.medicoForm;
+
+    this.modalFormGroup.patchValue({
+      ...medico.usuario,
+      birthDate: medico.usuario.birthDate, // ya es ISO
+      gender: medico.usuario.gender,
+      dni: medico.usuario.dni,
+      email: medico.usuario.email,
+      documentTypeId: medico.usuario.documentType.id,
+      especialidadId: medico.especialidad?.id
+    });
 
     this.medicoEditado = JSON.parse(JSON.stringify(medico));
     this.modalTipo = 'medico';
     this.modalTitulo = 'Editar Médico';
     this.modalCampos = [
+      {
+        name: 'documentTypeId', label: 'Tipo de Documento', type: 'select', options: [
+          { value: 1, label: 'DNI' },
+          { value: 2, label: 'Carnet de Extranjería' },
+          { value: 3, label: 'Pasaporte' },
+        ]
+      },
+      { name: 'dni', label: 'DNI' },
       { name: 'firstName', label: 'Nombre' },
-      { name: 'middleName', label: 'Apellido Materno' },
       { name: 'lastName', label: 'Apellido Paterno' },
+      { name: 'middleName', label: 'Apellido Materno' },
       { name: 'telefono', label: 'Teléfono' },
+      { name: 'birthDate', label: 'Fecha de Nacimiento', type: 'date' },
+      {
+        name: 'gender', label: 'Género', type: 'select', options: [
+          { value: 'M', label: 'Masculino' },
+          { value: 'F', label: 'Femenino' }
+        ]
+      },
+      { name: 'email', label: 'Correo Electrónico' },
+      { name: 'password', label: 'Nueva Contraseña (Opcional)', type: 'password' },
       { name: 'especialidadId', label: 'Especialidad', type: 'especialidad' }
     ];
-    this.modalFormGroup = this.medicoForm;
-    this.modalFormGroup.patchValue({
-      ...medico.usuario,
-      especialidadId: medico.especialidad?.id
-    });
+
     this.mostrarModalUsuario = true;
   }
 
-  guardarCambiosUsuario() {
+  guardarCambiosUsuario(payload: { datos: any, archivo?: File }) {
+
+    const datosFormulario = payload.datos;
+    const archivo = payload.archivo;
+
     if (!this.modalFormGroup.valid) {
       this.showAlert('warning', 'Por favor, complete todos los campos correctamente.');
       console.log(this.modalFormGroup.errors);
@@ -209,13 +270,16 @@ export class AdminComponent {
       return;
     }
 
-    if (this.modalTipo === 'paciente' && this.pacienteEditado) {
-      const dto: PacienteActualizacionDTO = {
-        idUsuario: this.pacienteEditado.idUsuario,
-        ...this.modalFormGroup.value
-      };
+    this.isLoading = true;
 
-      this.pacienteService.actualizarPaciente(dto.idUsuario, dto)
+    if (this.modalTipo === 'paciente' && this.pacienteEditado) {
+      const datos: PacienteActualizacionDTO = {
+        idUsuario: this.pacienteEditado.idUsuario,
+        ...datosFormulario
+      };
+      console.log(datos);
+
+      this.pacienteService.actualizarPaciente(datos.idUsuario, datos)
         .then(res => {
           if (res.success) {
             this.showAlert('success', res.message);
@@ -229,11 +293,14 @@ export class AdminComponent {
     }
 
     if (this.modalTipo === 'medico' && this.medicoEditado) {
-      const dto: MedicoActualizacionDTO = {
-        idUsuario: this.medicoEditado.idUsuario,
-        ...this.modalFormGroup.value
+      const datos: MedicoActualizacionDTO = {
+        idUsuario: this.medicoEditado.usuario.id,
+        ...datosFormulario
       };
-      this.medicoService.actualizarMedico(dto.idUsuario, dto)
+
+
+
+      this.medicoService.actualizarMedicoConArchivo(this.medicoEditado.idUsuario, datos, archivo)
         .then(res => {
           if (res.success) {
             this.showAlert('success', res.message);
@@ -241,16 +308,17 @@ export class AdminComponent {
             this.listarMedicos();
           }
         })
-        .catch((error) => {
+        .catch(err => {
           this.showAlert('error', 'Error al actualizar médico')
-          console.log("Error al actualizar médico " + error.error.message);
+          console.log("Error al actualizar médico " + err.error.message);
         });
     }
   }
 
   cerrarModalUsuario() {
+    this.isLoading = false;
     this.mostrarModalUsuario = false;
-    this.modalTipo = null;
+    this.modalTipo = 'paciente';
     this.modalFormGroup.reset();
   }
 

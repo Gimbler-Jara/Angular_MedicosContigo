@@ -227,55 +227,124 @@ export class PerfilComponent {
       firstName: [paciente.usuario.firstName || '', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)]],
       middleName: [paciente.usuario.middleName || '', [Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/)]],
       lastName: [paciente.usuario.lastName || '', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)]],
-      telefono: [paciente.usuario.telefono || '', [Validators.required, Validators.pattern(/^\d{9}$/)]]
+      telefono: [paciente.usuario.telefono || '', [Validators.required, Validators.pattern(/^\d{9}$/)]],
+      birthDate: [paciente.usuario.birthDate || '', Validators.required],
+      gender: [paciente.usuario.gender || '', Validators.required],
+      dni: [paciente.usuario.dni || '', Validators.required],
+      email: [paciente.usuario.email || '', [Validators.required, Validators.email]],
+      password: [''], // dejar en blanco si no desea actualizar
+      documentTypeId: [paciente.usuario.documentType?.id || null, Validators.required]
     });
 
     this.pacienteEditado = JSON.parse(JSON.stringify(paciente));
     this.modalTipo = 'paciente';
     this.modalTitulo = 'Editar Paciente';
+
     this.modalCampos = [
+      {
+        name: 'documentTypeId', label: 'Tipo de Documento', type: 'select', options: [
+          { value: 1, label: 'DNI' },
+          { value: 2, label: 'Carnet de Extranjería' },
+          { value: 3, label: 'Pasaporte' },
+        ]
+      },
+      { name: 'dni', label: 'DNI' },
       { name: 'firstName', label: 'Nombre' },
-      { name: 'middleName', label: 'Apellido Materno' },
       { name: 'lastName', label: 'Apellido Paterno' },
-      { name: 'telefono', label: 'Teléfono' }
+      { name: 'middleName', label: 'Apellido Materno' },
+      { name: 'telefono', label: 'Teléfono' },
+      { name: 'birthDate', label: 'Fecha de Nacimiento', type: 'date' },
+      {
+        name: 'gender', label: 'Género', type: 'select', options: [
+          { value: 'M', label: 'Masculino' },
+          { value: 'F', label: 'Femenino' }
+        ]
+      },
+      { name: 'email', label: 'Correo Electrónico' },
+      { name: 'password', label: 'Nueva Contraseña', type: 'password' },
     ];
+
     this.mostrarModalUsuario = true;
   }
 
 
-  guardarCambiosUsuario() {
+
+  // guardarCambiosUsuario() {
+  //   if (this.modalTipo === 'paciente' && this.pacienteEditado) {
+  //     const dto: PacienteActualizacionDTO = {
+  //       idUsuario: this.pacienteEditado.idUsuario,
+  //       ...this.modalFormGroup.value
+  //     };
+
+  //     this.pacienteService.actualizarPaciente(dto.idUsuario, dto)
+  //       .then(res => {
+  //         if (res.success) {
+  //           this.usuario.middleName = dto.middleName;
+  //           this.usuario.firstName = dto.firstName;
+  //           this.usuario.lastName = dto.lastName;
+  //           this.usuario.telefono = dto.telefono;
+
+  //           var u: UsuarioStorage = {
+  //             id: this.usuario.id,
+  //             firstName: this.usuario.firstName,
+  //             lastName: this.usuario.lastName,
+  //             middleName: this.usuario.middleName!,
+  //             email: this.usuario.email!,
+  //             telefono: this.usuario.telefono!
+  //           }
+  //           this.localStorageService.setUsuario(u);
+  //           this.cerrarModalUsuario();
+  //           this.showAlert('success', "Datos actualizados correctamente");
+  //         }
+  //       })
+  //       .catch(() =>
+  //         this.showAlert('error', 'Error al actualizar paciente')
+  //       );
+  //   }
+  // }
+
+  guardarCambiosUsuario(payload: { datos: any, archivo?: File }) {
+    const datosFormulario = payload.datos;
+
+    if (!this.modalFormGroup.valid) {
+      this.showAlert('warning', 'Por favor, complete todos los campos correctamente.');
+      console.log(this.modalFormGroup.errors);
+      return;
+    }
+
     if (this.modalTipo === 'paciente' && this.pacienteEditado) {
       const dto: PacienteActualizacionDTO = {
         idUsuario: this.pacienteEditado.idUsuario,
-        ...this.modalFormGroup.value
+        ...datosFormulario
       };
 
       this.pacienteService.actualizarPaciente(dto.idUsuario, dto)
         .then(res => {
           if (res.success) {
-            this.usuario.middleName = dto.middleName;
-            this.usuario.firstName = dto.firstName;
-            this.usuario.lastName = dto.lastName;
-            this.usuario.telefono = dto.telefono;
 
-            var u: UsuarioStorage = {
+            var usuarioActualizado: UsuarioStorage = {
               id: this.usuario.id,
-              firstName: this.usuario.firstName,
-              lastName: this.usuario.lastName,
-              middleName: this.usuario.middleName!,
-              email: this.usuario.email!,
-              telefono: this.usuario.telefono!
+              firstName: datosFormulario.firstName,
+              lastName: datosFormulario.lastName,
+              middleName: datosFormulario.middleName || '',
+              email: datosFormulario.email || '',
+              telefono: datosFormulario.telefono || ''
             }
-            this.localStorageService.setUsuario(u);
+
+            this.usuario = usuarioActualizado;
+            this.localStorageService.setUsuario(usuarioActualizado);
+
+            this.showAlert('success', res.message);
             this.cerrarModalUsuario();
-            this.showAlert('success', "Datos actualizados correctamente");
           }
         })
-        .catch(() =>
-          this.showAlert('error', 'Error al actualizar paciente')
-        );
+        .catch((err) => {
+          console.error("Error al actualizar paciente", err);
+          this.showAlert('error', 'Error al actualizar paciente');
+        });
     }
   }
+
 
 
   cerrarModalUsuario() {
@@ -359,7 +428,7 @@ export class PerfilComponent {
         });
 
       }).catch(() => { });
-      
+
     }).catch((error) => {
       console.error("Error al obtener los detalles:", error);
     });

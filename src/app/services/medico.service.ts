@@ -41,11 +41,25 @@ export class MedicoService {
   }
 
 
-  actualizarMedico(idUsuario: number, medico: MedicoActualizacionDTO): Promise<{ success: boolean; message: string }> {
+  // actualizarMedico(idUsuario: number, medico: MedicoActualizacionDTO): Promise<{ success: boolean; message: string }> {
+  //   return lastValueFrom(
+  //     this.http.put<{ success: boolean; message: string }>(`${API}/${MEDICOS}/${idUsuario}`, medico)
+  //   );
+  // }
+
+  actualizarMedicoConArchivo(id: number, medico: MedicoActualizacionDTO, archivo?: File): Promise<{ success: boolean; message: string }> {
+    const formData = new FormData();
+    formData.append('datos', JSON.stringify(medico));
+
+    if (archivo) {
+      formData.append('archivoFirmaDigital', archivo);
+    }
+
     return lastValueFrom(
-      this.http.put<{ success: boolean; message: string }>(`${API}/${MEDICOS}/${idUsuario}`, medico)
+      this.http.put<{ success: boolean; message: string }>(`${API}/${MEDICOS}/${id}`, formData)
     );
   }
+
 
   listarMedicosPorEspecialidad(idEspecialidad: number): Promise<MedicosPorEspecialidadDTO[]> {
     return lastValueFrom(

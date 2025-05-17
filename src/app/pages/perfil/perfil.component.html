@@ -169,7 +169,7 @@
 
 @if (mostrarModalUsuario) {
 <app-modal-editar-usuario [formGroup]="modalFormGroup" [titulo]="modalTitulo" [campos]="modalCampos"
-    [especialidades]="especialidades" (guardar)="guardarCambiosUsuario()" (cerrar)="cerrarModalUsuario()">
+    [especialidades]="especialidades" (guardar)="guardarCambiosUsuario($event)" (cerrar)="cerrarModalUsuario()">
 </app-modal-editar-usuario>
 }
 

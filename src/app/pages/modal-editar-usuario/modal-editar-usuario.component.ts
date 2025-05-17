@@ -10,17 +10,29 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
   styleUrl: './modal-editar-usuario.component.css'
 })
 export class ModalEditarUsuarioComponent {
-  // @Input() mostrarModal: boolean = false;
+  @Input() modalTipo: 'paciente' | 'medico' = 'paciente';
   @Input() formGroup!: FormGroup;
   @Input() titulo: string = '';
   @Input() campos: { name: string, label: string, type?: string, options?: any[] }[] = [];
   @Input() especialidades: any[] = [];
-  @Output() guardar = new EventEmitter<void>();
   @Output() cerrar = new EventEmitter<void>();
+  @Output() guardar = new EventEmitter<{ datos: any, archivo?: File }>();
+
+  firmaDigital?: File;
+
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.firmaDigital = file;
+    }
+  }
 
   onSubmit() {
     if (this.formGroup.valid) {
-      this.guardar.emit();
+      this.guardar.emit({
+        datos: this.formGroup.value,
+        archivo: this.firmaDigital
+      });
     }
   }
   onClose() {
