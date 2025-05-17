@@ -5,7 +5,7 @@
   border-bottom: 1px solid rgba(128, 128, 128, 0.63);
   padding: 10px 0;
   position: fixed;
-  z-index: 1000;
+  z-index: 5;
 }
 
 .container {
@@ -78,7 +78,7 @@ ul.menu li ul li a:hover {
   gap: 15px;
 }
 
-.telefono-btn {
+.btns {
   background-color: #00c8d7;
   color: white;
   padding: 10px 20px;
@@ -137,4 +137,20 @@ ul.menu li ul li a:hover {
   z-index: 999;
   overflow: hidden;
   padding: 20px;
+}
+
+/* Mobile - hasta 768px */
+@media (max-width: 768px) {
+  .telefono-btn {
+    display: none;
+  }
+
+  ul.menu > li {
+    margin: 0px 10px;
+  }
+
+  ul.menu > li > a {
+    font-size: 14px;
+    padding: 1px;
+  }
 }

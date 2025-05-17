@@ -63,14 +63,15 @@
                     </div>
 
                     <!-- Firma Digital -->
-                    <div style="margin-top: 5px;"  *ngIf="modalTipo === 'medico'">
+                    <div style="margin-top: 5px;" *ngIf="modalTipo === 'medico'">
                         <label>Firma Digital (opcional)</label>
                         <input type="file" class="form-control" (change)="onFileSelected($event)">
                     </div>
 
                     <!-- Botón -->
                     <div class="text-center">
-                        <button type="submit" class="btn btn-primary" [disabled]="!formGroup.valid">Guardar
+                        <button type="submit" class="btn btn-primary" [disabled]="!formGroup.valid"
+                            [style.background-color]="!formGroup.valid ? 'gray' : '#1558a6'">Guardar
                             Cambios</button>
                     </div>
                 </form>

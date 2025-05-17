@@ -1,16 +1,15 @@
 import { inject, Injectable } from '@angular/core';
-import { AgendarCitaMedicaDTO } from '../DTO/CitaMedica.interface';
+import { AgendarCitaMedicaDTO } from '../DTO/CitaMedica.DTO';
 import { HttpClient } from '@angular/common/http';
 import { catchError, lastValueFrom, throwError } from 'rxjs';
-import { API, ENDPOINTS_CITAS, CITA_MEDICA } from '../utils/constants';
-import { CitasAgendadasResponseDTO } from '../DTO/CitasAgendada.response.interface';
+import { API, ENDPOINTS_CITAS, CITA_MEDICA } from '../utils/constants_API';
+import { CitasAgendadasResponseDTO } from '../DTO/CitasAgendada.response.DTO';
 
-import { CitasReservadasPorPacienteResponseDTO } from '../DTO/CitasReservadasPorPaciente.interface';
-import { RegistrarDisponibilidadCitaDTO } from '../DTO/RegistrarDisponibilidad.interface';
-import { EstructuraDisponibilidadCitaResponse } from '../DTO/disponibilidadCitaResponse.interface'
-import { DiaSemana } from '../interface/DiaSemana.interface';
-import { DiagnosticoRequestDTO } from '../DTO/DiagnosticoRequest.interface';
-import { DetalleCitaAtendidaDTO } from '../DTO/DetalleCitaAtendida.interface';
+import { CitasReservadasPorPacienteResponseDTO } from '../DTO/CitasReservadasPorPaciente.DTO';
+import { RegistrarDisponibilidadCitaDTO } from '../DTO/RegistrarDisponibilidad.DTO';
+import { EstructuraDisponibilidadCitaResponse } from '../DTO/disponibilidadCitaResponse.DTO'
+import { DiagnosticoRequestDTO } from '../DTO/DiagnosticoRequest.DTO';
+import { DetalleCitaAtendidaDTO } from '../DTO/DetalleCitaAtendida.DTO';
 
 @Injectable({
   providedIn: 'root'
@@ -49,7 +48,9 @@ export class CitasService {
     const url = `${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.REGISTRAR_DISPONIBILIDAD}`;
     return lastValueFrom(
       this.http.post<EstructuraDisponibilidadCitaResponse>(url, req).pipe(
-        catchError(error => throwError(() => error))
+        catchError(error => {
+          return throwError(() => error);
+        })
       )
     );
   }
@@ -57,35 +58,42 @@ export class CitasService {
 
   agendarCita(req: AgendarCitaMedicaDTO): Promise<void> {
     return lastValueFrom(
-      this.http.post<void>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.AGENDAR_CITA}`, req)
-        .pipe(
-          catchError(error => throwError(() => error))
-        )
+      this.http.post<void>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.AGENDAR_CITA}`, req).pipe(
+        catchError(error => {
+          return throwError(() => error);
+        })
+      )
     );
   }
 
   eliminarCitaReservado(idCita: number): Promise<void> {
     return lastValueFrom(
-      this.http.delete<void>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.ELIMINAR_CITA_RESERVADO}/${idCita}`)
-        .pipe(
-          catchError(error => throwError(() => error))
-        )
+      this.http.delete<void>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.ELIMINAR_CITA_RESERVADO}/${idCita}`).pipe(
+        catchError(error => {
+          return throwError(() => error);
+        })
+      )
     );
   }
 
   listarCitasReservadasPorPaciente(idPaciente: number): Promise<CitasReservadasPorPacienteResponseDTO[]> {
     return lastValueFrom(
-      this.http.get<CitasReservadasPorPacienteResponseDTO[]>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.CITAS_RESERVADAS_POR_PACIENTE}/${idPaciente}`)
-        .pipe(
-          catchError(error => throwError(() => error))
-        )
+      this.http.get<CitasReservadasPorPacienteResponseDTO[]>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.CITAS_RESERVADAS_POR_PACIENTE}/${idPaciente}`).pipe(
+        catchError(error => {
+          return throwError(() => error);
+        })
+      )
     );
   }
 
 
   marcarcitaComoAtendido(idCita: number, request: DiagnosticoRequestDTO): Promise<void> {
     return lastValueFrom(
-      this.http.post<void>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.CAMBIAR_ESTADO_CITA_RESERVADO_ATENDIDO}/${idCita}`, request)
+      this.http.post<void>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.CAMBIAR_ESTADO_CITA_RESERVADO_ATENDIDO}/${idCita}`, request).pipe(
+        catchError(error => {
+          return throwError(() => error);
+        })
+      )
     );
   }
 

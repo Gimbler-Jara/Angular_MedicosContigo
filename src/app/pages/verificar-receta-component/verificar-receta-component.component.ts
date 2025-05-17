@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { DetalleCitaAtendidaDTO } from '../../DTO/DetalleCitaAtendida.interface';
+import { DetalleCitaAtendidaDTO } from '../../DTO/DetalleCitaAtendida.DTO';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { CitasService } from '../../services/citas.service';

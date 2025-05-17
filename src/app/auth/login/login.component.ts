@@ -3,9 +3,10 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { LoginDTO } from '../../DTO/Login.interface';
+import { LoginDTO } from '../../DTO/Login.interface.DTO';
 import Swal from 'sweetalert2';
 import { LoadingComponent } from '../../pages/loading/loading.component';
+import { showAlert } from '../../utils/utilities';
 
 @Component({
   selector: 'app-login',
@@ -33,53 +34,49 @@ export class LoginComponent {
   }
 
   iniciarSesion(): void {
-    if (this.formularioLogin.valid) {
-      this.isLoading = true;
-      var user: LoginDTO = {
-        email: this.formularioLogin.value.email,
-        password: this.formularioLogin.value.password
-      }
-      console.log('Datos enviados:', user);
-      this.authService.login(user).then(usuario => {
-        if (usuario) {          
-          if (usuario.rol?.id === 1) {
-            this.router.navigate(['/perfil']);
-          } else if (usuario.rol?.id === 2) {
-            this.router.navigate(['/perfil-medico']);
-          } else if (usuario.rol?.id === 3) {
-            this.router.navigate(['/admin']);
-          } else {
-            this.showAlert('error', 'Rol de usuario no reconocido');
-          }
+    if (!this.formularioLogin.valid) return;
 
-          this.formularioLogin.reset();
-          this.isLoading = false;
-          this.showAlert('success', 'Inicio de sesión exitoso');
+    this.isLoading = true;
+
+    const { email, password } = this.formularioLogin.value;
+    const credentials: LoginDTO = { email, password };
+
+    console.log('Datos enviados:', credentials);
+
+    this.authService.login(credentials)
+      .then(usuario => {
+        if (!usuario || !usuario.rol?.id) {
+          showAlert('error', 'No se pudo determinar el rol del usuario');
+          return;
         }
-      }).catch(error => {
-        console.error('Error al iniciar sesión:', error)
-        console.log(error?.error?.message);
+
+        const ruta = this.obtenerRutaPorRol(usuario.rol.id);
+        if (ruta) {
+          this.router.navigate([ruta]);
+          showAlert('success', 'Inicio de sesión exitoso');
+        } else {
+          showAlert('error', 'Rol de usuario no reconocido');
+        }
+
+        this.formularioLogin.reset();
+      })
+      .catch(error => {
+        console.error('Error al iniciar sesión:', error);
+        showAlert('error', error?.error?.message || 'Error al iniciar sesión');
+      })
+      .finally(() => {
         this.isLoading = false;
-        this.showAlert('error', error?.error?.message || 'Error al iniciar sesión');
       });
+  }
+
+
+  private obtenerRutaPorRol(rolId: number): string | null {
+    switch (rolId) {
+      case 1: return '/perfil';
+      case 2: return '/perfil-medico';
+      case 3: return '/admin';
+      default: return null;
     }
   }
 
-  showAlert(icon: 'warning' | 'error' | 'success', message: string) {
-    const Toast = Swal.mixin({
-      toast: true,
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-      }
-    });
-    Toast.fire({
-      icon: icon,
-      title: message
-    });
-  }
 }

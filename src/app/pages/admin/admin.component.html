@@ -55,11 +55,12 @@
                             <th>N° Doc.</th>
                             <th>Apellidos</th>
                             <th>Nombres</th>
-                            <th>Especialidad</th>
                             <th>Teléfono</th>
                             <th>Email</th>
                             <th>Género</th>
                             <th>Fecha de Nacimiento</th>
+                            <th>Especialidad</th>
+                            <th>CMP</th>
                             <th>Activo</th>
                             <th>Acciones</th>
                         </tr>
@@ -72,11 +73,12 @@
                             <td>{{ medico.usuario.dni }}</td>
                             <td>{{ medico.usuario.lastName }} {{ medico.usuario.middleName || '' }}</td>
                             <td>{{ medico.usuario.firstName }}</td>
-                            <td>{{ medico.especialidad.especialidad }}</td>
                             <td>{{ medico.usuario.telefono }}</td>
                             <td>{{ medico.usuario.email }}</td>
                             <td>{{ medico.usuario.gender === 'M' ? 'Masculino' : 'Femenino' }}</td>
-                            <td>{{ medico.usuario.birthDate | date:'yyyy-MM-dd'}}</td>
+                            <td>{{ medico.usuario.birthDate | date:'dd-MM-yyyy'}}</td>
+                            <td>{{ medico.especialidad.especialidad }}</td>
+                            <td>{{ medico.cmp }}</td>
                             <td>{{medico.usuario.activo ? "SI":"NO"}}</td>
                             <td>
                                 <a (click)="abrirModalEditarMedico(medico)"><i class="fa-solid fa-user-pen"></i></a>
@@ -128,7 +130,7 @@
                             <td>{{ paciente.usuario.lastName }} {{ paciente.usuario.middleName || '' }}</td>
                             <td>{{ paciente.usuario.firstName }} </td>
                             <td>{{ paciente.usuario.gender === 'F' ? 'Femenino' : 'Masculino' }}</td>
-                            <td>{{ paciente.usuario.birthDate | date:'yyyy-MM-dd' }}</td>
+                            <td>{{ paciente.usuario.birthDate | date:'dd-MM-yyyy' }}</td>
                             <td>{{ paciente.usuario.telefono }}</td>
                             <td>{{ paciente.usuario.email }}</td>
                             <td>{{paciente.usuario.activo ? "SI":"NO"}}</td>

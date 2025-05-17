@@ -1,4 +1,4 @@
-import { MedicamentoInputDTO } from "./MedicamentoInput.interface";
+import { MedicamentoInputDTO } from "./MedicamentoInput.DTO";
 
 export interface DiagnosticoRequestDTO {
   diagnostico: string;

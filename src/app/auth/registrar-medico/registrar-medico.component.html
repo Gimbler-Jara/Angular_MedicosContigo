@@ -141,15 +141,34 @@
             </div>
         </div>
 
-        <div class="file-upload">
-            <label for="firma" class="file-label">
-                @if (selectedFile) {
-                <span class="file-name">Firma seleccionada: {{ selectedFile.name }}</span>
-                }@else {
-                Seleccionar firma digital
+
+        <div class="input-group-password">
+            <div class="form-group input-control">
+                <!-- <div class="file-upload"> -->
+                    <label for="firma" class="file-label">
+                        @if (selectedFile) {
+                        <span class="file-name">Firma seleccionada: {{ selectedFile.name }}</span>
+                        }@else {
+                        Seleccionar firma digital
+                        }
+                        <input type="file" id="firma" (change)="onFileSelected($event)" hidden />
+                    </label>
+                <!-- </div> -->
+
+            </div>
+            <div class="form-group input-control">
+                <input type="text" formControlName="cmp" placeholder="CMP" />
+                @if (formularioMedico.get('cmp')?.invalid && formularioMedico.get('cmp')?.touched) {
+                <div class="error">
+                    @if (formularioMedico.get('cmp')?.errors?.['required']) {
+                    <span>El CMP es obligatorio.</span>
+                    }
+                    @if (formularioMedico.get('cmp')?.errors?.['pattern']) {
+                    <span>CMP inválido.</span>
+                    }
+                </div>
                 }
-                <input type="file" id="firma" (change)="onFileSelected($event)" hidden />
-            </label>
+            </div>
         </div>
 
 

@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 import { Document_Type } from '../../interface/DocumentType.interface';
 import { DocumentTypeService } from '../../services/document-type.service';
 import { LoadingComponent } from '../../pages/loading/loading.component';
+import { enviarCorreoBienvenida, mostrarErroresEdad, showAlert, validarEdad } from '../../utils/utilities';
 
 @Component({
   selector: 'app-register',
@@ -48,7 +49,6 @@ export class RegisterComponent {
     telefono: '',
     email: '',
     password_hash: '',
-    // confirmPassword: ''
   };
 
   constructor(private fb: FormBuilder) {
@@ -96,30 +96,13 @@ export class RegisterComponent {
   }
 
 
-  registrarUsuario() {
+  async registrarUsuario() {
     if (this.formularioUsuario.valid) {
       this.isLoading = true;
+
       const birthDate = new Date(this.formularioUsuario.value.birth_date);
-      const today = new Date();
-      var age = today.getFullYear() - birthDate.getFullYear();
-      const monthDiff = today.getMonth() - birthDate.getMonth();
-      const dayDiff = today.getDate() - birthDate.getDate();
-
-      if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-        age--;
-      }
-
-      if (age < 18) {
-        this.showAlert('error', 'Debe ser mayor de edad para registrarse.');
-        this.isLoading = false;
-        return;
-      }
-
-      if (age > 80) {
-        this.showAlert('error', 'Seleccione correctamente su fecha de nacimiento.');
-        this.isLoading = false;
-        return;
-      }
+      const edad = validarEdad(birthDate);
+      if (mostrarErroresEdad(edad)) return;
 
       var usuario: UsuarioPacienteRequest = {
         documentTypeId: Number(this.formularioUsuario.value.document_type),
@@ -134,14 +117,15 @@ export class RegisterComponent {
         password: this.formularioUsuario.value.password_hash,
       }
 
-      this.usuarioService.registrarPaciente(usuario).then((response) => {
-        console.log('Registro exitoso:', response);
+      this.usuarioService.registrarPaciente(usuario).then(() => {
         this.isLoading = false;
-        var mensaje = getRegisterTemplateHTML(usuario.firstName, usuario.lastName, usuario.email!, usuario.password)
-        this.emailService.message(usuario.email!, "Bienvenido a la plataforma de citas médicas. Su registro ha sido exitoso.", mensaje).then((value) => { }).catch((error) => { });
 
         this.formularioUsuario.reset(this.formularioInicial);
-        this.showAlert('success', 'Registro exitoso. Por favor verifica tu correo electrónico para más detalles.');
+        showAlert('success', 'Registro exitoso. Por favor verifica tu correo electrónico para más detalles.');
+        enviarCorreoBienvenida(this.emailService, usuario.firstName, usuario.lastName, usuario.email!, usuario.password).then(() => {
+          console.log("mensaje enviado");
+
+        });
 
         if (!this.authService.isAuthenticated()) {
           this.router.navigate(['/login']);
@@ -149,27 +133,8 @@ export class RegisterComponent {
       }).catch((error) => {
         this.isLoading = false;
         console.error('Error al registrar paciente:', error.error.message);
-        this.showAlert('error', error.error.message);
+        showAlert('error', error.error.message);
       });
     }
-  }
-
-
-  showAlert(icon: 'warning' | 'error' | 'success', message: string) {
-    const Toast = Swal.mixin({
-      toast: true,
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-      }
-    });
-    Toast.fire({
-      icon: icon,
-      title: message
-    });
   }
 }

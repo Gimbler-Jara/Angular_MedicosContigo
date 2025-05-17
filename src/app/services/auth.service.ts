@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { UsuarioMedicoRequest, UsuarioPacienteRequest, UsuarioResponse } from '../interface/Usuario/Usuario.interface';
 import { catchError, lastValueFrom, map, Observable, throwError } from 'rxjs';
-import { API, USUARIO, MEDICOS, PACIENTES, ENDPOINTS_USUARIO } from '../utils/constants';
-import { LoginDTO } from '../DTO/Login.interface';
+import { API, USUARIO, MEDICOS, PACIENTES, ENDPOINTS_USUARIO } from '../utils/constants_API';
+import { LoginDTO } from '../DTO/Login.interface.DTO';
 import { LocalStorageService } from './local-storage.service';
 import { jwtDecode } from 'jwt-decode';
 
@@ -23,14 +23,21 @@ export class AuthService {
   cambiarEstadoUsuario(id: number): Promise<{ success: boolean; message: string }> {
     var url = `${API}/${USUARIO}/${ENDPOINTS_USUARIO.CAMBIAR_ESTADO}/${id}`;
 
-    return lastValueFrom(
-      this.http.put<{ success: boolean; message: string }>(url, id)
+    return lastValueFrom(this.http.put<{ success: boolean; message: string }>(url, id).pipe(
+      catchError(error => {
+        return throwError(() => error);
+      })
+    )
     );
   }
 
 
   registrarPaciente(usuario: UsuarioPacienteRequest): Promise<UsuarioPacienteRequest> {
-    return lastValueFrom(this.http.post<UsuarioPacienteRequest>(`${API}/${PACIENTES}`, usuario));
+    return lastValueFrom(this.http.post<UsuarioPacienteRequest>(`${API}/${PACIENTES}`, usuario).pipe(
+      catchError(error => {
+        return throwError(() => error);
+      })
+    ));
   }
 
 
@@ -39,9 +46,11 @@ export class AuthService {
   // }
 
   registrarMedico(formData: FormData): Promise<any> {
-    return lastValueFrom(
-      this.http.post(`${API}/${MEDICOS}`, formData)
-        .pipe(catchError(error => throwError(() => error)))
+    return lastValueFrom(this.http.post(`${API}/${MEDICOS}`, formData).pipe(
+      catchError(error => {
+        return throwError(() => error);
+      })
+    )
     );
   }
 
@@ -94,7 +103,7 @@ export class AuthService {
     if (!token) return null;
 
     try {
-      const decoded: any = jwtDecode(token);      
+      const decoded: any = jwtDecode(token);
       return decoded.rol || null;
     } catch {
       return null;

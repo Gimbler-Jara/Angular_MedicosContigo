@@ -34,7 +34,7 @@
 
         <div class="buttons">
             <div class="contacto">
-                <a href="tel:980793614" class="telefono-btn">
+                <a href="tel:980793614" class="btns telefono-btn">
                     <i class="fas fa-phone"></i> 980 793 614
                 </a>
             </div>
@@ -46,21 +46,21 @@
             @switch (rolUsuario) {
             @case ("Paciente"){
             <div class="contacto">
-                <a [routerLink]="['/perfil']" class="telefono-btn">
+                <a [routerLink]="['/perfil']" class="btns">
                     <i class="fa-solid fa-user-tie"></i>
                 </a>
             </div>
             }
             @case ("Médico"){
             <div class="contacto">
-                <a [routerLink]="['/perfil-medico']" class="telefono-btn">
+                <a [routerLink]="['/perfil-medico']" class="btns">
                     <i class="fa-solid fa-user-tie"></i>
                 </a>
             </div>
             }
             @case ("Administrador"){
             <div class="contacto">
-                <a [routerLink]="['/admin']" class="telefono-btn">
+                <a [routerLink]="['/admin']" class="btns">
                     <i class="fa-solid fa-user-tie"></i>
                 </a>
             </div>
@@ -68,13 +68,13 @@
             }
 
             <div class="contacto">
-                <a (click)="logOut()" class="telefono-btn">
+                <a (click)="logOut()" class="btns">
                     <i class="fa-solid fa-right-from-bracket"></i>
                 </a>
             </div>
             }@else {
             <div class="contacto">
-                <a [routerLink]="['/login']" class="telefono-btn">
+                <a [routerLink]="['/login']" class="btns">
                     <i class="fa-solid fa-user-tie"></i> Login
                 </a>
             </div>
@@ -90,7 +90,7 @@
 
     @if (isLoggedIn && rolUsuario === "Paciente") {
     <div class="registrate">
-        <a [routerLink]="['/perfil']" class="telefono-btn">
+        <a [routerLink]="['/perfil']" class="btns">
             <i class="fa-regular fa-calendar-plus"></i> Agendar cita
         </a>
     </div>
@@ -98,7 +98,7 @@
 
     @if (!isLoggedIn) {
     <div class="registrate">
-        <a [routerLink]="['/login']" class="telefono-btn">
+        <a [routerLink]="['/login']" class="btns">
             <i class="fa-regular fa-calendar-plus"></i> Agendar cita
         </a>
     </div>

@@ -1,24 +1,22 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { UsuarioResponse } from '../../interface/Usuario/Usuario.interface';
-import { CitasAgendadasResponseDTO } from '../../DTO/CitasAgendada.response.interface';
+import { CitasAgendadasResponseDTO } from '../../DTO/CitasAgendada.response.DTO';
 import { CitasService } from '../../services/citas.service';
-import { RegistrarDisponibilidadCitaDTO } from '../../DTO/RegistrarDisponibilidad.interface';
+import { RegistrarDisponibilidadCitaDTO } from '../../DTO/RegistrarDisponibilidad.DTO';
 import { MedicoService } from '../../services/medico.service';
-import { DisponibilidadCitaPorMedicoDTO } from '../../DTO/DisponibilidadCitaPorMedico.interface';
-import { CambiarEstadoDisponibilidadDTO } from '../../DTO/CambiarEstadoDisponibilidad.interface';
+import { DisponibilidadCitaPorMedicoDTO } from '../../DTO/DisponibilidadCitaPorMedico.DTO';
+import { CambiarEstadoDisponibilidadDTO } from '../../DTO/CambiarEstadoDisponibilidad.DTO';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { CommonModule, DatePipe } from '@angular/common';
-import Swal from 'sweetalert2';
 import { Especialidad } from '../../interface/Especialidad.interface';
-import { MedicamentoInputDTO } from '../../DTO/MedicamentoInput.interface';
+import { MedicamentoInputDTO } from '../../DTO/MedicamentoInput.DTO';
 import { DiasSemanaService } from '../../services/dias-semana.service';
 import { DiaSemana } from '../../interface/DiaSemana.interface';
-import { DetalleCitaAtendidaDTO } from '../../DTO/DetalleCitaAtendida.interface';
+import { DetalleCitaAtendidaDTO } from '../../DTO/DetalleCitaAtendida.DTO';
 import { PacienteService } from '../../services/paciente.service';
-import { UsuarioStorage } from '../../DTO/UsuarioStorage.interface';
-import { obtenerDiaSemana } from '../../utils/utilities';
+import { UsuarioStorage } from '../../DTO/UsuarioStorage.DTO';
+import { obtenerDiaSemana, showAlert } from '../../utils/utilities';
 
 @Component({
   selector: 'app-perfil-medico',
@@ -84,7 +82,9 @@ export class PerfilMedicoComponent {
 
   agregarDisponibilidad() {
     if (this.nuevaDisponibilidad.dia && this.nuevaDisponibilidad.hora) {
-      this.medicoService.obtenerEspecialidadPorIdMedico(this.usuario.id!).then(e => {
+
+      this.medicoService.obtenerEspecialidadPorIdMedico(this.usuario.id!).then(especialidad => {
+
         var diaIndex = this.diasSemana.findIndex(d => d.id == this.nuevaDisponibilidad.dia);
         var horaIndex = this.horas.findIndex(d => d == this.nuevaDisponibilidad.hora);
 
@@ -92,11 +92,8 @@ export class PerfilMedicoComponent {
           idMedico: this.usuario.id!,
           idDiaSemana: diaIndex + 1,
           idHora: horaIndex + 1,
-          idEspecialidad: e.id
+          idEspecialidad: especialidad.id
         }
-
-        console.log(cita);
-
 
         this.citasService.registrarDisponibilidad(cita)
           .then(res => {
@@ -105,13 +102,13 @@ export class PerfilMedicoComponent {
               this.nuevaDisponibilidad.dia = 0;
               this.nuevaDisponibilidad.hora = "";
               this.listarDisponiblidadesDeCita();
-              this.showAlert('success', res.message);
+              showAlert('success', res.message);
             } else {
-              this.showAlert('error', res.message);
+              showAlert('error', res.message);
             }
           })
           .catch(error => {
-            this.showAlert('error', error?.error?.message || 'Error al registrar disponibilidad');
+            showAlert('error', error?.error?.message || 'Error al registrar disponibilidad');
             alert(error?.error?.message || 'Error al registrar disponibilidad');
           });
       }).catch((error) => {
@@ -130,7 +127,7 @@ export class PerfilMedicoComponent {
 
     this.medicoService.cambiarEstadoCita(data).then(() => {
       this.listarDisponiblidadesDeCita();
-      this.showAlert('success', 'Disponibilidad actualizada correctamente');
+      showAlert('success', 'Disponibilidad actualizada correctamente');
     });
   }
 
@@ -204,7 +201,7 @@ export class PerfilMedicoComponent {
 
     this.citasService.marcarcitaComoAtendido(this.idCitaSeleccionada, request).then(() => {
       this.listarCitasAgendadas();
-      this.showAlert('success', 'Cita marcada como atendida');
+      showAlert('success', 'Cita marcada como atendida');
       this.mostrarModalDiagnostico = false;
       this.resetFormulario();
     }).catch(error => {
@@ -251,24 +248,5 @@ export class PerfilMedicoComponent {
 
   obtenerDiaSemana(fecha:string) {
     return obtenerDiaSemana(fecha);
-  }
-
-
-  showAlert(icon: 'warning' | 'error' | 'success', message: string) {
-    const Toast = Swal.mixin({
-      toast: true,
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-      }
-    });
-    Toast.fire({
-      icon: icon,
-      title: message
-    });
   }
 }

@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EmailService } from '../../services/email.service';
 import Swal from 'sweetalert2';
+import { showAlert } from '../../utils/utilities';
 
 @Component({
   selector: 'app-contacto',
@@ -38,29 +39,10 @@ export class ContactoComponent {
         mensaje: datos.mensaje
       }
       this.emailService.contactanos(data);
-      this.showAlert('success', 'Mensaje enviado correctamente.');
+      showAlert('success', 'Mensaje enviado correctamente.');
       this.formularioContacto.reset();
     } else {
       alert('Por favor completa todos los campos correctamente.');
     }
-  }
-
-
-  showAlert(icon: 'warning' | 'error' | 'success', message: string) {
-    const Toast = Swal.mixin({
-      toast: true,
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-      }
-    });
-    Toast.fire({
-      icon: icon,
-      title: message
-    });
   }
 }

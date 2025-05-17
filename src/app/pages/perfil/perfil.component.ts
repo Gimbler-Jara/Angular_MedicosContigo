@@ -2,29 +2,29 @@ import { AsyncPipe, CommonModule, DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { CitasService } from '../../services/citas.service';
 import { Especialidad } from '../../interface/Especialidad.interface';
-import { AgendarCitaMedicaDTO } from '../../DTO/CitaMedica.interface';
+import { AgendarCitaMedicaDTO } from '../../DTO/CitaMedica.DTO';
 import { UsuarioPacienteRequest, UsuarioResponse } from '../../interface/Usuario/Usuario.interface';
 import { AuthService } from '../../services/auth.service';
 import { EspecialidadService } from '../../services/especialidad.service';
-import { MedicosPorEspecialidadDTO } from '../../DTO/MedicosPorEspecialidad.interface';
-import { HorasDispiniblesDTO } from '../../DTO/HorasDispinibles.interface';
-import { obtenerProximaFecha } from '../../utils/utilities';
-import { CitasReservadasPorPacienteResponseDTO } from '../../DTO/CitasReservadasPorPaciente.interface';
+import { MedicosPorEspecialidadDTO } from '../../DTO/MedicosPorEspecialidad.DTO';
+import { HorasDispiniblesDTO } from '../../DTO/HorasDispinibles.DTO';
+import { obtenerCamposUsuario, obtenerProximaFecha, obtenerValidacionesDeCamposUsuario, showAlert, validarEdad } from '../../utils/utilities';
+import { CitasReservadasPorPacienteResponseDTO } from '../../DTO/CitasReservadasPorPaciente.DTO';
 import { DiaSemana } from '../../interface/DiaSemana.interface';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MedicoService } from '../../services/medico.service';
-import { PacienteDTO } from '../../DTO/paciente.interface';
-import { PacienteActualizacionDTO } from '../../DTO/PacienteActualizacion.interface';
+import { PacienteDTO } from '../../DTO/paciente.DTO';
+import { PacienteActualizacionDTO } from '../../DTO/PacienteActualizacion.DTO';
 import { PacienteService } from '../../services/paciente.service';
 import { ModalEditarUsuarioComponent } from '../modal-editar-usuario/modal-editar-usuario.component';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { EmailService } from '../../services/email.service';
 import { getCancelarCitaTemplaeHTML, getReservarCitaTemplateHTML } from '../../utils/template';
 import Swal from 'sweetalert2';
-import { DetalleCitaAtendidaDTO } from '../../DTO/DetalleCitaAtendida.interface';
+import { DetalleCitaAtendidaDTO } from '../../DTO/DetalleCitaAtendida.DTO';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { UsuarioStorage } from '../../DTO/UsuarioStorage.interface';
+import { UsuarioStorage } from '../../DTO/UsuarioStorage.DTO';
 import { QRCodeComponent } from 'angularx-qrcode';
 
 
@@ -191,7 +191,7 @@ export class PerfilComponent {
 
       this.citaService.agendarCita(nuevaCita).then(() => {
 
-        this.showAlert('success', 'Cita médica agendada correctamente.');
+        showAlert('success', 'Cita médica agendada correctamente.');
         var mensaje = getReservarCitaTemplateHTML(this.usuario.firstName, this.usuario.lastName, nuevaCita.fecha, this.getHoraTexto(this.horaSeleccionada!), this.medicoSeleccionado?.medico!, "", this.especialidadSeleccionada?.especialidad!);
         this.emailService.message(this.usuario.email!, "Cita médica agendada", mensaje).then((value) => { }).catch((error) => { });
 
@@ -203,7 +203,7 @@ export class PerfilComponent {
         this.fechasFiltradas = [];
         this.horasFiltradas = [];
       }).catch((error) => {
-        this.showAlert('error', 'Error al agendar la cita médica.');
+        showAlert('error', 'Error al agendar la cita médica.');
       });
 
     }
@@ -222,93 +222,30 @@ export class PerfilComponent {
 
 
   abrirModalEditarPaciente(paciente: PacienteDTO) {
-    this.modalFormGroup = this.fb.group({
-      idUsuario: [paciente.idUsuario],
-      firstName: [paciente.usuario.firstName || '', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)]],
-      middleName: [paciente.usuario.middleName || '', [Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/)]],
-      lastName: [paciente.usuario.lastName || '', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)]],
-      telefono: [paciente.usuario.telefono || '', [Validators.required, Validators.pattern(/^\d{9}$/)]],
-      birthDate: [paciente.usuario.birthDate || '', Validators.required],
-      gender: [paciente.usuario.gender || '', Validators.required],
-      dni: [paciente.usuario.dni || '', Validators.required],
-      email: [paciente.usuario.email || '', [Validators.required, Validators.email]],
-      password: [''], // dejar en blanco si no desea actualizar
-      documentTypeId: [paciente.usuario.documentType?.id || null, Validators.required]
-    });
+    this.modalFormGroup = this.fb.group(obtenerValidacionesDeCamposUsuario(paciente.usuario));
+    this.pacienteEditado = structuredClone(paciente);
 
-    this.pacienteEditado = JSON.parse(JSON.stringify(paciente));
     this.modalTipo = 'paciente';
-    this.modalTitulo = 'Editar Paciente';
+    this.modalTitulo = 'Editar Datos';
 
-    this.modalCampos = [
-      {
-        name: 'documentTypeId', label: 'Tipo de Documento', type: 'select', options: [
-          { value: 1, label: 'DNI' },
-          { value: 2, label: 'Carnet de Extranjería' },
-          { value: 3, label: 'Pasaporte' },
-        ]
-      },
-      { name: 'dni', label: 'DNI' },
-      { name: 'firstName', label: 'Nombre' },
-      { name: 'lastName', label: 'Apellido Paterno' },
-      { name: 'middleName', label: 'Apellido Materno' },
-      { name: 'telefono', label: 'Teléfono' },
-      { name: 'birthDate', label: 'Fecha de Nacimiento', type: 'date' },
-      {
-        name: 'gender', label: 'Género', type: 'select', options: [
-          { value: 'M', label: 'Masculino' },
-          { value: 'F', label: 'Femenino' }
-        ]
-      },
-      { name: 'email', label: 'Correo Electrónico' },
-      { name: 'password', label: 'Nueva Contraseña', type: 'password' },
-    ];
+    this.modalCampos = obtenerCamposUsuario();
 
     this.mostrarModalUsuario = true;
   }
 
-
-
-  // guardarCambiosUsuario() {
-  //   if (this.modalTipo === 'paciente' && this.pacienteEditado) {
-  //     const dto: PacienteActualizacionDTO = {
-  //       idUsuario: this.pacienteEditado.idUsuario,
-  //       ...this.modalFormGroup.value
-  //     };
-
-  //     this.pacienteService.actualizarPaciente(dto.idUsuario, dto)
-  //       .then(res => {
-  //         if (res.success) {
-  //           this.usuario.middleName = dto.middleName;
-  //           this.usuario.firstName = dto.firstName;
-  //           this.usuario.lastName = dto.lastName;
-  //           this.usuario.telefono = dto.telefono;
-
-  //           var u: UsuarioStorage = {
-  //             id: this.usuario.id,
-  //             firstName: this.usuario.firstName,
-  //             lastName: this.usuario.lastName,
-  //             middleName: this.usuario.middleName!,
-  //             email: this.usuario.email!,
-  //             telefono: this.usuario.telefono!
-  //           }
-  //           this.localStorageService.setUsuario(u);
-  //           this.cerrarModalUsuario();
-  //           this.showAlert('success', "Datos actualizados correctamente");
-  //         }
-  //       })
-  //       .catch(() =>
-  //         this.showAlert('error', 'Error al actualizar paciente')
-  //       );
-  //   }
-  // }
-
   guardarCambiosUsuario(payload: { datos: any, archivo?: File }) {
     const datosFormulario = payload.datos;
 
-    if (!this.modalFormGroup.valid) {
-      this.showAlert('warning', 'Por favor, complete todos los campos correctamente.');
-      console.log(this.modalFormGroup.errors);
+    const birthDate = new Date(datosFormulario.birthDate);
+    const edad = validarEdad(birthDate);
+
+    if (edad < 18) {
+      showAlert('error', 'La Edad debe de ser mayor a 18 años.');
+      return;
+    }
+
+    if (edad > 80) {
+      showAlert('error', 'Seleccione correctamente su fecha de nacimiento.');
       return;
     }
 
@@ -334,13 +271,13 @@ export class PerfilComponent {
             this.usuario = usuarioActualizado;
             this.localStorageService.setUsuario(usuarioActualizado);
 
-            this.showAlert('success', res.message);
+            showAlert('success', res.message);
             this.cerrarModalUsuario();
           }
         })
         .catch((err) => {
           console.error("Error al actualizar paciente", err);
-          this.showAlert('error', 'Error al actualizar paciente');
+          showAlert('error', 'Error al actualizar paciente');
         });
     }
   }
@@ -403,10 +340,10 @@ export class PerfilComponent {
 
           var mensaje = getCancelarCitaTemplaeHTML(this.usuario.firstName, this.usuario.lastName, formattedFecha, this.getHoraTexto(citaEncontrada?.idHora!), citaEncontrada?.medico!, "", citaEncontrada?.especialidad!);
           this.emailService.message(this.usuario.email!, "Cita médica cancelada", mensaje).then((value) => { }).catch((error) => { });
-          this.showAlert('success', "Cita cancelada correctamente");
+          showAlert('success', "Cita cancelada correctamente");
         }).catch((error) => {
           console.log("Error ala eliminar cita " + error);
-          this.showAlert('error', "Error al cancelar la cita");
+          showAlert('error', "Error al cancelar la cita");
         })
       }
     });
@@ -489,23 +426,5 @@ export class PerfilComponent {
 
   toggleConfirm(): void {
     this.showConfirm = !this.showConfirm;
-  }
-
-  showAlert(icon: 'warning' | 'error' | 'success', message: string) {
-    const Toast = Swal.mixin({
-      toast: true,
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-      }
-    });
-    Toast.fire({
-      icon: icon,
-      title: message
-    });
   }
 }

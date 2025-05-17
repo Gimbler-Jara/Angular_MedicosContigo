@@ -1,4 +1,4 @@
-import { DisponibilidadCitaPorMedicoDTO } from "./DisponibilidadCitaPorMedico.interface";
+import { DisponibilidadCitaPorMedicoDTO } from "./DisponibilidadCitaPorMedico.DTO";
 
 export interface DisponibilidadesResponse {
     data: DisponibilidadCitaPorMedicoDTO[];
