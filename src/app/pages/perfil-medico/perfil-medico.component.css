@@ -271,6 +271,11 @@
   transform: scale(1.01);
 }
 
+/* .content {
+  width: 60%;
+  background-color: red;
+} */
+
 .btn-atendido {
   padding: 5px 15px;
   color: green;
@@ -292,13 +297,13 @@
 
 .btn-historial {
   padding: 5px 15px;
-  color: #0B446E;
+  color: #0b446e;
   border-radius: 10px;
   background-color: #e0f7fa;
   border: 1px solid #b2ebf2;
   text-decoration: none;
   cursor: pointer;
-  margin-left: 10px;
+  margin: 0px 10px;
 }
 
 .btn-historial:hover {
@@ -308,6 +313,7 @@
 
 .btn-historial i {
   padding-left: 10px;
+  color: #00acc1;
 }
 
 /* *====================  MODAL MARCAR COMO ATENDIDO ============================= */
@@ -412,7 +418,7 @@ input[type="text"] {
   box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
 }
 
-.modal-body{
+.modal-body {
   max-height: 500px;
   overflow-y: auto;
 }

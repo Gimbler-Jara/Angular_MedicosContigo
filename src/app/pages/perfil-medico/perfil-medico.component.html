@@ -12,10 +12,6 @@
         </div>
     </aside>
 
-    <div class="perfil-lateral">
-
-    </div>
-
     <!-- Panel derecho con menú y contenido -->
     <div class="perfil-derecha">
         <div class="menu-opciones">
@@ -52,32 +48,52 @@
                         <th style="text-align: center;">Hora</th>
                         <th style="text-align: center;">Paciente</th>
                         <th style="text-align: center;">Estado de cita</th>
+                        <th style="text-align: center;">Tipo de cita</th>
                         <th style="text-align: center;">Marcar como atendido</th>
                     </tr>
                 </thead>
                 <tbody>
                     @for (cita of citasFiltradas; track $index) {
                     <tr>
-                        <td style="text-align: center;">{{obtenerDiaSemana(cita.fecha)}} {{ cita.fecha | date:'dd-MM-yyyy' }}</td>
+                        <td style="text-align: center;">{{obtenerDiaSemana(cita.fecha)}} {{ cita.fecha |
+                            date:'dd-MM-yyyy' }}</td>
                         <td style="text-align: center;">{{ cita.hora }}</td>
                         <td style="text-align: center;">{{ cita.pacienteNombre }}</td>
-                        <td style="text-align: center;"><span class="estado {{ cita.estado }}">{{ cita.estado }}</span>
+                        <td style="text-align: center;"><span>{{ cita.estado }}</span>
                         </td>
-                        <td style="text-align: center;">
-                            <a (click)=" marcarcitaComoAtendido(cita.id) " class="btn-atendido"
-                                [style.pointerEvents]="!esCitaPasada(cita.fecha, cita.hora) ? 'none' : 'auto'"
-                                [style.opacity]="!esCitaPasada(cita.fecha, cita.hora) ? 0.5 : 1">
-                                Atendido
-                                <i class="fa-solid fa-check-to-slot"></i>
-                            </a>
-                            <!-- <a (click)=" marcarcitaComoAtendido(cita.id) " class="btn-atendido">
+                        <td style="text-align: center;">{{cita.tipo_cita===0 ? "Presencial":"Teleconsulta"}}</td>
+                        <td style="width: 480px; text-align: center;">
+                            <div class="content">
+                                <a (click)=" marcarcitaComoAtendido(cita.id) " class="btn-atendido"
+                                    [style.pointerEvents]="!esCitaPasada(cita.fecha, cita.hora) ? 'none' : 'auto'"
+                                    [style.opacity]="!esCitaPasada(cita.fecha, cita.hora) ? 0.5 : 1">
+                                    Atendido
+                                    <i class="fa-solid fa-check-to-slot"></i>
+                                </a>
+                                <!-- <a (click)=" marcarcitaComoAtendido(cita.id) " class="btn-atendido">
                                 Atendido
                                 <i class="fa-solid fa-check-to-slot"></i>
                             </a> -->
-                            <a (click)=" listarHistorialPaciente(cita.pacienteID) " class="btn-historial">
-                                Ver Historial
-                                <i class="fa-solid fa-list-ul"></i>
-                            </a>
+
+                                <a (click)=" listarHistorialPaciente(cita.pacienteID) " class="btn-historial">
+                                    Ver Historial
+                                    <i class="fa-solid fa-list-ul"></i>
+                                </a>
+
+
+                                <!-- <a [style.opacity]="cita.tipo_cita === 1 ? (esCitaPasada(cita.fecha, cita.hora) ? '1' : '0.5') : '0'"  
+                                   [style.pointerEvents]="(cita.tipo_cita === 1 && esCitaPasada(cita.fecha, cita.hora)) ? 'auto' : 'none'" 
+                                   (click)="navigateVideoCall(cita.medicoId)"
+                                    class="btn-historial">Conectarse<i class="fa-solid fa-video"></i>
+                                </a> -->
+
+                                <a [style.opacity]="cita.tipo_cita === 1 ? '1' : '0'"
+                                    [style.pointerEvents]="(cita.tipo_cita === 1 ) ? 'auto' : 'none'"
+                                    (click)="navigateVideoCall(cita.medicoId)" class="btn-historial">Conectarse<i
+                                        class="fa-solid fa-video"></i>
+                                </a>
+                            </div>
+
                         </td>
 
                     </tr>

@@ -22,7 +22,7 @@ export class VerificarRecetaComponentComponent {
     this.activedRouter.paramMap.subscribe(async (param) => {
       var idCita = param.get('id');
       this.citaService.verDetallesDeCitaAtendida(Number(idCita)).then((data) => {
-        this.detalleCita = data;
+        this.detalleCita = data; 
       }).catch((error) => {
         console.error("Error al obtener los detalles:", error);
       });

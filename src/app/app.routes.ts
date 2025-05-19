@@ -15,6 +15,7 @@ import { RegistrarMedicoComponent } from './auth/registrar-medico/registrar-medi
 import { AdminComponent } from './pages/admin/admin.component';
 import { authGuard } from './guard/auth.guard';
 import { VerificarRecetaComponentComponent } from './pages/verificar-receta-component/verificar-receta-component.component';
+import { VideocallComponent } from './pages/videocall/videocall.component';
 
 export const routes: Routes = [
     {
@@ -77,11 +78,17 @@ export const routes: Routes = [
                 component: AdminComponent,
                 canActivate: [authGuard],
             },
+
             {
                 path: "verificar-receta/:id",
                 component: VerificarRecetaComponentComponent,
             }
         ]
+    },
+    {
+        path: "videocall/:userId",
+        component: VideocallComponent,
+        canActivate: [authGuard],
     },
     {
         path: '',

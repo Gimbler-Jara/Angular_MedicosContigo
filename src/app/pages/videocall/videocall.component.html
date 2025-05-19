@@ -1,0 +1,61 @@
+<div class="contenedor-video">
+    <div class="video-home" [ngClass]="{'left-side': true}">
+
+        <div class="user-data">
+            <h3>{{ isDoctor ? 'Dr:' : 'Paciente:' }} {{nombreLocal}}</h3>
+        </div>
+
+        @if (isLocalCameraOn) {
+        <video id="localVideo" autoplay muted></video>
+        }@else {
+        <div class="loading">
+            <h2>{{getInitials(nombreLocal)}}</h2>
+        </div>
+        }
+
+        <div class="buttons">
+            @if (enableAudio) {
+            <a id="toggleCameraBtn" (click)="toggleAudio()" class="enable"><i class="fa-solid fa-microphone"></i></a>
+            }@else {
+            <a id="toggleCameraBtn" (click)="toggleAudio()" class="disable"><i
+                    class="fa-solid fa-microphone-slash"></i></a>
+            }
+            @if (enableCamera) {
+            <a id="toggleMicBtn" (click)="toggleCamera()" class="enable"><i class="fa-solid fa-camera"></i></a>
+            }@else {
+            <a id="toggleMicBtn" (click)="toggleCamera()" class="disable"><i class="fa-solid fa-video-slash"></i></a>
+            }
+            <a id="leaveBtn" (click)="leaveChannel()" class="leaveCall"><i class="fa-solid fa-phone-slash"></i></a>
+        </div>
+    </div>
+    <div class="video-remote" [ngClass]="{'right-side': true}" id="video-container">
+
+        @if (nombreRemoto!="") {
+        <div class="user-data">
+            <h3>{{ isDoctor ? 'Paciente' : 'Dr(a)' }}: {{nombreRemoto}}</h3>
+        </div>
+
+        @if (!isRemoteCameraOn) {
+        <div class="loading">
+            <h2>{{getInitials(nombreRemoto)}}</h2>
+        </div>
+        }
+
+        }@else {
+        <div class="loading">
+            <h2>Esperando conexión de {{isDoctor ? 'Paciente' : 'Dr(a)'}}</h2>
+        </div>
+        }
+
+    </div>
+</div>
+
+
+<!-- <h1>Videollama</h1>
+<input type="text" id="channelName" (input)="getChanelName($event)">
+<button id="leaveBtn" (click)="leaveChannel()">leave call</button>
+<button id="toggleCameraBtn" (click)="toggleCamera()">{{toggleCameraName}}</button>
+<button id="toggleMicBtn" (click)="toggleAudio()">{{toggleAudioName}}</button>
+<div class="video-container" id="video-container">
+    <video id="localVideo" autoplay muted></video>
+</div> -->

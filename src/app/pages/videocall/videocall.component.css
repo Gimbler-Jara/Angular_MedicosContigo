@@ -1,0 +1,107 @@
+.contenedor-video {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  background-color: #12507b;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  /* background-color: gray; */
+}
+
+.video-home,
+.video-remote {
+  width: 50%;
+  height: 100%;
+  position: relative;
+}
+
+.video-home {
+  flex-direction: column;
+  position: relative;
+}
+
+.video-remote {
+  border-left: 2px solid red;
+}
+
+#localVideo {
+  width: 100%;
+  height: 100%;
+  border-right: 2px solid red;
+  /* border: 2px solid red; */
+}
+
+/* .left-side {
+  width: 50%;
+  background-color: #f0f0f0;
+}
+
+.right-side {
+  width: 50%;
+  background-color: #e0e0e0;
+} */
+
+
+.buttons {
+  height: 80px;
+  /* background-color: #00c8d7; */
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  position: absolute;
+  bottom: 0;
+  /* padding-bottom: 40px; */
+  width: 100%;
+}
+
+.buttons a {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.leaveCall {
+  background-color: #eb3229;
+}
+
+.buttons .enable {
+  background-color: #312d2d;
+}
+
+.buttons .enable i,
+.buttons .leaveCall i {
+  color: #fff;
+}
+
+.disable {
+  background-color: #db7e79;
+}
+
+.buttons .disable i {
+  color: #734340;
+}
+
+.user-data {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* margin-top: 10px; */
+  color: #fff;
+  background-color: gray;
+  padding: 20px;
+}
+
+.loading {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

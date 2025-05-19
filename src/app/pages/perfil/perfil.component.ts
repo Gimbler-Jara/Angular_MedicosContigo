@@ -26,13 +26,16 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { UsuarioStorage } from '../../DTO/UsuarioStorage.DTO';
 import { QRCodeComponent } from 'angularx-qrcode';
+import { Router, RouterLink } from '@angular/router';
 
 
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [AsyncPipe, ReactiveFormsModule, ModalEditarUsuarioComponent, DatePipe, CommonModule, QRCodeComponent],
+  imports: [AsyncPipe, ReactiveFormsModule,
+    ModalEditarUsuarioComponent, DatePipe,
+    CommonModule, QRCodeComponent],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.css',
 })
@@ -44,6 +47,7 @@ export class PerfilComponent {
   medicoService = inject(MedicoService)
   pacienteService = inject(PacienteService)
   emailService = inject(EmailService);
+  router = inject(Router)
 
   vista: 'citas' | 'reservar' | 'extra' = 'citas';
 
@@ -72,6 +76,11 @@ export class PerfilComponent {
     { value: 3, label: 'Pasaporte' }
   ];
 
+  tipoCita = [
+    { value: 0, label: "Presencial" },
+    { value: 1, label: "Teleconsulta" }
+  ]
+
   // * EDITAR PACIENTE
   modalTipo: 'paciente' | 'medico' | null = null;
   modalTitulo: string = '';
@@ -82,11 +91,11 @@ export class PerfilComponent {
 
   pacienteEditado: PacienteDTO | null = null;
 
-  // especialidadSeleccionada: Especialidad | null = null;
   medicoSeleccionado: MedicosPorEspecialidadDTO | null = null;
   diaSeleccionada: string | null = null;
-  horaSeleccionada: number | null = null;
   fechaCitaSeleccionada: string | null = null;
+  horaSeleccionada: number | null = null;
+  tipoCitaSeleccionada: number = -1;
 
   mostrarModalDiagnosticoPaciente: boolean = false;
   detalleCita!: DetalleCitaAtendidaDTO;
@@ -178,6 +187,10 @@ export class PerfilComponent {
     this.horaSeleccionada = hora;
   }
 
+  seleccionarTipoCita(tipo: number) {
+    this.tipoCitaSeleccionada = tipo;
+  }
+
   confirmarCita() {
     if (this.especialidadSeleccionada && this.medicoSeleccionado && this.diaSeleccionada && this.horaSeleccionada) {
 
@@ -186,7 +199,8 @@ export class PerfilComponent {
         idPaciente: this.usuario.id ?? 1,
         fecha: this.fechaCitaSeleccionada!,
         idHora: this.horaSeleccionada,
-        estado: 1
+        estado: 1,
+        tipoCita: this.tipoCitaSeleccionada
       }
 
       this.citaService.agendarCita(nuevaCita).then(() => {
@@ -195,13 +209,13 @@ export class PerfilComponent {
         var mensaje = getReservarCitaTemplateHTML(this.usuario.firstName, this.usuario.lastName, nuevaCita.fecha, this.getHoraTexto(this.horaSeleccionada!), this.medicoSeleccionado?.medico!, "", this.especialidadSeleccionada?.especialidad!);
         this.emailService.message(this.usuario.email!, "Cita médica agendada", mensaje).then((value) => { }).catch((error) => { });
 
-        // this.especialidadSeleccionada = null;
         this.medicoSeleccionado = null;
         this.diaSeleccionada = null;
         this.horaSeleccionada = null;
         this.medicosFiltrados = [];
         this.fechasFiltradas = [];
         this.horasFiltradas = [];
+        this.tipoCitaSeleccionada = -1;
       }).catch((error) => {
         showAlert('error', 'Error al agendar la cita médica.');
       });
@@ -426,5 +440,19 @@ export class PerfilComponent {
 
   toggleConfirm(): void {
     this.showConfirm = !this.showConfirm;
+  }
+
+  esCitaPasada(fecha: string, hora: string): boolean {
+    const ahora = new Date();
+    const fechaHoraCita = new Date(`${fecha}T${hora}:00`);
+    return ahora >= fechaHoraCita;
+  }
+
+  navigateVideoCall(usuarioId: number) {
+    // this.router.navigate(['/videocall', usuarioId]);
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree(['/videocall', usuarioId])
+    );
+    window.open(url, '_blank');
   }
 }

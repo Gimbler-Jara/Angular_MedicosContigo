@@ -7,5 +7,6 @@ export interface CitasAgendadasResponseDTO {
     pacienteNombre: string,
     medicoId: number,
     medicoNombre: string;
-    Especialidad: string
+    Especialidad: string;
+    tipo_cita: number;
 } 

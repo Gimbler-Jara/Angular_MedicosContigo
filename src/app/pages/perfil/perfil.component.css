@@ -181,8 +181,14 @@
 .citas-lista li a {
   padding: 5px 10px;
   border-radius: 10px;
+  margin: 0px 5px;
   cursor: pointer;
   transition: transform 0.3s ease-in-out;
+}
+
+.citas-lista .teleconsulta {
+  border: 1px solid #b2ebf2;
+  color: #004d73;
 }
 
 .citas-lista .eliminar-cita {

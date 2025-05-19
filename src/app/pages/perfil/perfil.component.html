@@ -44,8 +44,20 @@
                                     ({{ cita.especialidad }})
                                 </span>
                             </div>
-                            <a class="eliminar-cita" (click)="cancelarCita(cita.id!)"><i
-                                    class="fa-solid fa-trash"></i>Cancelar Cita</a>
+                            <div class="options">
+                                @if (cita.tipo_cita) {
+                                <!-- <a class="teleconsulta" (click)="navigateVideoCall(cita.idMedico)"
+                                    [style.pointerEvents]="!esCitaPasada(cita.fecha, getHoraTexto(cita.idHora)) ? 'none' : 'auto'"
+                                    [style.opacity]="!esCitaPasada(cita.fecha, getHoraTexto(cita.idHora)) ? 0.5 : 1"><i
+                                        class="fa-solid fa-video"></i>Conectarse a la cita</a> -->
+
+                                <a class="teleconsulta" (click)="navigateVideoCall(usuario.id!)"><i
+                                        class="fa-solid fa-video"></i>Conectarse a la cita</a>
+                                }
+
+                                <a class="eliminar-cita" (click)="cancelarCita(cita.id!)"><i
+                                        class="fa-solid fa-trash"></i>Cancelar Cita</a>
+                            </div>
                         </li>
                         }
                     </ul>
@@ -124,8 +136,22 @@
                     </div>
                     }
 
+                    @if(horaSeleccionada){
+                    <div class="step">
+                        <h3><i class="fa-solid fa-hospital"></i>|<i class="fa-solid fa-laptop"></i> Selecciona el tipo de cita</h3>
+                        <div class="card-list">
+                            @for (tipo of tipoCita; track $index) {
+                            <div class="card-option" (click)="seleccionarTipoCita(tipo.value)"
+                                [class.active]="tipoCitaSeleccionada === tipo.value">
+                                {{ tipo.label }}
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    }
+
                     <!-- Confirmación -->
-                    @if (horaSeleccionada) {
+                    @if (tipoCitaSeleccionada >= 0) {
                     <div class="step confirm-section">
                         <button class="btn-confirm" (click)="confirmarCita()">
                             <i class="fa-solid fa-check-circle"></i> Confirmar Cita

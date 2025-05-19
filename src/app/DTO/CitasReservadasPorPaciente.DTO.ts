@@ -1,9 +1,10 @@
 export interface CitasReservadasPorPacienteResponseDTO {
     id?: number,
+    fecha: string,
+    idHora: number,
+    estado: string,
     idMedico: number,
     medico: string,
     especialidad: string,
-    estado: string,
-    fecha: string,
-    idHora: number
+    tipo_cita: number,
 }

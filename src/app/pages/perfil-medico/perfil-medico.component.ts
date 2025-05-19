@@ -17,6 +17,7 @@ import { DetalleCitaAtendidaDTO } from '../../DTO/DetalleCitaAtendida.DTO';
 import { PacienteService } from '../../services/paciente.service';
 import { UsuarioStorage } from '../../DTO/UsuarioStorage.DTO';
 import { obtenerDiaSemana, showAlert } from '../../utils/utilities';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-perfil-medico',
@@ -32,6 +33,8 @@ export class PerfilMedicoComponent {
   medicoService = inject(MedicoService)
   diasSemanaService = inject(DiasSemanaService);
   pacienteService = inject(PacienteService);
+  router = inject(Router)
+
   vista: 'citas' | 'agregar' | 'eliminar' = 'citas';
 
   citasProgramadas: CitasAgendadasResponseDTO[] = [];
@@ -246,7 +249,15 @@ export class PerfilMedicoComponent {
     return ahora >= fechaHoraCita;
   }
 
-  obtenerDiaSemana(fecha:string) {
+  obtenerDiaSemana(fecha: string) {
     return obtenerDiaSemana(fecha);
+  }
+
+  navigateVideoCall(usuarioId: number) {
+    // this.router.navigate(['/videocall', usuarioId]);
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree(['/videocall', usuarioId])
+    );
+    window.open(url, '_blank');
   }
 }

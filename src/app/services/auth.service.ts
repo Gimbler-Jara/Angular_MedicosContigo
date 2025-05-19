@@ -76,6 +76,14 @@ export class AuthService {
     return this.http.get<UsuarioResponse>(`${API}/${USUARIO}/me`);
   }
 
+  getUserById(id: number): Promise<UsuarioResponse> {
+    return lastValueFrom(this.http.get<UsuarioResponse>(`${API}/${USUARIO}/${id}`).pipe(
+      catchError(error => {
+        return throwError(() => error);
+      })
+    ));
+  }
+
 
   getToken() {
     return localStorage.getItem('token');
