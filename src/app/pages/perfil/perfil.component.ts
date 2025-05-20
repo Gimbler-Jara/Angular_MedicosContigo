@@ -27,6 +27,7 @@ import jsPDF from 'jspdf';
 import { UsuarioStorage } from '../../DTO/UsuarioStorage.DTO';
 import { QRCodeComponent } from 'angularx-qrcode';
 import { Router, RouterLink } from '@angular/router';
+import { v4 as uuidv4 } from 'uuid';
 
 
 
@@ -193,6 +194,11 @@ export class PerfilComponent {
 
   confirmarCita() {
     if (this.especialidadSeleccionada && this.medicoSeleccionado && this.diaSeleccionada && this.horaSeleccionada) {
+      var _nombreSala = "";
+
+      if (this.tipoCitaSeleccionada == 1) {
+        _nombreSala = uuidv4();
+      }
 
       const nuevaCita: AgendarCitaMedicaDTO = {
         idMedico: this.medicoSeleccionado.id!,
@@ -200,7 +206,8 @@ export class PerfilComponent {
         fecha: this.fechaCitaSeleccionada!,
         idHora: this.horaSeleccionada,
         estado: 1,
-        tipoCita: this.tipoCitaSeleccionada
+        tipoCita: this.tipoCitaSeleccionada,
+        nombreSala: _nombreSala
       }
 
       this.citaService.agendarCita(nuevaCita).then(() => {
@@ -325,6 +332,8 @@ export class PerfilComponent {
         for (let i = 0; i < data.length; i++) {
           if (data[i].estado.toLocaleLowerCase() != "atendido") {
             this.citasRegistradas.push(data[i]);
+            // console.log(data[i]);
+
           } else {
             this.citasAtendidas.push(data[i]);
           }
@@ -448,10 +457,10 @@ export class PerfilComponent {
     return ahora >= fechaHoraCita;
   }
 
-  navigateVideoCall(usuarioId: number) {
-    // this.router.navigate(['/videocall', usuarioId]);
+  navigateVideoCall(usuarioId: number, roomId: string) {
+    // this.router.navigate(['/videocall', usuarioId]);   
     const url = this.router.serializeUrl(
-      this.router.createUrlTree(['/videocall', usuarioId])
+      this.router.createUrlTree(['/videocall', usuarioId, roomId])
     );
     window.open(url, '_blank');
   }

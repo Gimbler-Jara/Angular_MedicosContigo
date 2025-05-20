@@ -21,14 +21,13 @@
 }
 
 .video-remote {
-  border-left: 2px solid red;
+  border-left: 2px solid rgb(70, 70, 70);
 }
 
 #localVideo {
   width: 100%;
   height: 100%;
-  border-right: 2px solid red;
-  /* border: 2px solid red; */
+  /* border-right: 2px solid rgb(70, 70, 70); */
 }
 
 /* .left-side {
@@ -41,10 +40,8 @@
   background-color: #e0e0e0;
 } */
 
-
 .buttons {
   height: 80px;
-  /* background-color: #00c8d7; */
   margin-top: auto;
   display: flex;
   justify-content: center;
@@ -52,7 +49,6 @@
   gap: 20px;
   position: absolute;
   bottom: 0;
-  /* padding-bottom: 40px; */
   width: 100%;
 }
 
@@ -92,10 +88,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* margin-top: 10px; */
   color: #fff;
   background-color: gray;
-  padding: 20px;
+  padding: 35px;
+}
+
+.user-data h2{
+  letter-spacing: 2px;
 }
 
 .loading {
@@ -104,4 +103,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.cicle {
+  width: 30%;
+  height: 30%;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cicle h2 {
+  font-size: 30pt;
+  color: #fff;
+  letter-spacing: 8px;
+  font-weight: bold;
 }

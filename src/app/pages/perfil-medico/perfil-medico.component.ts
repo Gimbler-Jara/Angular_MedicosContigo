@@ -171,6 +171,8 @@ export class PerfilMedicoComponent {
 
         if (dato[i].estado.toLocaleLowerCase() == "reservado") {
           this.citasProgramadas.push(dato[i]);
+          // console.log(dato[i]);
+          
         }
       }
       this.filtrarCitasPorDia()
@@ -228,7 +230,7 @@ export class PerfilMedicoComponent {
   listarHistorialPaciente(idPaciente: number) {
     this.pacienteService.verDetallesDeCitaAtendidaPorpaciente(idPaciente).then(res => {
       this.historialPaciente = res.reverse();
-      console.log(this.historialPaciente);
+      // console.log(this.historialPaciente);
       this.mostrarHistorial = true;
 
     }).catch(error => {
@@ -253,10 +255,10 @@ export class PerfilMedicoComponent {
     return obtenerDiaSemana(fecha);
   }
 
-  navigateVideoCall(usuarioId: number) {
+  navigateVideoCall(usuarioId: number, roomId: string) {
     // this.router.navigate(['/videocall', usuarioId]);
     const url = this.router.serializeUrl(
-      this.router.createUrlTree(['/videocall', usuarioId])
+      this.router.createUrlTree(['/videocall', usuarioId, roomId])
     );
     window.open(url, '_blank');
   }

@@ -35,7 +35,7 @@ export class MenuComponent {
       this.isAutentiticared = this.authService.isAuthenticated();
       // this.rol = usuario?.rol.id!;
       this.rolUsuario = this.authService.getUserRole()!;
-      console.log(this.rolUsuario);
+      // console.log(this.rolUsuario);
       
     });
 

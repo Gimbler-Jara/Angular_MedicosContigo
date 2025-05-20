@@ -24,21 +24,23 @@ export class VideocallComponent {
   nombreRemoto: string = "";
   isDoctor: boolean = false
   userId: string = "";
+  roomId: string = "";
   isRemoteCameraOn: boolean = true;
   isRemoteAudioOn: boolean = true;
-  isLocalCameraOn: boolean = true;
-  isLocalAudioOn: boolean = true;
   initialsName: string = "";
 
   ngOnInit(): void {
     this.activedRouter.paramMap.subscribe(async (param) => {
       this.userId = param.get('userId')!;
+      this.roomId = param.get('roomId')!;
+      console.log(this.roomId);
+      this.channel = this.roomId;
+      
       this.authService.getUserById(Number(this.userId)).then((user) => {
 
         this.nombreLocal = `${user.firstName} ${user.lastName} ${user.middleName}`;
 
         this.isDoctor = user.rol.rol.toUpperCase() === 'MÉDICO';
-        this.channel = String(user.activo);
       })
     });
 
@@ -96,17 +98,12 @@ export class VideocallComponent {
   }
 
   handleUserMediaToggled(data: any) {
-    // console.log(data.user.uuid, data.type, data.enabled);
-    if (data.user.uuid != this.userId) {
-      if (data.type == "video") {
-        this.isRemoteCameraOn = data.enabled
-        console.log("remote " + this.isRemoteCameraOn);
-      }
+    if (data.type == "video") {
+      this.isRemoteCameraOn = data.enabled
+    }
 
-      if (data.type == "Audio") {
-        this.isRemoteCameraOn = data.enabled
-        console.log(this.isRemoteCameraOn);
-      }
+    if (data.type == "Audio") {
+      this.isRemoteCameraOn = data.enabled
     }
   }
 
@@ -122,20 +119,20 @@ export class VideocallComponent {
   toggleCamera() {
     var isOn = SocketClient.isCameraOn();
     var value = !isOn;
-    this.enableCamera = !this.enableCamera;
-    this.isLocalCameraOn = !this.isLocalCameraOn;
-    console.log(this.isLocalCameraOn);
-
+    this.enableCamera = value;
     SocketClient.toggleCamera(value);
+    if (this.enableCamera == true) {
+      setTimeout(() => {
+        SocketClient.playVideoTrack('localVideo');
+      }, 100);
+    }
+
   }
 
   toggleAudio() {
     var isOn = SocketClient.isAudioOn();
     var value = !isOn
-    this.enableAudio = !this.enableAudio;
-    this.isLocalAudioOn = !this.isLocalAudioOn;
-    console.log(this.isLocalAudioOn);
-
+    this.enableAudio = value;
     SocketClient.toggleAudio(value);
   }
 

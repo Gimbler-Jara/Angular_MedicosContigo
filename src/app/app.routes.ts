@@ -86,7 +86,7 @@ export const routes: Routes = [
         ]
     },
     {
-        path: "videocall/:userId",
+        path: "videocall/:userId/:roomId",
         component: VideocallComponent,
         canActivate: [authGuard],
     },

@@ -2,14 +2,16 @@
     <div class="video-home" [ngClass]="{'left-side': true}">
 
         <div class="user-data">
-            <h3>{{ isDoctor ? 'Dr:' : 'Paciente:' }} {{nombreLocal}}</h3>
+            <h2>{{ isDoctor ? 'Dr:' : 'Paciente:' }} {{nombreLocal}}</h2>
         </div>
 
-        @if (isLocalCameraOn) {
+        @if (enableCamera) {
         <video id="localVideo" autoplay muted></video>
         }@else {
         <div class="loading">
-            <h2>{{getInitials(nombreLocal)}}</h2>
+            <div class="cicle" [style.background-color]="isDoctor ? '#00ACC1' : '#1EBC59'">
+                <h2>{{getInitials(nombreLocal)}}</h2>
+            </div>
         </div>
         }
 
@@ -32,18 +34,20 @@
 
         @if (nombreRemoto!="") {
         <div class="user-data">
-            <h3>{{ isDoctor ? 'Paciente' : 'Dr(a)' }}: {{nombreRemoto}}</h3>
+            <h2>{{ isDoctor ? 'Paciente' : 'Dr(a)' }}: {{nombreRemoto}}</h2>
         </div>
 
         @if (!isRemoteCameraOn) {
         <div class="loading">
-            <h2>{{getInitials(nombreRemoto)}}</h2>
+            <div class="cicle" [style.background-color]="!isDoctor ? '#00ACC1' : '#1EBC59'">
+                <h2>{{getInitials(nombreRemoto)}}</h2>
+            </div>
         </div>
         }
 
         }@else {
         <div class="loading">
-            <h2>Esperando conexión de {{isDoctor ? 'Paciente' : 'Dr(a)'}}</h2>
+            <h2 style="color: #fff; letter-spacing: 3px;">Esperando conexión de {{isDoctor ? 'Paciente' : 'Dr(a)'}}</h2>
         </div>
         }
 

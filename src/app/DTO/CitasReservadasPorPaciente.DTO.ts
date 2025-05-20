@@ -7,4 +7,5 @@ export interface CitasReservadasPorPacienteResponseDTO {
     medico: string,
     especialidad: string,
     tipo_cita: number,
+    nombre_sala: string
 }

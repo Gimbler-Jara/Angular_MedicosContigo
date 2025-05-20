@@ -46,13 +46,13 @@
                             </div>
                             <div class="options">
                                 @if (cita.tipo_cita) {
-                                <!-- <a class="teleconsulta" (click)="navigateVideoCall(cita.idMedico)"
+                                <a class="teleconsulta" (click)="navigateVideoCall(usuario.id!, cita.nombre_sala)"
                                     [style.pointerEvents]="!esCitaPasada(cita.fecha, getHoraTexto(cita.idHora)) ? 'none' : 'auto'"
                                     [style.opacity]="!esCitaPasada(cita.fecha, getHoraTexto(cita.idHora)) ? 0.5 : 1"><i
-                                        class="fa-solid fa-video"></i>Conectarse a la cita</a> -->
-
-                                <a class="teleconsulta" (click)="navigateVideoCall(usuario.id!)"><i
                                         class="fa-solid fa-video"></i>Conectarse a la cita</a>
+
+                                <!-- <a class="teleconsulta" (click)="navigateVideoCall(usuario.id!, cita.nombre_sala)"><i
+                                        class="fa-solid fa-video"></i>Conectarse a la cita</a> -->
                                 }
 
                                 <a class="eliminar-cita" (click)="cancelarCita(cita.id!)"><i

@@ -98,6 +98,7 @@ CREATE TABLE tb_cita_medica (
     idHora INT NOT NULL,
     estado INT DEFAULT 1,
     tipo_cita int not null,
+    nombre_sala varchar(50),
     FOREIGN KEY (id_medico) REFERENCES tb_medico(id_usuario) ON DELETE CASCADE,
     FOREIGN KEY (id_paciente) REFERENCES tb_paciente(id_usuario) ON DELETE CASCADE,
     FOREIGN KEY (idHora) REFERENCES tb_hora(id),

@@ -5,5 +5,6 @@ export interface AgendarCitaMedicaDTO {
     fecha: string;
     idHora: number;
     estado: number;
-    tipoCita: number
+    tipoCita: number;
+    nombreSala: string;
 }

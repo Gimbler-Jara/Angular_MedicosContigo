@@ -5,6 +5,7 @@ USE sistema_citas_medicas;
 -- Procedimiento: usp_listar_citas_Agendadas
 -- Descripción: Lista todas las citas médicas agendadas para un médico específico.
 -- =========================================
+DROP PROCEDURE IF EXISTS usp_listar_citas_Agendadas;
 DELIMITER //
 CREATE PROCEDURE usp_listar_citas_Agendadas(IN idMedico INT)
 BEGIN
@@ -13,12 +14,13 @@ BEGIN
         c.fecha,
         h.hora,
         ec.estado,
-        pu.dni AS PacienteDNI,
+        pu.id AS PacienteId,
         CONCAT(pu.first_name, ' ', pu.last_name, ' ', pu.middle_name) AS PacienteNombre,
         mu.id AS MedicoId,
         CONCAT(mu.first_name, ' ', mu.last_name) AS MedicoNombre,
         e.especialidad AS Especialidad,
-        c.tipo_cita
+        c.tipo_cita,
+        c.nombre_sala
     FROM tb_cita_medica c
     JOIN tb_paciente p ON c.id_paciente = p.id_usuario
     JOIN tb_usuario pu ON p.id_usuario = pu.id
@@ -83,13 +85,15 @@ DELIMITER ;
 -- Procedimiento: sp_agendar_cita
 -- Descripción: Agenda una nueva cita médica si existe disponibilidad para el médico en ese día y hora.
 -- =========================================
+DROP PROCEDURE IF EXISTS sp_agendar_cita;
 DELIMITER //
 CREATE PROCEDURE sp_agendar_cita(
     IN p_idMedico INT,
     IN p_idPaciente INT,
     IN p_fecha DATE,
     IN p_idHora INT,
-    IN p_tipoCita INT
+    IN p_tipoCita INT,
+    IN p_nombreSala VARCHAR(50)
 )
 BEGIN
     DECLARE v_dia_semana INT;
@@ -115,8 +119,14 @@ BEGIN
         SELECT 1 FROM tb_cita_medica c
         WHERE c.id_medico = p_idMedico AND c.fecha = p_fecha AND c.idHora = p_idHora
     ) THEN
-        INSERT INTO tb_cita_medica (id_medico, id_paciente, fecha, idHora, estado, tipo_cita)
-        VALUES (p_idMedico, p_idPaciente, p_fecha, p_idHora, 1, p_tipoCita);
+       -- Insertar con o sin nombre_sala dependiendo del tipo de cita
+        IF p_tipoCita = 1 THEN
+            INSERT INTO tb_cita_medica (id_medico, id_paciente, fecha, idHora, estado, tipo_cita, nombre_sala)
+            VALUES (p_idMedico, p_idPaciente, p_fecha, p_idHora, 1, p_tipoCita, p_nombreSala);
+        ELSE
+            INSERT INTO tb_cita_medica (id_medico, id_paciente, fecha, idHora, estado, tipo_cita)
+            VALUES (p_idMedico, p_idPaciente, p_fecha, p_idHora, 1, p_tipoCita);
+        END IF;
     ELSE
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No hay disponibilidad para el horario seleccionado.';
     END IF;
@@ -326,7 +336,8 @@ BEGIN
   e.estado,
   cm.fecha,
   cm.idHora, 
-  cm.tipo_cita
+  cm.tipo_cita,
+  cm.nombre_sala
 FROM tb_cita_medica AS cm
 JOIN tb_usuario AS u ON u.id = cm.id_medico
 JOIN tb_estado_cita AS e ON e.id = cm.estado
