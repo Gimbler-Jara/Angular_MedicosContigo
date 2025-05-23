@@ -36,11 +36,10 @@ export class VideocallComponent {
       console.log(this.roomId);
       this.channel = this.roomId;
       
-      this.authService.getUserById(Number(this.userId)).then((user) => {
+      this.authService.getUserById(Number(this.userId)).then((data) => {
+        this.nombreLocal = `${data.usuario.firstName} ${data.usuario.lastName} ${data.usuario.middleName}`;
 
-        this.nombreLocal = `${user.firstName} ${user.lastName} ${user.middleName}`;
-
-        this.isDoctor = user.rol.rol.toUpperCase() === 'MÉDICO';
+        this.isDoctor = data.usuario.rol.rol.toUpperCase() === 'MÉDICO';
       })
     });
 
@@ -79,8 +78,8 @@ export class VideocallComponent {
     }
     console.log("handleUserPublished", data);
 
-    this.authService.getUserById(Number(user.uuid)).then((user) => {
-      this.nombreRemoto = `${user.firstName} ${user.lastName} ${user.middleName}`
+    this.authService.getUserById(Number(user.uuid)).then((data) => {
+      this.nombreRemoto = `${data.usuario.firstName} ${data.usuario.lastName} ${data.usuario.middleName}`
     });
 
   }

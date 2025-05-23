@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { UsuarioMedicoRequest, UsuarioPacienteRequest, UsuarioResponse } from '../interface/Usuario/Usuario.interface';
+import { PerfilResponse, UsiarioPacienteResponse,  UsuarioPacienteRequest } from '../interface/Usuario/Usuario.interface';
 import { catchError, lastValueFrom, map, Observable, throwError } from 'rxjs';
 import { API, USUARIO, MEDICOS, PACIENTES, ENDPOINTS_USUARIO } from '../utils/constants_API';
 import { LoginDTO } from '../DTO/Login.interface.DTO';
@@ -20,10 +20,10 @@ export class AuthService {
     });
   }
 
-  cambiarEstadoUsuario(id: number): Promise<{ success: boolean; message: string }> {
+  cambiarEstadoUsuario(id: number): Promise<{ httpStatus: number; mensaje: string }> {
     var url = `${API}/${USUARIO}/${ENDPOINTS_USUARIO.CAMBIAR_ESTADO}/${id}`;
 
-    return lastValueFrom(this.http.put<{ success: boolean; message: string }>(url, id).pipe(
+    return lastValueFrom(this.http.put<{ httpStatus: number; mensaje: string }>(url, id).pipe(
       catchError(error => {
         return throwError(() => error);
       })
@@ -32,8 +32,8 @@ export class AuthService {
   }
 
 
-  registrarPaciente(usuario: UsuarioPacienteRequest): Promise<UsuarioPacienteRequest> {
-    return lastValueFrom(this.http.post<UsuarioPacienteRequest>(`${API}/${PACIENTES}`, usuario).pipe(
+  registrarPaciente(usuario: UsuarioPacienteRequest): Promise<UsiarioPacienteResponse> {
+    return lastValueFrom(this.http.post<UsiarioPacienteResponse>(`${API}/${PACIENTES}`, usuario).pipe(
       catchError(error => {
         return throwError(() => error);
       })
@@ -55,11 +55,11 @@ export class AuthService {
   }
 
 
-  async login(user: LoginDTO): Promise<UsuarioResponse> {
+  async login(user: LoginDTO): Promise<PerfilResponse> {
     return lastValueFrom(this.http.post<any>(`${API}/${USUARIO}/login`, user)).then(res => {
       localStorage.setItem('token', res.token);
       this.localStorageService.setUsuario(res.usuario);
-      return res.usuario;
+      return res;
     });
   }
 
@@ -72,12 +72,12 @@ export class AuthService {
 
 
 
-  getPerfilUsuario(): Observable<UsuarioResponse> {
-    return this.http.get<UsuarioResponse>(`${API}/${USUARIO}/me`);
+  getPerfilUsuario(): Observable<PerfilResponse> {
+    return this.http.get<PerfilResponse>(`${API}/${USUARIO}/me`);
   }
 
-  getUserById(id: number): Promise<UsuarioResponse> {
-    return lastValueFrom(this.http.get<UsuarioResponse>(`${API}/${USUARIO}/${id}`).pipe(
+  getUserById(id: number): Promise<PerfilResponse> {
+    return lastValueFrom(this.http.get<PerfilResponse>(`${API}/${USUARIO}/${id}`).pipe(
       catchError(error => {
         return throwError(() => error);
       })

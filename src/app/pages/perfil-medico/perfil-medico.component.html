@@ -64,16 +64,16 @@
                         <td style="text-align: center;">{{cita.tipo_cita===0 ? "Presencial":"Teleconsulta"}}</td>
                         <td style="width: 480px; text-align: center;">
                             <div class="content">
-                                <a (click)=" marcarcitaComoAtendido(cita.id) " class="btn-atendido"
+                                <!-- <a (click)=" marcarcitaComoAtendido(cita.id) " class="btn-atendido"
                                     [style.pointerEvents]="!esCitaPasada(cita.fecha, cita.hora) ? 'none' : 'auto'"
                                     [style.opacity]="!esCitaPasada(cita.fecha, cita.hora) ? 0.5 : 1">
                                     Atendido
                                     <i class="fa-solid fa-check-to-slot"></i>
-                                </a>
-                                <!-- <a (click)=" marcarcitaComoAtendido(cita.id) " class="btn-atendido">
+                                </a> -->
+                                <a (click)=" marcarcitaComoAtendido(cita.id) " class="btn-atendido">
                                 Atendido
                                 <i class="fa-solid fa-check-to-slot"></i>
-                            </a> -->
+                            </a>
 
                                 <a (click)=" listarHistorialPaciente(cita.pacienteId) " class="btn-historial">
                                     Ver Historial
@@ -81,17 +81,17 @@
                                 </a>
 
 
-                                <a [style.opacity]="cita.tipo_cita === 1 ? (esCitaPasada(cita.fecha, cita.hora) ? '1' : '0.5') : '0'"  
+                                <!-- <a [style.opacity]="cita.tipo_cita === 1 ? (esCitaPasada(cita.fecha, cita.hora) ? '1' : '0.5') : '0'"  
                                    [style.pointerEvents]="(cita.tipo_cita === 1 && esCitaPasada(cita.fecha, cita.hora)) ? 'auto' : 'none'" 
                                    (click)="navigateVideoCall(cita.medicoId, cita.nombre_sala)"
                                     class="btn-historial">Conectarse<i class="fa-solid fa-video"></i>
-                                </a>
+                                </a> -->
 
-                                <!-- <a [style.opacity]="cita.tipo_cita === 1 ? '1' : '0'"
+                                <a [style.opacity]="cita.tipo_cita === 1 ? '1' : '0'"
                                     [style.pointerEvents]="(cita.tipo_cita === 1 ) ? 'auto' : 'none'"
                                     (click)="navigateVideoCall(cita.medicoId, cita.nombre_sala)" class="btn-historial">Conectarse<i
                                         class="fa-solid fa-video"></i>
-                                </a> -->
+                                </a>
                             </div>
 
                         </td>

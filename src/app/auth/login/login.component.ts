@@ -41,19 +41,19 @@ export class LoginComponent {
     const { email, password } = this.formularioLogin.value;
     const credentials: LoginDTO = { email, password };
 
-    console.log('Datos enviados:', credentials);
+    // console.log('Datos enviados:', credentials);
 
     this.authService.login(credentials)
-      .then(usuario => {
-        if (!usuario || !usuario.rol?.id) {
+      .then(data => {       
+        if (!data.usuario || !data.usuario.rol?.id) {
           showAlert('error', 'No se pudo determinar el rol del usuario');
           return;
         }
 
-        const ruta = this.obtenerRutaPorRol(usuario.rol.id);
+        const ruta = this.obtenerRutaPorRol(data.usuario.rol.id);
         if (ruta) {
           this.router.navigate([ruta]);
-          showAlert('success', 'Inicio de sesión exitoso');
+          showAlert('success', data.mensaje);
         } else {
           showAlert('error', 'Rol de usuario no reconocido');
         }
@@ -61,8 +61,10 @@ export class LoginComponent {
         this.formularioLogin.reset();
       })
       .catch(error => {
-        console.error('Error al iniciar sesión:', error);
-        showAlert('error', error?.error?.message || 'Error al iniciar sesión');
+        // console.error('Error al iniciar sesión:', error);
+        // console.log(error.error.httpStatus);
+        // console.log(error.error.mensaje);
+        showAlert('error', error.error.mensaje);
       })
       .finally(() => {
         this.isLoading = false;

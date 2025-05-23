@@ -1,4 +1,10 @@
 export interface CitasReservadasPorPacienteResponseDTO {
+    httpStatus: number;
+    mensaje: string;
+    citas: CitasReservadasPorPacienteResponse[];
+}
+
+export interface CitasReservadasPorPacienteResponse {
     id?: number,
     fecha: string,
     idHora: number,

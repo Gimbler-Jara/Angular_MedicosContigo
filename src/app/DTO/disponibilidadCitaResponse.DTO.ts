@@ -1,6 +1,6 @@
 export interface EstructuraDisponibilidadCitaResponse<T = any> {
-    success: boolean;
-    message: string;
+    httpStatus:number;
+    mensaje: string;
     data?: T;
     errors?: string[];
 }

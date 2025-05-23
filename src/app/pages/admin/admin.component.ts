@@ -4,7 +4,7 @@ import { RegistrarMedicoComponent } from '../../auth/registrar-medico/registrar-
 import { RegisterComponent } from '../../auth/register/register.component';
 import { MedicoService } from '../../services/medico.service';
 import { MedicoDTO } from '../../DTO/medico.DTO';
-import { PacienteDTO } from '../../DTO/paciente.DTO';
+import { Paciente } from '../../DTO/paciente.DTO';
 import { PacienteService } from '../../services/paciente.service';
 import { AuthService } from '../../services/auth.service';
 import { PacienteActualizacionDTO } from '../../DTO/PacienteActualizacion.DTO';
@@ -45,7 +45,7 @@ export class AdminComponent {
   tabs = TABS;
 
   medicos: MedicoDTO[] = [];
-  pacientes: PacienteDTO[] = [];
+  pacientes: Paciente[] = [];
 
   // pacienteForm: FormGroup;
   // medicoForm: FormGroup;
@@ -58,7 +58,7 @@ export class AdminComponent {
   modalFormGroup!: FormGroup;
   mostrarModalUsuario: boolean = false;
 
-  pacienteEditado: PacienteDTO | null = null;
+  pacienteEditado: Paciente | null = null;
   medicoEditado: MedicoDTO | null = null;
 
   constructor() {
@@ -82,7 +82,7 @@ export class AdminComponent {
 
   ngOnInit(): void {
     this.especialidadService.listarEspecialidades().then(data => {
-      this.especialidades = data ?? [];
+      this.especialidades = data.especialidades ?? [];
     }).catch((error) => {
       console.log("Error al listar las especialidades " + error);
     });
@@ -113,7 +113,9 @@ export class AdminComponent {
 
   listarPacientes() {
     this.pacienteService.listarPacientes().then(data => {
-      this.pacientes = data;
+      console.log(data);
+      
+      this.pacientes = data.pacientes;
     }).catch((error) => {
       console.log("Error al listar los pacientes " + error);
     })
@@ -121,24 +123,24 @@ export class AdminComponent {
 
 
   listarMedicos() {
-    this.medicoService.listarMedicos().then(_medicos => {
-      this.medicos = _medicos;
+    this.medicoService.listarMedicos().then(data => {     
+      this.medicos = data.medicos;
     }).catch((error) => {
       console.log("Error al listar los medicos " + error);
     })
   }
 
   cambiarEstadoActivo(id: number) {
-    this.authService.cambiarEstadoUsuario(id).then((data) => {
+    this.authService.cambiarEstadoUsuario(id).then((data) => {     
       this.listarMedicos();
       this.listarPacientes();
-      console.log(data.message);
+      showAlert('success', data.mensaje);
     }).catch((error) => {
       console.log("Error al ocultar el paciente " + error);
     });
   }
 
-  abrirModalEditarPaciente(paciente: PacienteDTO) {
+  abrirModalEditarPaciente(paciente: Paciente) {
     this.modalFormGroup = this.fb.group(obtenerValidacionesDeCamposUsuario(paciente.usuario));
     this.pacienteEditado = structuredClone(paciente);
 
@@ -190,8 +192,8 @@ export class AdminComponent {
 
       this.pacienteService.actualizarPaciente(datos.idUsuario, datos)
         .then(res => {
-          if (res.success) {
-            showAlert('success', res.message);
+          if (res.httpStatus == 200) {
+            showAlert('success', res.mensaje);
             this.cerrarModalUsuario();
             this.listarPacientes();
           }
@@ -209,15 +211,15 @@ export class AdminComponent {
 
       this.medicoService.actualizarMedicoConArchivo(this.medicoEditado.idUsuario, datos, archivo)
         .then(res => {
-          if (res.success) {
-            showAlert('success', res.message);
+          if (res.httpStatus == 200) {
+            showAlert('success', res.mensaje);
             this.cerrarModalUsuario();
             this.listarMedicos();
           }
         })
         .catch(err => {
           showAlert('error', 'Error al actualizar médico')
-          console.log("Error al actualizar médico " + err.error.message);
+          console.log("Error al actualizar médico " + err.error.mensaje);
         });
     }
   }

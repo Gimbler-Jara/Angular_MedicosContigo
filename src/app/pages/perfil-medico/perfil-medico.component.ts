@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { CitasAgendadasResponseDTO } from '../../DTO/CitasAgendada.response.DTO';
+import { CitasAgendadasResponse } from '../../DTO/CitasAgendada.response.DTO';
 import { CitasService } from '../../services/citas.service';
 import { RegistrarDisponibilidadCitaDTO } from '../../DTO/RegistrarDisponibilidad.DTO';
 import { MedicoService } from '../../services/medico.service';
@@ -13,7 +13,7 @@ import { Especialidad } from '../../interface/Especialidad.interface';
 import { MedicamentoInputDTO } from '../../DTO/MedicamentoInput.DTO';
 import { DiasSemanaService } from '../../services/dias-semana.service';
 import { DiaSemana } from '../../interface/DiaSemana.interface';
-import { DetalleCitaAtendidaDTO } from '../../DTO/DetalleCitaAtendida.DTO';
+import { DetalleCitaAtendida } from '../../DTO/DetalleCitaAtendida.DTO';
 import { PacienteService } from '../../services/paciente.service';
 import { UsuarioStorage } from '../../DTO/UsuarioStorage.DTO';
 import { obtenerDiaSemana, showAlert } from '../../utils/utilities';
@@ -37,11 +37,11 @@ export class PerfilMedicoComponent {
 
   vista: 'citas' | 'agregar' | 'eliminar' = 'citas';
 
-  citasProgramadas: CitasAgendadasResponseDTO[] = [];
+  citasProgramadas: CitasAgendadasResponse[] = [];
   citasFiltradas = [...this.citasProgramadas];
 
   disponibilidades: DisponibilidadCitaPorMedicoDTO[] = [];
-  historialPaciente: DetalleCitaAtendidaDTO[] = [];
+  historialPaciente: DetalleCitaAtendida[] = [];
   mostrarHistorial: boolean = false;
 
   filtroDia = 0;
@@ -67,12 +67,12 @@ export class PerfilMedicoComponent {
     this.citasProgramadas.sort((a, b) => {
       return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
     });
-    this.medicoService.obtenerEspecialidadPorIdMedico(this.usuario.id!).then(e => {
-      this.especialidad = e ?? [];
+    this.medicoService.obtenerEspecialidadPorIdMedico(this.usuario.id!).then(data => {
+      this.especialidad = data.especialidad ?? [];
     }).catch((error) => { });
 
-    this.diasSemanaService.listarDiasSemana().then(dias => {
-      this.diasSemana = this.ordenarDiasSemana(dias);
+    this.diasSemanaService.listarDiasSemana().then(data => {
+      this.diasSemana = this.ordenarDiasSemana(data.diasSemana);
     }).catch((error) => {
       console.log(error);
     });
@@ -95,19 +95,22 @@ export class PerfilMedicoComponent {
           idMedico: this.usuario.id!,
           idDiaSemana: diaIndex + 1,
           idHora: horaIndex + 1,
-          idEspecialidad: especialidad.id
+          idEspecialidad: especialidad.especialidad.id
         }
 
         this.citasService.registrarDisponibilidad(cita)
           .then(res => {
 
-            if (res.success) {
+            console.log(res);
+
+
+            if (res.httpStatus == 200) {
               this.nuevaDisponibilidad.dia = 0;
               this.nuevaDisponibilidad.hora = "";
               this.listarDisponiblidadesDeCita();
-              showAlert('success', res.message);
+              showAlert('success', res.mensaje);
             } else {
-              showAlert('error', res.message);
+              showAlert('error', res.mensaje);
             }
           })
           .catch(error => {
@@ -128,9 +131,9 @@ export class PerfilMedicoComponent {
       activo: !disponible
     };
 
-    this.medicoService.cambiarEstadoCita(data).then(() => {
+    this.medicoService.cambiarEstadoCita(data).then((res) => {
       this.listarDisponiblidadesDeCita();
-      showAlert('success', 'Disponibilidad actualizada correctamente');
+      showAlert('success', res.mensaje);
     });
   }
 
@@ -167,12 +170,10 @@ export class PerfilMedicoComponent {
   async listarCitasAgendadas() {
     this.citasService.listarCitasAgendadas(this.usuario.id!).then(dato => {
       this.citasProgramadas = [];
-      for (let i = 0; i < dato.length; i++) {
+      for (let i = 0; i < dato.citas.length; i++) {
 
-        if (dato[i].estado.toLocaleLowerCase() == "reservado") {
-          this.citasProgramadas.push(dato[i]);
-          // console.log(dato[i]);
-          
+        if (dato.citas[i].estado.toLocaleLowerCase() == "reservado") {
+          this.citasProgramadas.push(dato.citas[i]);
         }
       }
       this.filtrarCitasPorDia()
@@ -182,11 +183,12 @@ export class PerfilMedicoComponent {
   }
 
   async listarDisponiblidadesDeCita() {
-    this.medicoService.listarHorariosDeTranajoPorMedico(this.usuario.id!).then(res => {
-      if (res.success) {
-        this.disponibilidades = res.data;
+    this.medicoService.listarHorariosDeTrabajoPorMedico(this.usuario.id!).then(res => {
+
+      if (res.httpStatus == 200) {
+        this.disponibilidades = res.datos;
       } else {
-        alert(res.message);
+        showAlert('error', res.mensaje);
       }
     }).catch(error => {
       console.log("Ocurrió un error en la consulta" + error);
@@ -199,16 +201,31 @@ export class PerfilMedicoComponent {
   }
 
   confirmarAtencionCita() {
+
+    if (this.diagnostico == "") {
+      showAlert('error', "El diagnóstico no puede estar vacío.");
+      return;
+    }
+
+    if (this.medicamentos.length < 1) {
+      showAlert('error', "Debe proporcionar al menos un medicamento.");
+      return;
+    }
+
     const request = {
       diagnostico: this.diagnostico,
       medicamentos: this.medicamentos
     };
 
-    this.citasService.marcarcitaComoAtendido(this.idCitaSeleccionada, request).then(() => {
-      this.listarCitasAgendadas();
-      showAlert('success', 'Cita marcada como atendida');
-      this.mostrarModalDiagnostico = false;
-      this.resetFormulario();
+    this.citasService.marcarcitaComoAtendido(this.idCitaSeleccionada, request).then((res) => {
+      if (res.httpStatus == 200) {
+        this.listarCitasAgendadas();
+        showAlert('success', res.mensaje);
+        this.mostrarModalDiagnostico = false;
+        this.resetFormulario();
+      } else {
+        showAlert('error', res.mensaje);
+      }
     }).catch(error => {
       console.log("Error al marcar la cita como atendida " + error);
     });
@@ -227,10 +244,9 @@ export class PerfilMedicoComponent {
     this.medicamentos = [{ medicamento: '', indicaciones: '' }];
   }
 
-  listarHistorialPaciente(idPaciente: number) {
-    this.pacienteService.verDetallesDeCitaAtendidaPorpaciente(idPaciente).then(res => {
-      this.historialPaciente = res.reverse();
-      // console.log(this.historialPaciente);
+  listarHistorialPaciente(idPaciente: number) {   
+    this.pacienteService.verDetallesDeCitaAtendidaPorpaciente(idPaciente).then(res => {      
+      this.historialPaciente = res.datos.reverse();
       this.mostrarHistorial = true;
 
     }).catch(error => {

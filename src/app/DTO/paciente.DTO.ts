@@ -1,6 +1,13 @@
 import { UsuarioResponse } from "../interface/Usuario/Usuario.interface";
 
 export interface PacienteDTO {
-    idUsuario: number;
-    usuario: UsuarioResponse;
-  }
+  httpStatus: number;
+  mensaje: string;
+  pacientes: Paciente[];
+}
+
+
+export interface Paciente {
+  idUsuario: number;
+  usuario: UsuarioResponse;
+}

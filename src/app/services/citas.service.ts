@@ -3,13 +3,13 @@ import { AgendarCitaMedicaDTO } from '../DTO/CitaMedica.DTO';
 import { HttpClient } from '@angular/common/http';
 import { catchError, lastValueFrom, throwError } from 'rxjs';
 import { API, ENDPOINTS_CITAS, CITA_MEDICA } from '../utils/constants_API';
-import { CitasAgendadasResponseDTO } from '../DTO/CitasAgendada.response.DTO';
+import { CitasAgendadasResponse, CitasAgendadasResponseDTO } from '../DTO/CitasAgendada.response.DTO';
 
-import { CitasReservadasPorPacienteResponseDTO } from '../DTO/CitasReservadasPorPaciente.DTO';
+import { CitasReservadasPorPacienteResponse, CitasReservadasPorPacienteResponseDTO } from '../DTO/CitasReservadasPorPaciente.DTO';
 import { RegistrarDisponibilidadCitaDTO } from '../DTO/RegistrarDisponibilidad.DTO';
 import { EstructuraDisponibilidadCitaResponse } from '../DTO/disponibilidadCitaResponse.DTO'
 import { DiagnosticoRequestDTO } from '../DTO/DiagnosticoRequest.DTO';
-import { DetalleCitaAtendidaDTO } from '../DTO/DetalleCitaAtendida.DTO';
+import { DetalleCitaAtendida, DetalleCitaAtendidaDTO } from '../DTO/DetalleCitaAtendida.DTO';
 
 @Injectable({
   providedIn: 'root'
@@ -36,8 +36,8 @@ export class CitasService {
   }
 
 
-  listarCitasAgendadas(idMedico: number): Promise<CitasAgendadasResponseDTO[]> {
-    return lastValueFrom(this.http.get<CitasAgendadasResponseDTO[]>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.CITAS_AGENDADAS}/${idMedico}`).pipe(
+  listarCitasAgendadas(idMedico: number): Promise<CitasAgendadasResponseDTO> {
+    return lastValueFrom(this.http.get<CitasAgendadasResponseDTO>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.CITAS_AGENDADAS}/${idMedico}`).pipe(
       catchError(error => {
         return throwError(() => error);
       })
@@ -56,9 +56,9 @@ export class CitasService {
   }
 
 
-  agendarCita(req: AgendarCitaMedicaDTO): Promise<void> {
+  agendarCita(req: AgendarCitaMedicaDTO): Promise<any> {
     return lastValueFrom(
-      this.http.post<void>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.AGENDAR_CITA}`, req).pipe(
+      this.http.post<any>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.AGENDAR_CITA}`, req).pipe(
         catchError(error => {
           return throwError(() => error);
         })
@@ -66,9 +66,9 @@ export class CitasService {
     );
   }
 
-  eliminarCitaReservado(idCita: number): Promise<void> {
+  eliminarCitaReservado(idCita: number): Promise<any> {
     return lastValueFrom(
-      this.http.delete<void>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.ELIMINAR_CITA_RESERVADO}/${idCita}`).pipe(
+      this.http.delete<any>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.ELIMINAR_CITA_RESERVADO}/${idCita}`).pipe(
         catchError(error => {
           return throwError(() => error);
         })
@@ -76,9 +76,9 @@ export class CitasService {
     );
   }
 
-  listarCitasReservadasPorPaciente(idPaciente: number): Promise<CitasReservadasPorPacienteResponseDTO[]> {
+  listarCitasReservadasPorPaciente(idPaciente: number): Promise<CitasReservadasPorPacienteResponseDTO> {
     return lastValueFrom(
-      this.http.get<CitasReservadasPorPacienteResponseDTO[]>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.CITAS_RESERVADAS_POR_PACIENTE}/${idPaciente}`).pipe(
+      this.http.get<CitasReservadasPorPacienteResponseDTO>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.CITAS_RESERVADAS_POR_PACIENTE}/${idPaciente}`).pipe(
         catchError(error => {
           return throwError(() => error);
         })
@@ -87,9 +87,9 @@ export class CitasService {
   }
 
 
-  marcarcitaComoAtendido(idCita: number, request: DiagnosticoRequestDTO): Promise<void> {
+  marcarcitaComoAtendido(idCita: number, request: DiagnosticoRequestDTO): Promise<any> {
     return lastValueFrom(
-      this.http.post<void>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.CAMBIAR_ESTADO_CITA_RESERVADO_ATENDIDO}/${idCita}`, request).pipe(
+      this.http.post<any>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.CAMBIAR_ESTADO_CITA_RESERVADO_ATENDIDO}/${idCita}`, request).pipe(
         catchError(error => {
           return throwError(() => error);
         })

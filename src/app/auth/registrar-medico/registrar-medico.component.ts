@@ -65,14 +65,14 @@ export class RegistrarMedicoComponent {
   isLoading: boolean = false;
 
   ngOnInit(): void {
-    this.typeDocumentService.listarTiposDeDocumentos().then(doc => {
-      this.tiposDocumento = doc
+    this.typeDocumentService.listarTiposDeDocumentos().then(data => {      
+      this.tiposDocumento = data.documentos
     }).catch((error) => {
       console.log("Error al listar los documentos " + error);
     });
 
-    this.especialidadService.listarEspecialidades().then(esp => {
-      this.especialidades = esp;
+    this.especialidadService.listarEspecialidades().then(data => {
+      this.especialidades = data.especialidades;
     }).catch((error) => {
       console.log("Error al listar especialidades " + error);
     })

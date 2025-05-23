@@ -1,4 +1,10 @@
 export interface CitasAgendadasResponseDTO {
+    httpStatus: number;
+    mensaje: string;
+    citas: CitasAgendadasResponse[];
+}
+
+export interface CitasAgendadasResponse {
     id: number,
     fecha: string,
     hora: string,

@@ -75,7 +75,7 @@ export class RegisterComponent {
     });
 
     this.typeDocumentService.listarTiposDeDocumentos().then(doc => {
-      this.tiposDocumento = doc
+      this.tiposDocumento = doc.documentos
     }).catch((error) => {
       console.log("Error al listar los documentos " + error);
     });

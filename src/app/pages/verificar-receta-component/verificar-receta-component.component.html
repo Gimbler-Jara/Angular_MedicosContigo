@@ -42,12 +42,12 @@
                 </ul>
             </div>
 
-            <br><br>
-
             <!-- Firma médica -->
             <div class="firma-medico">
+                <img [src]="urlFirma" alt="" class="firma">
                 <p>__________________________</p>
                 <p><strong>{{ detalleCita.medico }}</strong></p>
+                <p><em>CMP: {{medico?.cmp}}</em></p>
                 <p><em>Médico tratante</em></p>
             </div>
             }

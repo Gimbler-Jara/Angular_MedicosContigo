@@ -1,6 +1,12 @@
 import { Document_Type } from "../DocumentType.interface";
 import { Rol } from "../Rol.interface";
 
+export interface UsiarioPacienteResponse {
+    httpStatus: number;
+    mensaje: string;
+    paciente: UsuarioPacienteRequest;
+}
+
 export interface UsuarioPacienteRequest {
     id?: number;
     documentTypeId: number;
@@ -28,6 +34,12 @@ export interface UsuarioMedicoRequest {
     email?: string;
     password: string;
     especialidadId: number
+}
+
+export interface PerfilResponse {
+    httpStatus: number,
+    mensaje: string,
+    usuario: UsuarioResponse
 }
 
 

@@ -2,13 +2,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, lastValueFrom, map, throwError } from 'rxjs';
 import { API, ENDPOINTS_CITAS, MEDICOS, CITA_MEDICA, ENDPOINTS_MEDICO } from '../utils/constants_API';
-import { MedicoDTO } from '../DTO/medico.DTO';
+import { MedicoDTO, MedicoPorIdResponse, MedicoResponse } from '../DTO/medico.DTO';
 import { DisponibilidadesResponse } from '../DTO/DisponibilidadesCitasResponse.DTO';
 import { CambiarEstadoDisponibilidadDTO } from '../DTO/CambiarEstadoDisponibilidad.DTO';
-import { MedicosPorEspecialidadDTO } from '../DTO/MedicosPorEspecialidad.DTO';
-import { HorasDispiniblesDTO } from '../DTO/HorasDispinibles.DTO';
-import { DiaSemana } from '../interface/DiaSemana.interface';
-import { Especialidad } from '../interface/Especialidad.interface';
+import { MedicosPorEspecialidad, MedicosPorEspecialidadDTO } from '../DTO/MedicosPorEspecialidad.DTO';
+import { HorasDispinibles, HorasDispiniblesDTO } from '../DTO/HorasDispinibles.DTO';
+import { DiaSemana, DiaSemanaResponse } from '../interface/DiaSemana.interface';
+import { Especialidad, EspecialidadPorMedicoResponse } from '../interface/Especialidad.interface';
 import { MedicoActualizacionDTO } from '../DTO/MedicoActualizacion.DTO';
 
 @Injectable({
@@ -18,23 +18,23 @@ export class MedicoService {
 
   constructor(private http: HttpClient) { }
 
-  listarMedicos(): Promise<MedicoDTO[]> {
-    return lastValueFrom(this.http.get<MedicoDTO[]>(`${API}/${MEDICOS}`).pipe(
+  listarMedicos(): Promise<MedicoResponse> {
+    return lastValueFrom(this.http.get<MedicoResponse>(`${API}/${MEDICOS}`).pipe(
       catchError(error => {
         return throwError(() => error);
       })
     ));
   }
 
-  obtenerMedico(idMedico: number): Promise<MedicoDTO> {
-    return lastValueFrom(this.http.get<MedicoDTO>(`${API}/${MEDICOS}/${idMedico}`).pipe(
+  obtenerMedico(idMedico: number): Promise<MedicoPorIdResponse> {
+    return lastValueFrom(this.http.get<MedicoPorIdResponse>(`${API}/${MEDICOS}/${idMedico}`).pipe(
       catchError(error => {
         return throwError(() => error);
       })
     ));
   }
 
-  listarHorariosDeTranajoPorMedico(idMedico: number): Promise<DisponibilidadesResponse> {
+  listarHorariosDeTrabajoPorMedico(idMedico: number): Promise<DisponibilidadesResponse> {
     return lastValueFrom(this.http.get<DisponibilidadesResponse>(`${API}/${MEDICOS}/${ENDPOINTS_MEDICO.HORARIO_TRABAJO_MEDICO}/${idMedico}`).pipe(
       catchError(error => {
         return throwError(() => error);
@@ -43,9 +43,9 @@ export class MedicoService {
   }
 
 
-  cambiarEstadoCita(data: CambiarEstadoDisponibilidadDTO): Promise<void> {
+  cambiarEstadoCita(data: CambiarEstadoDisponibilidadDTO): Promise<any> {
     return lastValueFrom(
-      this.http.put<void>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.CAMBIAR_ESTADO_DISPONIBILIDAD}`, data)
+      this.http.put<any>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.CAMBIAR_ESTADO_DISPONIBILIDAD}`, data)
         .pipe(
           catchError(error => {
             return throwError(() => error);
@@ -61,7 +61,7 @@ export class MedicoService {
   //   );
   // }
 
-  actualizarMedicoConArchivo(id: number, medico: MedicoActualizacionDTO, archivo?: File): Promise<{ success: boolean; message: string }> {
+  actualizarMedicoConArchivo(id: number, medico: MedicoActualizacionDTO, archivo?: File): Promise<{ httpStatus: number; mensaje: string }> {
     const formData = new FormData();
     formData.append('datos', JSON.stringify(medico));
 
@@ -70,7 +70,7 @@ export class MedicoService {
     }
 
     return lastValueFrom(
-      this.http.put<{ success: boolean; message: string }>(`${API}/${MEDICOS}/${id}`, formData).pipe(
+      this.http.put<{ httpStatus: number; mensaje: string }>(`${API}/${MEDICOS}/${id}`, formData).pipe(
         catchError(error => {
           return throwError(() => error);
         })
@@ -79,9 +79,9 @@ export class MedicoService {
   }
 
 
-  listarMedicosPorEspecialidad(idEspecialidad: number): Promise<MedicosPorEspecialidadDTO[]> {
+  listarMedicosPorEspecialidad(idEspecialidad: number): Promise<MedicosPorEspecialidad> {
     return lastValueFrom(
-      this.http.get<MedicosPorEspecialidadDTO[]>(`${API}/${MEDICOS}/${ENDPOINTS_MEDICO.MEDICOS_POR_ESPECIALIDAD}/${idEspecialidad}`)
+      this.http.get<MedicosPorEspecialidad>(`${API}/${MEDICOS}/${ENDPOINTS_MEDICO.MEDICOS_POR_ESPECIALIDAD}/${idEspecialidad}`)
         .pipe(
           catchError(error => {
             return throwError(() => error);
@@ -90,9 +90,9 @@ export class MedicoService {
     );
   }
 
-  listarDiasDisponibles(idMedico: number): Promise<DiaSemana[]> {
+  listarDiasDisponibles(idMedico: number): Promise<DiaSemanaResponse> {
     return lastValueFrom(
-      this.http.get<DiaSemana[]>(`${API}/${MEDICOS}/${ENDPOINTS_MEDICO.DIAS_DISPONIBLES}/${idMedico}`)
+      this.http.get<DiaSemanaResponse>(`${API}/${MEDICOS}/${ENDPOINTS_MEDICO.DIAS_DISPONIBLES}/${idMedico}`)
         .pipe(
           catchError(error => {
             return throwError(() => error);
@@ -101,12 +101,12 @@ export class MedicoService {
     );
   }
 
-  listarHorasDisponibles(idMedico: number, fecha: string): Promise<HorasDispiniblesDTO[]> {
+  listarHorasDisponibles(idMedico: number, fecha: string): Promise<HorasDispiniblesDTO> {
     let params = new HttpParams()
       .set('idMedico', idMedico)
       .set('fecha', fecha);
     return lastValueFrom(
-      this.http.get<HorasDispiniblesDTO[]>(`${API}/${MEDICOS}/${ENDPOINTS_MEDICO.HORAS_DISPONIBLES}`, { params })
+      this.http.get<HorasDispiniblesDTO>(`${API}/${MEDICOS}/${ENDPOINTS_MEDICO.HORAS_DISPONIBLES}`, { params })
         .pipe(
           catchError(error => {
             return throwError(() => error);
@@ -115,9 +115,9 @@ export class MedicoService {
     );
   }
 
-  obtenerEspecialidadPorIdMedico(idMedico: number): Promise<Especialidad> {
+  obtenerEspecialidadPorIdMedico(idMedico: number): Promise<EspecialidadPorMedicoResponse> {
     return lastValueFrom(
-      this.http.get<Especialidad>(`${API}/${MEDICOS}/${ENDPOINTS_MEDICO.ESPECIALIDAD_POR_ID_MEDICO}/${idMedico}`)
+      this.http.get<EspecialidadPorMedicoResponse>(`${API}/${MEDICOS}/${ENDPOINTS_MEDICO.ESPECIALIDAD_POR_ID_MEDICO}/${idMedico}`)
         .pipe(
           catchError(error => {
             return throwError(() => error);
@@ -126,9 +126,9 @@ export class MedicoService {
     );
   }
 
-  obtenerUrlFirmaDigital(path: string): Promise<string> {
+  obtenerUrlFirmaDigital(path: string): Promise<any> {
     let params = new HttpParams().set('path', path)
-    return lastValueFrom(this.http.get<string>(`${API}/${MEDICOS}/${ENDPOINTS_MEDICO.OBTENER_FIRMA}`, {
+    return lastValueFrom(this.http.get<any>(`${API}/${MEDICOS}/${ENDPOINTS_MEDICO.OBTENER_FIRMA}`, {
       params,
       responseType: 'text' as 'json'
     })

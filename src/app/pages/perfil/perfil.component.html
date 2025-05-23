@@ -46,13 +46,13 @@
                             </div>
                             <div class="options">
                                 @if (cita.tipo_cita) {
-                                <a class="teleconsulta" (click)="navigateVideoCall(usuario.id!, cita.nombre_sala)"
+                                <!-- <a class="teleconsulta" (click)="navigateVideoCall(usuario.id!, cita.nombre_sala)"
                                     [style.pointerEvents]="!esCitaPasada(cita.fecha, getHoraTexto(cita.idHora)) ? 'none' : 'auto'"
                                     [style.opacity]="!esCitaPasada(cita.fecha, getHoraTexto(cita.idHora)) ? 0.5 : 1"><i
-                                        class="fa-solid fa-video"></i>Conectarse a la cita</a>
-
-                                <!-- <a class="teleconsulta" (click)="navigateVideoCall(usuario.id!, cita.nombre_sala)"><i
                                         class="fa-solid fa-video"></i>Conectarse a la cita</a> -->
+
+                                <a class="teleconsulta" (click)="navigateVideoCall(usuario.id!, cita.nombre_sala)"><i
+                                        class="fa-solid fa-video"></i>Conectarse a la cita</a>
                                 }
 
                                 <a class="eliminar-cita" (click)="cancelarCita(cita.id!)"><i
@@ -75,11 +75,11 @@
                 <div class="agenda-container">
                     <!-- Paso 1: Especialidades -->
                     @if (especialidades$ | async; as especialidades) {
-                    @if (especialidades.length) {
+                    @if (especialidades.especialidades) {
                     <div class="step">
                         <h3><i class="fa-solid fa-stethoscope"></i> Elige una especialidad</h3>
                         <div class="card-list">
-                            @for (esp of especialidades; track $index) {
+                            @for (esp of especialidades.especialidades; track $index) {
                             <div class="card-option" (click)="seleccionarEspecialidad(esp)"
                                 [class.active]="especialidadSeleccionada?.id === esp.id">
                                 {{ esp.especialidad }}
@@ -250,6 +250,7 @@
                     <img [src]="urlFirma" alt="" class="firma">
                     <p>__________________________</p>
                     <p><strong>{{ detalleCita.medico }}</strong></p>
+                    <p><em>CMP: {{medico?.cmp}}</em></p>
                     <p><em>Médico tratante</em></p>
                 </div>
             </div>

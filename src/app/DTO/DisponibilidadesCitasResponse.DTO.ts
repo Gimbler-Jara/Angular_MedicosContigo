@@ -1,8 +1,7 @@
 import { DisponibilidadCitaPorMedicoDTO } from "./DisponibilidadCitaPorMedico.DTO";
 
 export interface DisponibilidadesResponse {
-    data: DisponibilidadCitaPorMedicoDTO[];
-    success: boolean;
-    message: string;
-  }
-  
+  httpStatus: number;
+  mensaje: string;
+  datos: DisponibilidadCitaPorMedicoDTO[];
+}
