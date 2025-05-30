@@ -383,7 +383,11 @@ export class PerfilComponent {
     this.citaService.verDetallesDeCitaAtendida(idCita).then((res) => {
 
       this.detalleCita = res.datos;
-      this.qrData = `https://xzqnmbqb-4200.brs.devtunnels.ms/verificar-receta/${this.detalleCita.idCita}`;
+      console.log(window.location);
+      
+      this.qrData = `${window.location.origin}/verificar-receta/${this.detalleCita.idCita}`;
+      console.log("QR Data: ", this.qrData);
+      
 
       this.medicoService.obtenerMedico(res.datos.idMedico).then((res) => {
         this.medico = res.medico;

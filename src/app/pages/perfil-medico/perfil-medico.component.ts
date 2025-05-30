@@ -244,9 +244,18 @@ export class PerfilMedicoComponent {
     this.medicamentos = [{ medicamento: '', indicaciones: '' }];
   }
 
-  listarHistorialPaciente(idPaciente: number) {   
-    this.pacienteService.verDetallesDeCitaAtendidaPorpaciente(idPaciente).then(res => {      
-      this.historialPaciente = res.datos.reverse();
+  listarHistorialPaciente(idPaciente: number) {
+    console.log(`Listando historial del paciente con ID: ${idPaciente}`);
+
+    this.pacienteService.verDetallesDeCitaAtendidaPorpaciente(idPaciente).then(res => {
+      if (!res || !res.datos || res.datos.length === 0) {       
+        // console.log("No hay historial disponible.");
+        this.historialPaciente = [];
+        this.mostrarHistorial = true;
+        return;
+      }
+
+      this.historialPaciente = res.datos.reverse() ?? [];
       this.mostrarHistorial = true;
 
     }).catch(error => {

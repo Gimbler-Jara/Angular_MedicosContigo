@@ -6,7 +6,10 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "startSsl": "ng serve -o --ssl",
+    "startLocal": "ng serve -o --disableHostCheck --host=0.0.0.0",
+    "startLocalSsl": "ng serve -o --disableHostCheck --host=0.0.0.0 --ssl"
   },
   "private": true,
   "dependencies": {

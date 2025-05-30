@@ -8,6 +8,7 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
     const isPublic = [
         '/api/usuarios/login',
         '/api/usuarios/refresh',
+        "/api/medicos/**", 
         '/api/cita-medica/historial/**',
     ].some(path => req.url.includes(path));
 

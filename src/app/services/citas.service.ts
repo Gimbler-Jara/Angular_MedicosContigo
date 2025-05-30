@@ -98,7 +98,11 @@ export class CitasService {
   }
 
   verDetallesDeCitaAtendida(idcita: number): Promise<DetalleCitaAtendidaDTO> {
-    return lastValueFrom(this.http.get<DetalleCitaAtendidaDTO>(`${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.HISTORIAL}/${idcita}`).pipe(
+    var url = "http://localhost:8080/api/cita-medica/historial/1";
+    var url2 = `${API}/${CITA_MEDICA}/${ENDPOINTS_CITAS.HISTORIAL}/${idcita}`;
+    console.log(url);
+
+    return lastValueFrom(this.http.get<DetalleCitaAtendidaDTO>(url).pipe(
       catchError(error => {
         return throwError(() => error);
       })
