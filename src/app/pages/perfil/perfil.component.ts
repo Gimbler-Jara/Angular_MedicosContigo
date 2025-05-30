@@ -25,10 +25,11 @@ import { DetalleCitaAtendida } from '../../DTO/DetalleCitaAtendida.DTO';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { UsuarioStorage } from '../../DTO/UsuarioStorage.DTO';
-import { QRCodeComponent } from 'angularx-qrcode';
+// import { QRCodeComponent } from 'angularx-qrcode';
 import { Router, RouterLink } from '@angular/router';
 import { v4 as uuidv4 } from 'uuid';
 import { MedicoDTO } from '../../DTO/medico.DTO';
+import { QRCodeModule } from 'angularx-qrcode';
 
 
 
@@ -37,7 +38,7 @@ import { MedicoDTO } from '../../DTO/medico.DTO';
   standalone: true,
   imports: [AsyncPipe, ReactiveFormsModule,
     ModalEditarUsuarioComponent, DatePipe,
-    CommonModule, QRCodeComponent],
+    CommonModule, QRCodeModule],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.css',
 })
