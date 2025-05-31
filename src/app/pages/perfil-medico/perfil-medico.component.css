@@ -110,6 +110,7 @@
 /* Tabla de citas */
 .tabla-citas {
   width: 100%;
+  min-width: 700px;
   border-collapse: collapse;
   margin-top: 10px;
   font-size: 14px;
@@ -497,4 +498,87 @@ blockquote {
 
 .btn-cerrar:hover {
   background-color: #c82333;
+}
+
+.acciones-citas {
+  display: none;
+}
+
+.td-btns {
+  width: 480px;
+}
+
+@media (max-width: 820px) {
+  .perfil-container {
+    margin: 0px auto;
+    margin-bottom: 0px;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+  }
+
+  .perfil-panel {
+    width: 100%;
+    max-width: none;
+    margin-bottom: 20px;
+  }
+
+  .perfil-derecha {
+    width: 100%;
+  }
+
+  .menu-opciones {
+    justify-content: center;
+  }
+
+  .contenido {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .contenido h3 {
+    margin-bottom: 10px;
+  }
+
+  .acciones-citas {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .acciones-citas a {
+    font-size: 14px;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .content a span {
+    display: none;
+  }
+
+  .td-btns {
+    width: 170px;
+    padding: 0px;
+  }
+
+  .btn-historial,
+  .btn-atendido {
+    margin: 0px 5px;
+    padding: 5px 10px;
+  }
+
+  .btn-historial i,
+  .btn-atendido i {
+    padding-left: 0px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-table {
+    overflow-x: auto;
+  }
 }

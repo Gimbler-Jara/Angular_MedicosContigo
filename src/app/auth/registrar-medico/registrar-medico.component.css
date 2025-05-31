@@ -194,3 +194,16 @@ select.ng-invalid.ng-touched {
   text-overflow: ellipsis;
 }
 
+@media (max-width: 478px) {
+  .formulario-usuario {
+    padding: 1rem;
+  }
+
+  .input-group-password {
+    flex-direction: column;
+  }
+
+  .input-control {
+    flex: 1 1 100%;
+  }
+}

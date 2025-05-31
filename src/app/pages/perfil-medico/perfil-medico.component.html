@@ -39,72 +39,83 @@
                 </select>
             </div>
 
+            <div class="acciones-citas">
+                <a class="btn-atendido"> Atendido <i class="fa-solid fa-check-to-slot"></i></a>
+                <a class="btn-historial"> Ver Historial del Paciente<i class="fa-solid fa-list-ul"></i></a>
+                <a class="btn-historial">Conectarse<i class="fa-solid fa-video"></i></a>
+            </div>
 
-            @if (citasFiltradas.length) {
-            <table class="tabla-citas">
-                <thead>
-                    <tr>
-                        <th style="text-align: center;">Fecha</th>
-                        <th style="text-align: center;">Hora</th>
-                        <th style="text-align: center;">Paciente</th>
-                        <th style="text-align: center;">Estado de cita</th>
-                        <th style="text-align: center;">Tipo de cita</th>
-                        <th style="text-align: center;">Marcar como atendido</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (cita of citasFiltradas; track $index) {
-                    <tr>
-                        <td style="text-align: center;">{{obtenerDiaSemana(cita.fecha)}} {{ cita.fecha |
-                            date:'dd-MM-yyyy' }}</td>
-                        <td style="text-align: center;">{{ cita.hora }}</td>
-                        <td style="text-align: center;">{{ cita.pacienteNombre }}</td>
-                        <td style="text-align: center;"><span>{{ cita.estado }}</span>
-                        </td>
-                        <td style="text-align: center;">{{cita.tipo_cita===0 ? "Presencial":"Teleconsulta"}}</td>
-                        <td style="width: 480px; text-align: center;">
-                            <div class="content">
-                                <!-- <a (click)=" marcarcitaComoAtendido(cita.id) " class="btn-atendido"
+
+            <div class="content-table">
+                @if (citasFiltradas.length) {
+                <table class="tabla-citas">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;">Fecha</th>
+                            <th style="text-align: center;">Hora</th>
+                            <th style="text-align: center;">Paciente</th>
+                            <th style="text-align: center;">Estado de cita</th>
+                            <th style="text-align: center;">Tipo de cita</th>
+                            <th style="text-align: center;">Marcar como atendido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (cita of citasFiltradas; track $index) {
+                        <tr>
+                            <td style="text-align: center;"> {{ cita.fecha |date:'dd-MM-yyyy' }}
+                                {{obtenerDiaSemana(cita.fecha)}}</td>
+                            <td style="text-align: center;">{{ cita.hora }}</td>
+                            <td style="text-align: center;">{{ cita.pacienteNombre }}</td>
+                            <td style="text-align: center;"><span>{{ cita.estado }}</span>
+                            </td>
+                            <td style="text-align: center;">{{cita.tipo_cita===0 ? "Presencial":"Teleconsulta"}}</td>
+                            <td style="text-align: center;" class="td-btns">
+                                <div class="content">
+                                    <!-- <a (click)=" marcarcitaComoAtendido(cita.id) " class="btn-atendido"
                                     [style.pointerEvents]="!esCitaPasada(cita.fecha, cita.hora) ? 'none' : 'auto'"
                                     [style.opacity]="!esCitaPasada(cita.fecha, cita.hora) ? 0.5 : 1">
-                                    Atendido
+                                   <span> Atendido</span>
                                     <i class="fa-solid fa-check-to-slot"></i>
                                 </a> -->
-                                <a (click)=" marcarcitaComoAtendido(cita.id) " class="btn-atendido">
-                                Atendido
-                                <i class="fa-solid fa-check-to-slot"></i>
-                            </a>
+                                    <a (click)=" marcarcitaComoAtendido(cita.id) " class="btn-atendido">
+                                        <span> Atendido</span>
+                                        <i class="fa-solid fa-check-to-slot"></i>
+                                    </a>
 
-                                <a (click)=" listarHistorialPaciente(cita.pacienteId) " class="btn-historial">
-                                    Ver Historial
-                                    <i class="fa-solid fa-list-ul"></i>
-                                </a>
+                                    <a (click)=" listarHistorialPaciente(cita.pacienteId) " class="btn-historial">
+                                        <span>Ver Historial</span>
+                                        <i class="fa-solid fa-list-ul"></i>
+                                    </a>
 
 
-                                <!-- <a [style.opacity]="cita.tipo_cita === 1 ? (esCitaPasada(cita.fecha, cita.hora) ? '1' : '0.5') : '0'"  
+                                    <!-- <a [style.opacity]="cita.tipo_cita === 1 ? (esCitaPasada(cita.fecha, cita.hora) ? '1' : '0.5') : '0'"  
                                    [style.pointerEvents]="(cita.tipo_cita === 1 && esCitaPasada(cita.fecha, cita.hora)) ? 'auto' : 'none'" 
                                    (click)="navigateVideoCall(cita.medicoId, cita.nombre_sala)"
-                                    class="btn-historial">Conectarse<i class="fa-solid fa-video"></i>
+                                    class="btn-historial">
+                                    <span>Conectarse</span>
+                                    <i class="fa-solid fa-video"></i>
                                 </a> -->
 
-                                <a [style.opacity]="cita.tipo_cita === 1 ? '1' : '0'"
-                                    [style.pointerEvents]="(cita.tipo_cita === 1 ) ? 'auto' : 'none'"
-                                    (click)="navigateVideoCall(cita.medicoId, cita.nombre_sala)" class="btn-historial">Conectarse<i
-                                        class="fa-solid fa-video"></i>
-                                </a>
-                            </div>
+                                    <a [style.opacity]="cita.tipo_cita === 1 ? '1' : '0'"
+                                        [style.pointerEvents]="(cita.tipo_cita === 1 ) ? 'auto' : 'none'"
+                                        (click)="navigateVideoCall(cita.medicoId, cita.nombre_sala)"
+                                        class="btn-historial">
+                                        <span>Conectarse</span>
+                                        <i class="fa-solid fa-video"></i>
+                                    </a>
+                                </div>
 
-                        </td>
+                            </td>
 
-                    </tr>
-                    }
-                </tbody>
-            </table>
-            }@else {
-            <p>No hay citas programadas para el filtro seleccionado.</p>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+                }@else {
+                <p>No hay citas programadas para el filtro seleccionado.</p>
+                }
+            </div>
             }
-            }
-
             <!-- Agregar disponibilidad -->
             @if (vista === 'agregar') {
             <div class="disponibilidad-form">

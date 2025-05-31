@@ -47,53 +47,56 @@
             }
             @if (selectedGestion === 'medico' && selectedTab === "listar") {
             <ng-container>
-                <table class="tabla-medicos">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Documento</th>
-                            <th>N° Doc.</th>
-                            <th>Apellidos</th>
-                            <th>Nombres</th>
-                            <th>Teléfono</th>
-                            <th>Email</th>
-                            <th>Género</th>
-                            <th>Fecha de Nacimiento</th>
-                            <th>Especialidad</th>
-                            <th>CMP</th>
-                            <th>Activo</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (medico of medicos; track $index) {
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ medico.usuario.documentType.doc }}</td>
-                            <td>{{ medico.usuario.dni }}</td>
-                            <td>{{ medico.usuario.lastName }} {{ medico.usuario.middleName || '' }}</td>
-                            <td>{{ medico.usuario.firstName }}</td>
-                            <td>{{ medico.usuario.telefono }}</td>
-                            <td>{{ medico.usuario.email }}</td>
-                            <td>{{ medico.usuario.gender === 'M' ? 'Masculino' : 'Femenino' }}</td>
-                            <td>{{ medico.usuario.birthDate | date:'dd-MM-yyyy'}}</td>
-                            <td>{{ medico.especialidad.especialidad }}</td>
-                            <td>{{ medico.cmp }}</td>
-                            <td>{{medico.usuario.activo ? "SI":"NO"}}</td>
-                            <td>
-                                <a (click)="abrirModalEditarMedico(medico)"><i class="fa-solid fa-user-pen"></i></a>
-                                @if (medico.usuario.activo) {
-                                <a (click)="cambiarEstadoActivo(medico.usuario.id!)"><i class="fa-solid fa-eye"></i></a>
-                                }@else {
-                                <a (click)="cambiarEstadoActivo(medico.usuario.id!)"><i
-                                        class="fa-solid fa-eye-slash"></i></a>
-                                }
-                            </td>
-                        </tr>
-                        }
-                    </tbody>
-                </table>
+                <div class="content-table">
+                    <table class="tabla-medicos">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Documento</th>
+                                <th>N° Doc.</th>
+                                <th>Apellidos</th>
+                                <th>Nombres</th>
+                                <th>Teléfono</th>
+                                <th>Email</th>
+                                <th>Género</th>
+                                <th>Fecha de Nacimiento</th>
+                                <th>Especialidad</th>
+                                <th>CMP</th>
+                                <th>Activo</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (medico of medicos; track $index) {
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ medico.usuario.documentType.doc }}</td>
+                                <td>{{ medico.usuario.dni }}</td>
+                                <td>{{ medico.usuario.lastName }} {{ medico.usuario.middleName || '' }}</td>
+                                <td>{{ medico.usuario.firstName }}</td>
+                                <td>{{ medico.usuario.telefono }}</td>
+                                <td>{{ medico.usuario.email }}</td>
+                                <td>{{ medico.usuario.gender === 'M' ? 'Masculino' : 'Femenino' }}</td>
+                                <td>{{ medico.usuario.birthDate | date:'dd-MM-yyyy'}}</td>
+                                <td>{{ medico.especialidad.especialidad }}</td>
+                                <td>{{ medico.cmp }}</td>
+                                <td>{{medico.usuario.activo ? "SI":"NO"}}</td>
+                                <td>
+                                    <a (click)="abrirModalEditarMedico(medico)"><i class="fa-solid fa-user-pen"></i></a>
+                                    @if (medico.usuario.activo) {
+                                    <a (click)="cambiarEstadoActivo(medico.usuario.id!)"><i
+                                            class="fa-solid fa-eye"></i></a>
+                                    }@else {
+                                    <a (click)="cambiarEstadoActivo(medico.usuario.id!)"><i
+                                            class="fa-solid fa-eye-slash"></i></a>
+                                    }
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
 
+                </div>
             </ng-container>
             }
 

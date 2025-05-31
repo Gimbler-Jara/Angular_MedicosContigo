@@ -99,19 +99,22 @@
   flex: 1;
   border: 2px solid #dbe6ee;
   border-radius: 0 10px 10px 10px;
-  /* padding: 32px 24px; */
   min-height: 360px;
   box-shadow: 0 4px 22px rgba(33, 150, 243, 0.04);
   font-size: 1.1rem;
   color: #00324a;
-  /* display: flex;
-  align-items: center;
-  justify-content: center; */
 }
 
 /* *================== TABLA MEDICOS ================================== */
+.content-table {
+  min-width: 1275px;
+  overflow-x: auto;
+  background-color: red;
+}
+
 .tabla-medicos {
   width: 100%;
+  min-width: 1250px;
   border-collapse: collapse;
   background: #fff;
   /* margin-top: 20px; */
@@ -185,4 +188,44 @@ td a:hover {
   border: 1px solid #00324a;
 }
 
+@media (max-width: 478px) {
+  .container-principal {
+    flex-direction: column;
+  }
 
+  .perfil-panel {
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 0px;
+    box-shadow: none;
+    margin-bottom: 20px;
+  }
+
+  .sidebar button {
+    width: calc(100% - 32px);
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .main-content {
+    padding: 20px;
+  }
+
+  .tabs {
+    flex-direction: column;
+  }
+
+  .tabs button {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .content-box {
+    min-height: auto;
+  }
+}

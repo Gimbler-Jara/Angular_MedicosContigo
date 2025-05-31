@@ -98,7 +98,6 @@ select.ng-invalid.ng-touched {
   color: #888;
 }
 
-
 .input-error {
   border: 1px solid red !important;
 }
@@ -160,4 +159,22 @@ select.ng-invalid.ng-touched {
   border: 1.7px solid #d32f2f !important;
   background: #fff0f0 !important;
   transition: border 0.2s, background 0.2s;
+}
+
+@media (max-width: 478px) {
+  .formulario-usuario {
+    padding: 1rem;
+  }
+
+  /* .input-control {
+    flex: 1 1 100%;
+  }
+
+  .input-group {
+    flex-direction: column;
+  }
+
+  .input-group-password {
+    flex-direction: column;
+  } */
 }
