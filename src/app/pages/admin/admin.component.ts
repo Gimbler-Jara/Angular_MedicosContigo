@@ -135,7 +135,7 @@ export class AdminComponent {
       this.listarMedicos();
       this.listarPacientes();
       showAlert('success', data.mensaje);
-    }).catch((error) => {
+    }).catch((error) => { 
       console.log("Error al ocultar el paciente " + error);
     });
   }

@@ -1,6 +1,6 @@
 
 // SPRING BOOT
-// export const API = "http://localhost:8080/api";
+// export const API = "http://localhost:8081/api";
 export const API = "https://sb-sistema-citas-medicas-api.onrender.com/api";  
 
 // ! /api/procedimientos/*** 

@@ -106,11 +106,10 @@
 }
 
 /* *================== TABLA MEDICOS ================================== */
-.content-table {
-  min-width: 1275px;
+/* .content-table {
+  min-width: 1285px;
   overflow-x: auto;
-  background-color: red;
-}
+} */
 
 .tabla-medicos {
   width: 100%;
