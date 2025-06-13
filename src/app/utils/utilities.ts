@@ -1,10 +1,20 @@
-import { Validators } from "@angular/forms";
-import Swal from "sweetalert2";
-import { EmailService } from "../services/email.service";
-import { getRegisterTemplateHTML } from "./template";
+import { Validators } from '@angular/forms';
+import Swal from 'sweetalert2';
+import { EmailService } from '../services/email.service';
+import { getRegisterTemplateHTML } from './template';
+import { UsuarioResponse } from '../interface/Usuario/Usuario.interface';
+import { UsuarioStorage } from '../DTO/UsuarioStorage.DTO';
 
 export function obtenerProximaFecha(diaSemana: string): string {
-  const dias = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
+  const dias = [
+    'lunes',
+    'martes',
+    'miércoles',
+    'jueves',
+    'viernes',
+    'sábado',
+    'domingo',
+  ];
   const dia = diaSemana.trim().toLowerCase();
 
   const hoy = new Date();
@@ -23,22 +33,35 @@ export function obtenerProximaFecha(diaSemana: string): string {
   proximaFecha.setDate(hoy.getDate() + diasParaSumar);
 
   return proximaFecha.toISOString().split('T')[0];
-};
+}
 
 export function obtenerDiaSemana(fecha: string | Date): string {
   const date = new Date(fecha);
-  const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+  const diasSemana = [
+    'Lunes',
+    'Martes',
+    'Miércoles',
+    'Jueves',
+    'Viernes',
+    'Sábado',
+    'Domingo',
+  ];
   return diasSemana[date.getDay()];
 }
 
-export function obtenerCamposUsuario(includeEspecialidad: boolean = false): any[] {
+export function obtenerCamposUsuario(
+  includeEspecialidad: boolean = false
+): any[] {
   const camposBase = [
     {
-      name: 'documentTypeId', label: 'Tipo de Documento', type: 'select', options: [
+      name: 'documentTypeId',
+      label: 'Tipo de Documento',
+      type: 'select',
+      options: [
         { value: 1, label: 'DNI' },
         { value: 2, label: 'Carnet de Extranjería' },
-        { value: 3, label: 'Pasaporte' }
-      ]
+        { value: 3, label: 'Pasaporte' },
+      ],
     },
     { name: 'dni', label: 'DNI' },
     { name: 'firstName', label: 'Nombre' },
@@ -47,31 +70,48 @@ export function obtenerCamposUsuario(includeEspecialidad: boolean = false): any[
     { name: 'telefono', label: 'Teléfono' },
     { name: 'birthDate', label: 'Fecha de Nacimiento', type: 'date' },
     {
-      name: 'gender', label: 'Género', type: 'select', options: [
+      name: 'gender',
+      label: 'Género',
+      type: 'select',
+      options: [
         { value: 'M', label: 'Masculino' },
-        { value: 'F', label: 'Femenino' }
-      ]
+        { value: 'F', label: 'Femenino' },
+      ],
     },
     { name: 'email', label: 'Correo Electrónico' },
-    { name: 'password', label: 'Nueva Contraseña', type: 'password' }
+    { name: 'password', label: 'Nueva Contraseña', type: 'password' },
   ];
 
   if (includeEspecialidad) {
-    camposBase.push({ name: 'especialidadId', label: 'Especialidad', type: 'especialidad' });
+    camposBase.push({
+      name: 'especialidadId',
+      label: 'Especialidad',
+      type: 'especialidad',
+    });
     camposBase.push({ name: 'cmp', label: 'CMP' });
   }
 
   return camposBase;
 }
 
-
-
 export function obtenerValidacionesDeCamposUsuario(usuario: any) {
   return {
-    firstName: [usuario.firstName || '', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)]],
-    middleName: [usuario.middleName || '', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/)]],
-    lastName: [usuario.lastName || '', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)]],
-    telefono: [usuario.telefono || '', [Validators.required, Validators.pattern(/^\d{9}$/)]],
+    firstName: [
+      usuario.firstName || '',
+      [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)],
+    ],
+    middleName: [
+      usuario.middleName || '',
+      [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/)],
+    ],
+    lastName: [
+      usuario.lastName || '',
+      [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)],
+    ],
+    telefono: [
+      usuario.telefono || '',
+      [Validators.required, Validators.pattern(/^\d{9}$/)],
+    ],
     birthDate: [usuario.birthDate || '', Validators.required],
     gender: [usuario.gender || '', Validators.required],
     dni: [usuario.dni || '', Validators.required],
@@ -93,22 +133,24 @@ export function validarEdad(fecha: Date): number {
   return edad;
 }
 
-
-export function showAlert(icon: 'warning' | 'error' | 'success', message: string) {
+export function showAlert(
+  icon: 'warning' | 'error' | 'success',
+  message: string
+) {
   const Toast = Swal.mixin({
     toast: true,
-    position: "top-end",
+    position: 'top-end',
     showConfirmButton: false,
     timer: 3000,
     timerProgressBar: true,
     didOpen: (toast) => {
       toast.onmouseenter = Swal.stopTimer;
       toast.onmouseleave = Swal.resumeTimer;
-    }
+    },
   });
   Toast.fire({
     icon: icon,
-    title: message
+    title: message,
   });
 }
 
@@ -124,13 +166,30 @@ export function mostrarErroresEdad(edad: number): boolean {
   return false;
 }
 
-
-export async function enviarCorreoBienvenida(emailService: EmailService, nombre: string, apellido: string, email: string, password: string): Promise<void> {
+export async function enviarCorreoBienvenida(
+  emailService: EmailService,
+  nombre: string,
+  apellido: string,
+  email: string,
+  password: string
+): Promise<void> {
   const mensaje = getRegisterTemplateHTML(nombre, apellido, email, password);
-  await emailService.message(email, "Bienvenido a la plataforma de citas médicas. Su registro ha sido exitoso.", mensaje);
+  await emailService.message(
+    email,
+    'Bienvenido a la plataforma de citas médicas. Su registro ha sido exitoso.',
+    mensaje
+  );
 }
 
+export function obtenerDatosUsuario(usuario: UsuarioResponse) {
+  var u: UsuarioStorage = {
+    id: usuario.id,
+    firstName: usuario.firstName,
+    lastName: usuario.lastName,
+    middleName: usuario.middleName!,
+    email: usuario.email!,
+    telefono: usuario.telefono!,
+  };
 
-
-
-
+  return u;
+}

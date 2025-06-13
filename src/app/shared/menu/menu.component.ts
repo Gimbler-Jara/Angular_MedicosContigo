@@ -33,6 +33,8 @@ export class MenuComponent {
   ngOnInit(): void {
     this.usuarioSubscription = this.localStorageService.usuario$.subscribe(usuario => {
       this.isAutentiticared = this.authService.isAuthenticated();
+      // console.log('Usuario autenticado:', this.isAutentiticared);
+      
       // this.rol = usuario?.rol.id!;
       this.rolUsuario = this.authService.getUserRole()!;
       // console.log(this.rolUsuario);

@@ -5,16 +5,18 @@ import { AuthService } from './auth.service';
 import { UsuarioStorage } from '../DTO/UsuarioStorage.DTO';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LocalStorageService {
-
-  private usuarioSubject = new BehaviorSubject<UsuarioStorage | null>(this.getUsuario());
+  private usuarioSubject = new BehaviorSubject<UsuarioStorage | null>(
+    this.getUsuario()
+  );
 
   usuario$ = this.usuarioSubject.asObservable();
 
   getUsuario(): UsuarioStorage | null {
-    const usuarioStr = localStorage.getItem('usuario');
+    // const usuarioStr = localStorage.getItem('usuario');
+    const usuarioStr = sessionStorage.getItem('usuario');
     return usuarioStr ? JSON.parse(usuarioStr) : null;
   }
 
@@ -26,17 +28,18 @@ export class LocalStorageService {
         lastName: usuario.lastName,
         middleName: usuario.middleName!,
         email: usuario.email!,
-        telefono: usuario.telefono!
-      }
+        telefono: usuario.telefono!,
+      };
 
-      localStorage.setItem('usuario', JSON.stringify(u));
+      // localStorage.setItem('usuario', JSON.stringify(u));
+      sessionStorage.setItem('usuario', JSON.stringify(u));
       this.usuarioSubject.next(u);
     }
   }
 
   logOut() {
     localStorage.removeItem('usuario');
-    localStorage.removeItem('token')
+    localStorage.removeItem('token');
     this.usuarioSubject.next(null);
   }
 
