@@ -5,7 +5,6 @@ import { catchError } from 'rxjs/operators';
 const PUBLIC_ROUTES = [
   '/api/usuarios/login',
   '/api/usuarios/refresh',
-  '/api/medicos',
   '/api/cita-medica/historial',
 ];
 
@@ -24,7 +23,7 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
       if ([401, 403].includes(err.status)) {
         console.warn('🔐 Sesión expirada. Redirigiendo al login...');
         localStorage.removeItem('token');
-        window.location.href = '/login';
+         window.location.href = '/login';
       }
       return throwError(() => err);
     })

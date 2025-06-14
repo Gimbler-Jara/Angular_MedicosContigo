@@ -28,14 +28,12 @@ export class VerificarRecetaComponentComponent {
       var idCita = param.get('id');
 
       this.citaService.verDetallesDeCitaAtendida(Number(idCita)).then((res) => {
-
         this.detalleCita = res.datos;
 
         this.medicoService.obtenerMedico(res.datos.idMedico).then((res) => {
-          console.log(res);
            this.medico = res.medico;
-          this.medicoService.obtenerUrlFirmaDigital(res.medico.urlFirmaDigital).then((data) => {
 
+          this.medicoService.obtenerUrlFirmaDigital(res.medico.urlFirmaDigital).then((data) => {
             var dataSerializada = JSON.parse(data)
             this.urlFirma = dataSerializada.url;
 
