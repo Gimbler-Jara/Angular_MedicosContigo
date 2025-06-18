@@ -15,7 +15,6 @@ export class LocalStorageService {
   usuario$ = this.usuarioSubject.asObservable();
 
   getUsuario(): UsuarioStorage | null {
-    // const usuarioStr = localStorage.getItem('usuario');
     const usuarioStr = sessionStorage.getItem('usuario');
     return usuarioStr ? JSON.parse(usuarioStr) : null;
   }
@@ -23,7 +22,6 @@ export class LocalStorageService {
   setUsuario(usuario: UsuarioStorage) {
     if (usuario) {
       var u: UsuarioStorage = {
-        id: usuario.id,
         firstName: usuario.firstName,
         lastName: usuario.lastName,
         middleName: usuario.middleName!,
@@ -31,21 +29,16 @@ export class LocalStorageService {
         telefono: usuario.telefono!,
       };
 
-      // localStorage.setItem('usuario', JSON.stringify(u));
       sessionStorage.setItem('usuario', JSON.stringify(u));
       this.usuarioSubject.next(u);
     }
   }
 
   logOut() {
-    localStorage.removeItem('usuario');
+    sessionStorage.removeItem('usuario');
     localStorage.removeItem('token');
     this.usuarioSubject.next(null);
   }
-
-  // setToken(token: string) {
-  //   localStorage.setItem('token', token);
-  // }
 
   getToken(): string | null {
     return localStorage.getItem('token');

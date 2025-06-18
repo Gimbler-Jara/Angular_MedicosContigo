@@ -23,7 +23,7 @@ export class AppComponent {
   ngOnInit(): void {
     const token = localStorage.getItem('token');
     if (token && !sessionStorage.getItem('usuario')) {
-      this.authService.obtenerPerfilDesdeToken(token).subscribe((res) => {
+      this.authService.obtenerPerfilDesdeToken().subscribe((res) => {
         if (res.usuario) {
           var u = obtenerDatosUsuario(res.usuario);
           this.localStorageService.setUsuario(u);

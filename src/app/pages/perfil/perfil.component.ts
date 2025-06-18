@@ -3,17 +3,12 @@ import { Component, inject } from '@angular/core';
 import { CitasService } from '../../services/citas.service';
 import { Especialidad } from '../../interface/Especialidad.interface';
 import { AgendarCitaMedicaDTO } from '../../DTO/CitaMedica.DTO';
-import {
-  UsuarioPacienteRequest,
-  UsuarioResponse,
-} from '../../interface/Usuario/Usuario.interface';
 import { AuthService } from '../../services/auth.service';
 import { EspecialidadService } from '../../services/especialidad.service';
 import { MedicosPorEspecialidadDTO } from '../../DTO/MedicosPorEspecialidad.DTO';
 import { HorasDispinibles } from '../../DTO/HorasDispinibles.DTO';
 import {
   obtenerCamposUsuario,
-  obtenerDatosUsuario,
   obtenerProximaFecha,
   obtenerValidacionesDeCamposUsuario,
   showAlert,
@@ -80,6 +75,7 @@ export class PerfilComponent {
   vista: 'citas' | 'reservar' | 'extra' = 'citas';
 
   usuario: UsuarioStorage = this.localStorageService.getUsuario()!;
+  idUsuario: number = this.authService.getUserId()!;
 
   citasRegistradas: CitasReservadasPorPacienteResponse[] = [];
   citasAtendidas: CitasReservadasPorPacienteResponse[] = [];
@@ -190,6 +186,7 @@ export class PerfilComponent {
   }
 
   seleccionarEspecialidad(esp: Especialidad) {
+    this.isLoading = true;
     this.especialidadSeleccionada = esp;
 
     this.limpiarCamposCita();
@@ -198,6 +195,7 @@ export class PerfilComponent {
       .listarMedicosPorEspecialidad(esp.id)
       .then((data) => {
         this.medicosFiltrados = data.medicos;
+        this.isLoading = false;
       })
       .catch((error) => {
         this.medicosFiltrados = [];
@@ -206,6 +204,7 @@ export class PerfilComponent {
   }
 
   seleccionarMedico(medico: MedicosPorEspecialidadDTO) {
+    this.isLoading = true;
     this.medicoSeleccionado = medico;
 
     this.limpiarCamposCita();
@@ -214,15 +213,18 @@ export class PerfilComponent {
       .listarDiasDisponibles(medico.id!)
       .then((datos) => {
         this.fechasFiltradas = datos.diasSemana;
+        this.isLoading = false;
         // this.fechasFiltradas = [];
       })
       .catch((error) => {
         this.fechasFiltradas = [];
+        this.isLoading = false;
         console.log(error);
       });
   }
 
   seleccionarFecha(fecha: DiaSemana) {
+    this.isLoading = true;
     const dia = obtenerProximaFecha(fecha.dia);
     this.fechaCitaSeleccionada = dia;
 
@@ -233,6 +235,7 @@ export class PerfilComponent {
       .listarHorasDisponibles(this.medicoSeleccionado.id, dia)
       .then((data) => {
         this.horasFiltradas = data.horas;
+        this.isLoading = false;
       })
       .catch(() => {
         this.horasFiltradas = [];
@@ -253,6 +256,7 @@ export class PerfilComponent {
   }
 
   confirmarCita() {
+    this.isLoading = true;
     if (
       this.especialidadSeleccionada &&
       this.medicoSeleccionado &&
@@ -267,7 +271,7 @@ export class PerfilComponent {
 
       const nuevaCita: AgendarCitaMedicaDTO = {
         idMedico: this.medicoSeleccionado.id!,
-        idPaciente: this.usuario.id ?? 1,
+        idPaciente: this.authService.getUserId() ?? 1,
         fecha: this.fechaCitaSeleccionada!,
         idHora: this.horaSeleccionada,
         estado: 1,
@@ -301,11 +305,14 @@ export class PerfilComponent {
             this.fechasFiltradas = [];
             this.horasFiltradas = [];
             this.tipoCitaSeleccionada = -1;
+            this.isLoading = false;
           } else {
+            this.isLoading = false;
             showAlert('error', res.mensaje);
           }
         })
         .catch((error) => {
+          this.isLoading = false;
           showAlert('error', 'Error al agendar la cita médica.');
         });
     }
@@ -368,7 +375,7 @@ export class PerfilComponent {
         .then((res) => {
           if (res.httpStatus == 200) {
             var usuarioActualizado: UsuarioStorage = {
-              id: this.usuario.id,
+              // id: this.usuario.id,
               firstName: datosFormulario.firstName,
               lastName: datosFormulario.lastName,
               middleName: datosFormulario.middleName || '',
@@ -410,7 +417,7 @@ export class PerfilComponent {
 
   async listarCitasPorPaciente() {
     this.citaService
-      .listarCitasReservadasPorPaciente(this.usuario.id!)
+      .listarCitasReservadasPorPaciente(this.authService.getUserId()!)
       .then((data) => {
         this.citasRegistradas = [];
         this.citasAtendidas = [];
@@ -476,6 +483,7 @@ export class PerfilComponent {
   }
 
   verDiagnosticoYReceta(idCita: number) {
+    this.isLoading = true;
     this.urlFirma = '';
     this.citaService
       .verDetallesDeCitaAtendida(idCita)
@@ -495,16 +503,22 @@ export class PerfilComponent {
 
                 this.urlFirma = dataSerializada.url;
                 this.mostrarModalDiagnosticoPaciente = true;
+                this.isLoading = false;
               })
               .catch((error) => {
+                this.isLoading = false;
                 console.log(
                   'Error al obtener la url: ' + JSON.stringify(error)
                 );
               });
           })
-          .catch(() => {});
+          .catch((error) => {
+            console.error('Error al obtener el médico:', error);
+            this.isLoading = false;
+          });
       })
       .catch((error) => {
+        this.isLoading = false;
         console.error('Error al obtener los detalles:', error);
       });
   }

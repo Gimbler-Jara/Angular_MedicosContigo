@@ -30,11 +30,8 @@ export class AuthService {
     });
   }
 
-  cambiarEstadoUsuario(
-    id: number
-  ): Promise<{ httpStatus: number; mensaje: string }> {
+  cambiarEstadoUsuario(id: number): Promise<{ httpStatus: number; mensaje: string }> {
     var url = `${API}/${USUARIO}/${ENDPOINTS_USUARIO.CAMBIAR_ESTADO}/${id}`;
-
     return lastValueFrom(
       this.http.put<{ httpStatus: number; mensaje: string }>(url, id).pipe(
         catchError((error) => {
@@ -44,9 +41,7 @@ export class AuthService {
     );
   }
 
-  registrarPaciente(
-    usuario: UsuarioPacienteRequest
-  ): Promise<UsiarioPacienteResponse> {
+  registrarPaciente(usuario: UsuarioPacienteRequest): Promise<UsiarioPacienteResponse> {
     return lastValueFrom(
       this.http
         .post<UsiarioPacienteResponse>(`${API}/${PACIENTES}`, usuario)
@@ -71,7 +66,7 @@ export class AuthService {
   async login(user: LoginDTO): Promise<PerfilResponse> {
     return lastValueFrom(
       this.http.post<any>(`${API}/${USUARIO}/login`, user)
-    ).then((res) => {
+    ).then((res) => { 
       localStorage.setItem('token', res.token);
       this.localStorageService.setUsuario(res.usuario);
       return res;
@@ -92,16 +87,13 @@ export class AuthService {
     );
   }
 
-  obtenerPerfilDesdeToken(token: string): Observable<PerfilResponse> {
+  obtenerPerfilDesdeToken(): Observable<PerfilResponse> {
     return this.http.get<PerfilResponse>(`${API}/${USUARIO}/perfil-token`);
   }
 
-  getToken() {
-    return localStorage.getItem('token');
-  }
 
   isAuthenticated(): boolean {
-    const token = this.getToken();
+    const token = this.localStorageService.getToken();
     if (!token) return false;
 
     try {
@@ -114,8 +106,20 @@ export class AuthService {
     }
   }
 
+  getUserId(): number | null {
+    const token = this.localStorageService.getToken();
+    if (!token) return null;
+
+    try {
+      const decoded: any = jwtDecode(token);
+      return decoded.id || null;
+    } catch {
+      return null;
+    }
+  }
+
   getUserRole(): string | null {
-    const token = this.getToken();
+    const token = this.localStorageService.getToken();
     if (!token) return null;
 
     try {
@@ -126,12 +130,12 @@ export class AuthService {
     }
   }
 
-  getTiempoRestante(): number {
-    const token = this.getToken();
-    if (!token) return 0;
+  // getTiempoRestante(): number {
+  //   const token = this.localStorageService.getToken();
+  //   if (!token) return 0;
 
-    const decoded: any = jwtDecode(token);
-    const now = Math.floor(Date.now() / 1000);
-    return decoded.exp - now;
-  }
+  //   const decoded: any = jwtDecode(token);
+  //   const now = Math.floor(Date.now() / 1000);
+  //   return decoded.exp - now;
+  // }
 }

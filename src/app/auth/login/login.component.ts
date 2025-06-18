@@ -61,9 +61,7 @@ export class LoginComponent {
         this.formularioLogin.reset();
       })
       .catch(error => {
-        console.error('Error al iniciar sesión:', error);
-        console.log(error.error.httpStatus);
-        console.log(error.error.mensaje);
+        console.log('Error al iniciar sesión:', error);
         showAlert('error', error.error.mensaje);
       })
       .finally(() => {

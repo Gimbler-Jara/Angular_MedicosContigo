@@ -126,10 +126,10 @@ export class RegistrarMedicoComponent {
 
     var usuario = this.formularioMedico.value;
 
-    this.usuarioService.registrarMedico(formData).then(() => {
-      this.isLoading = false;
+    this.usuarioService.registrarMedico(formData).then((res) => {
       this.formularioMedico.reset(this.formularioInicial);
-      showAlert('success', 'Registro exitoso. El médico ha sido registrado correctamente.');
+      this.isLoading = false;
+      showAlert('success', 'Registro exitoso. ' + res.mensaje);
       this.selectedFile = null;
       enviarCorreoBienvenida(this.emailService, usuario.firstName, usuario.lastName, usuario.email!, usuario.password).then(() => {
         console.log("mensaje enviado");

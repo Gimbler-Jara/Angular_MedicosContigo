@@ -1,7 +1,7 @@
 import { Rol } from "../interface/Rol.interface";
 
 export interface UsuarioStorage {
-    id?: number,
+    // id?: number,
     firstName: string,
     lastName: string,
     middleName?: string,

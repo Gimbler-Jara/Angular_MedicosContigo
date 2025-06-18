@@ -183,7 +183,6 @@ export async function enviarCorreoBienvenida(
 
 export function obtenerDatosUsuario(usuario: UsuarioResponse) {
   var u: UsuarioStorage = {
-    id: usuario.id,
     firstName: usuario.firstName,
     lastName: usuario.lastName,
     middleName: usuario.middleName!,

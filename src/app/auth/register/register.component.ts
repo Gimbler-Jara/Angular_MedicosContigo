@@ -118,9 +118,9 @@ export class RegisterComponent {
       }
 
       this.usuarioService.registrarPaciente(usuario).then(() => {
-        this.isLoading = false;
-
+        
         this.formularioUsuario.reset(this.formularioInicial);
+        this.isLoading = false;
         showAlert('success', 'Registro exitoso. Por favor verifica tu correo electrónico para más detalles.');
         enviarCorreoBienvenida(this.emailService, usuario.firstName, usuario.lastName, usuario.email!, usuario.password).then(() => {
           console.log("mensaje enviado");

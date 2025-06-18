@@ -54,7 +54,7 @@
                                     [style.opacity]="!esCitaPasada(cita.fecha, getHoraTexto(cita.idHora)) ? 0.5 : 1"><i
                                         class="fa-solid fa-video"></i>Conectarse a la cita</a> -->
 
-                                <a class="teleconsulta" (click)="navigateVideoCall(usuario.id!, cita.nombre_sala)"><i
+                                <a class="teleconsulta" (click)="navigateVideoCall(idUsuario, cita.nombre_sala)"><i
                                         class="fa-solid fa-video"></i>Unirse a la cita</a>
                                 }
 
