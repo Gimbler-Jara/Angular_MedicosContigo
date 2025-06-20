@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as SocketClient from 'videocall-client-socket';
 import { AuthService } from '../../services/auth.service';
 import { NgClass } from '@angular/common';
+import Hashids from 'hashids';
 
 @Component({
   selector: 'app-videocall',
@@ -31,7 +32,11 @@ export class VideocallComponent {
 
   ngOnInit(): void {
     this.activedRouter.paramMap.subscribe(async (param) => {
-      this.userId = param.get('userId')!;
+      var id = param.get('userId')!;
+      
+      const hashids = new Hashids()
+      this.userId = hashids.decode(id)[0].toString();
+      
       this.roomId = param.get('roomId')!;
       console.log(this.roomId);
       this.channel = this.roomId;

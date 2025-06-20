@@ -46,6 +46,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { MedicoDTO } from '../../DTO/medico.DTO';
 import { QRCodeModule } from 'angularx-qrcode';
 import { LoadingComponent } from '../loading/loading.component';
+import Hashids from 'hashids';
 
 @Component({
   selector: 'app-perfil',
@@ -594,8 +595,9 @@ export class PerfilComponent {
 
   navigateVideoCall(usuarioId: number, roomId: string) {
     // this.router.navigate(['/videocall', usuarioId]);
+    const hashids = new Hashids()   
     const url = this.router.serializeUrl(
-      this.router.createUrlTree(['/videocall', usuarioId, roomId])
+      this.router.createUrlTree(['/videocall', hashids.encode(usuarioId), roomId])
     );
     window.open(url, '_blank');
   }

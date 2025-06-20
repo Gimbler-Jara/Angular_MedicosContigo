@@ -19,6 +19,7 @@ import { UsuarioStorage } from '../../DTO/UsuarioStorage.DTO';
 import { obtenerDiaSemana, showAlert } from '../../utils/utilities';
 import { Router, RouterLink } from '@angular/router';
 import { LoadingComponent } from '../loading/loading.component';
+import Hashids from 'hashids';
 
 @Component({
   selector: 'app-perfil-medico',
@@ -331,8 +332,9 @@ export class PerfilMedicoComponent {
 
   navigateVideoCall(usuarioId: number, roomId: string) {
     // this.router.navigate(['/videocall', usuarioId]);
+    const hashids = new Hashids();
     const url = this.router.serializeUrl(
-      this.router.createUrlTree(['/videocall', usuarioId, roomId])
+      this.router.createUrlTree(['/videocall', hashids.encode(usuarioId), roomId])
     );
     window.open(url, '_blank');
   }

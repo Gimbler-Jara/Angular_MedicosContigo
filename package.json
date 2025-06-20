@@ -20,6 +20,7 @@
     "@angular/router": "^17.3.0",
     "angularx-qrcode": "^17.0.0",
     "emailjs-com": "^3.2.0",
+    "hashids": "^2.3.0",
     "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.10.3",
     "jspdf": "^3.0.1",
