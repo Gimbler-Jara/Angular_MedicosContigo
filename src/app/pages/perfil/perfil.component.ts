@@ -190,11 +190,18 @@ export class PerfilComponent {
     this.especialidadSeleccionada = esp;
 
     this.limpiarCamposCita();
+    this.medicosFiltrados = [];
 
     this.medicoService
       .listarMedicosPorEspecialidad(esp.id)
       .then((data) => {
-        this.medicosFiltrados = data.medicos;
+        if (data.httpStatus == 200) {
+          this.medicosFiltrados = data.medicos;
+        }
+
+        if (data.httpStatus == 204) {
+          showAlert('error', data.mensaje);
+        }
         this.isLoading = false;
       })
       .catch((error) => {
