@@ -29,7 +29,7 @@ export class AppComponent {
           this.localStorageService.setUsuario(u);
         }
       });
-    }
+    } 
 
     // this.intervalId = setInterval(() => {
     //   const tiempoRestante = this.authService.getTiempoRestante();

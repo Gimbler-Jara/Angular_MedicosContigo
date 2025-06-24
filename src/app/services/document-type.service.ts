@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Document_Type, DocumentResponse } from '../interface/DocumentType.interface';
+import {  DocumentResponse } from '../interface/DocumentType.interface';
 import { catchError, lastValueFrom, throwError } from 'rxjs';
 import { API, DOCUMENT_TYPE } from '../utils/constants_API';
 

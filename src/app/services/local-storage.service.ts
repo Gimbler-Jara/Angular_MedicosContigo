@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { UsuarioResponse } from '../interface/Usuario/Usuario.interface';
 import { BehaviorSubject } from 'rxjs';
-import { AuthService } from './auth.service';
 import { UsuarioStorage } from '../DTO/UsuarioStorage.DTO';
 
 @Injectable({
@@ -27,7 +25,7 @@ export class LocalStorageService {
         middleName: usuario.middleName!,
         email: usuario.email!,
         telefono: usuario.telefono!,
-      };
+      }; 
 
       sessionStorage.setItem('usuario', JSON.stringify(u));
       this.usuarioSubject.next(u);

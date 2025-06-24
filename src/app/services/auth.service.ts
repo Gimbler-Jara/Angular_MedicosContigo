@@ -5,7 +5,7 @@ import {
   UsiarioPacienteResponse,
   UsuarioPacienteRequest,
 } from '../interface/Usuario/Usuario.interface';
-import { catchError, lastValueFrom, map, Observable, throwError } from 'rxjs';
+import { catchError, lastValueFrom, Observable, throwError } from 'rxjs';
 import {
   API,
   USUARIO,
@@ -64,9 +64,8 @@ export class AuthService {
   }
 
   async login(user: LoginDTO): Promise<PerfilResponse> {
-    return lastValueFrom(
-      this.http.post<any>(`${API}/${USUARIO}/login`, user)
-    ).then((res) => { 
+    return lastValueFrom(this.http.post<any>(`${API}/${USUARIO}/${ENDPOINTS_USUARIO.LOGIN}`, user))
+    .then((res) => {
       localStorage.setItem('token', res.token);
       this.localStorageService.setUsuario(res.usuario);
       return res;
@@ -74,7 +73,9 @@ export class AuthService {
   }
 
   getPerfilUsuario(): Observable<PerfilResponse> {
-    return this.http.get<PerfilResponse>(`${API}/${USUARIO}/me`);
+    return this.http.get<PerfilResponse>(
+      `${API}/${USUARIO}/${ENDPOINTS_USUARIO.ME}`
+    );
   }
 
   getUserById(id: number): Promise<PerfilResponse> {
@@ -88,9 +89,10 @@ export class AuthService {
   }
 
   obtenerPerfilDesdeToken(): Observable<PerfilResponse> {
-    return this.http.get<PerfilResponse>(`${API}/${USUARIO}/perfil-token`);
+    return this.http.get<PerfilResponse>(
+      `${API}/${USUARIO}/${ENDPOINTS_USUARIO.PERFIL_TOKEN}`
+    );
   }
-
 
   isAuthenticated(): boolean {
     const token = this.localStorageService.getToken();

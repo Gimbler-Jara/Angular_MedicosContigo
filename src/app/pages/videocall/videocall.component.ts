@@ -43,7 +43,6 @@ export class VideocallComponent {
       
       this.authService.getUserById(Number(this.userId)).then((data) => {
         this.nombreLocal = `${data.usuario.firstName} ${data.usuario.lastName} ${data.usuario.middleName}`;
-
         this.isDoctor = data.usuario.rol.rol.toUpperCase() === 'MÉDICO';
       })
     });

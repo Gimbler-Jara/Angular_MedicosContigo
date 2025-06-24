@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Especialidad, EspecialidadResponse } from '../interface/Especialidad.interface';
+import {  EspecialidadResponse } from '../interface/Especialidad.interface';
 import { catchError, lastValueFrom, throwError } from 'rxjs';
 import { API, ENDPOINT_ESPECIALIDADES } from '../utils/constants_API';
 

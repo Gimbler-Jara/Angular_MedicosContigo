@@ -1,14 +1,14 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, lastValueFrom, map, throwError } from 'rxjs';
+import { catchError, lastValueFrom,  throwError } from 'rxjs';
 import { API, ENDPOINTS_CITAS, MEDICOS, CITA_MEDICA, ENDPOINTS_MEDICO } from '../utils/constants_API';
-import { MedicoDTO, MedicoPorIdResponse, MedicoResponse } from '../DTO/medico.DTO';
+import {  MedicoPorIdResponse, MedicoResponse } from '../DTO/medico.DTO';
 import { DisponibilidadesResponse } from '../DTO/DisponibilidadesCitasResponse.DTO';
 import { CambiarEstadoDisponibilidadDTO } from '../DTO/CambiarEstadoDisponibilidad.DTO';
-import { MedicosPorEspecialidad, MedicosPorEspecialidadDTO } from '../DTO/MedicosPorEspecialidad.DTO';
-import { HorasDispinibles, HorasDispiniblesDTO } from '../DTO/HorasDispinibles.DTO';
-import { DiaSemana, DiaSemanaResponse } from '../interface/DiaSemana.interface';
-import { Especialidad, EspecialidadPorMedicoResponse } from '../interface/Especialidad.interface';
+import { MedicosPorEspecialidad } from '../DTO/MedicosPorEspecialidad.DTO';
+import {  HorasDispiniblesDTO } from '../DTO/HorasDispinibles.DTO';
+import {  DiaSemanaResponse } from '../interface/DiaSemana.interface';
+import { EspecialidadPorMedicoResponse } from '../interface/Especialidad.interface';
 import { MedicoActualizacionDTO } from '../DTO/MedicoActualizacion.DTO';
 
 @Injectable({

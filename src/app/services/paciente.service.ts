@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Paciente, PacienteDTO } from '../DTO/paciente.DTO';
-import { catchError, lastValueFrom, map, throwError } from 'rxjs';
+import {  PacienteDTO } from '../DTO/paciente.DTO';
+import { catchError, lastValueFrom,  throwError } from 'rxjs';
 import { API, CITA_MEDICA, ENDPOINTS_CITAS, PACIENTES } from '../utils/constants_API';
 import { PacienteActualizacionDTO } from '../DTO/PacienteActualizacion.DTO';
-import { DetalleCitaAtendida, DetalleCitaAtendidaPorIdPacienteDTO } from '../DTO/DetalleCitaAtendida.DTO';
+import { DetalleCitaAtendidaPorIdPacienteDTO } from '../DTO/DetalleCitaAtendida.DTO';
 
 @Injectable({
   providedIn: 'root'

@@ -543,33 +543,51 @@ export class PerfilComponent {
   }
 
   guardarPDF() {
+    this.isLoading = true;
     const element = document.querySelector('.downland') as HTMLElement;
+    const firmaImg = element.querySelector('.firma') as HTMLImageElement;
 
-    if (!element) return;
+    if (!element || !firmaImg) return;
 
-    html2canvas(element, { scale: 2 }).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
+    const firmaSrc = firmaImg.src;
 
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4',
-      });
+    this.preloadImage(firmaSrc).then(() => {
+      setTimeout(() => {
+        html2canvas(element, { scale: 2, useCORS: true }).then((canvas) => {
+          const imgData = canvas.toDataURL('image/png');
 
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const margin = 20;
+          const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4',
+          });
 
-      const usableWidth = pageWidth - 2 * margin;
+          const pageWidth = pdf.internal.pageSize.getWidth();
+          const margin = 20;
 
-      const ratio = usableWidth / canvas.width;
-      const imgWidth = usableWidth;
-      const imgHeight = canvas.height * ratio;
+          const usableWidth = pageWidth - 2 * margin;
+          const ratio = usableWidth / canvas.width;
+          const imgWidth = usableWidth;
+          const imgHeight = canvas.height * ratio;
 
-      const x = margin;
-      const y = 20;
+          const x = margin;
+          const y = 20;
 
-      pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
-      pdf.save(`Receta-medica-${this.detalleCita.paciente}.pdf`);
+          pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
+          pdf.save(`Receta-medica-${this.detalleCita.paciente}.pdf`);
+        });
+        this.isLoading = false;
+      }, 100);
+    });
+  }
+
+  private preloadImage(url: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => resolve();
+      img.onerror = () => reject();
+      img.src = url;
     });
   }
 
@@ -595,9 +613,13 @@ export class PerfilComponent {
 
   navigateVideoCall(usuarioId: number, roomId: string) {
     // this.router.navigate(['/videocall', usuarioId]);
-    const hashids = new Hashids()   
+    const hashids = new Hashids();
     const url = this.router.serializeUrl(
-      this.router.createUrlTree(['/videocall', hashids.encode(usuarioId), roomId])
+      this.router.createUrlTree([
+        '/videocall',
+        hashids.encode(usuarioId),
+        roomId,
+      ])
     );
     window.open(url, '_blank');
   }
