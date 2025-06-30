@@ -72,17 +72,17 @@
                             <td style="text-align: center;">{{cita.tipo_cita===0 ? "Presencial":"Teleconsulta"}}</td>
                             <td style="text-align: center;" class="td-btns">
                                 <div class="content">
-                                    <!-- <a (click)=" marcarcitaComoAtendido(cita.id) " class="btn-atendido"
+                                    <a (click)=" marcarcitaComoAtendido(cita.id) " class="btn-atendido"
                                        [style.pointerEvents]="!esCitaPasada(cita.fecha, cita.hora) ? 'none' : 'auto'"
                                        [style.opacity]="!esCitaPasada(cita.fecha, cita.hora) ? 0.5 : 1">
                                        <span> Atendido</span>
                                        <i class="fa-solid fa-check-to-slot"></i>
-                                    </a> -->
+                                    </a>
 
-                                    <a (click)=" marcarcitaComoAtendido(cita.id) " class="btn-atendido">
+                                    <!-- <a (click)=" marcarcitaComoAtendido(cita.id) " class="btn-atendido">
                                         <span> Atendido</span>
                                         <i class="fa-solid fa-check-to-slot"></i>
-                                    </a>
+                                    </a> -->
 
                                     <a (click)=" listarHistorialPaciente(cita.pacienteId) " class="btn-historial">
                                         <span>Ver Historial</span>
@@ -90,21 +90,21 @@
                                     </a>
 
 
-                                    <!-- <a [style.opacity]="cita.tipo_cita === 1 ? (esCitaPasada(cita.fecha, cita.hora) ? '1' : '0.5') : '0'"  
+                                    <a [style.opacity]="cita.tipo_cita === 1 ? (esCitaPasada(cita.fecha, cita.hora) ? '1' : '0.5') : '0'"  
                                        [style.pointerEvents]="(cita.tipo_cita === 1 && esCitaPasada(cita.fecha, cita.hora)) ? 'auto' : 'none'" 
                                        (click)="navigateVideoCall(cita.medicoId, cita.nombre_sala)"
                                         class="btn-historial">
                                         <span>Conectarse</span>
                                         <i class="fa-solid fa-video"></i>
-                                     </a> -->
+                                     </a>
 
-                                    <a [style.opacity]="cita.tipo_cita === 1 ? '1' : '0'"
+                                    <!-- <a [style.opacity]="cita.tipo_cita === 1 ? '1' : '0'"
                                         [style.pointerEvents]="(cita.tipo_cita === 1 ) ? 'auto' : 'none'"
                                         (click)="navigateVideoCall(cita.medicoId, cita.nombre_sala)"
                                         class="btn-historial">
                                         <span>Conectarse</span>
                                         <i class="fa-solid fa-video"></i>
-                                    </a>
+                                    </a> -->
                                 </div>
 
                             </td>

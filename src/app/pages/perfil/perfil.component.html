@@ -49,13 +49,13 @@
 
                             <div class="options">
                                 @if (cita.tipo_cita == 1) {
-                                <!-- <a class="teleconsulta" (click)="navigateVideoCall(idUsuario, cita.nombre_sala)"
+                                <a class="teleconsulta" (click)="navigateVideoCall(idUsuario, cita.nombre_sala)"
                                     [style.pointerEvents]="!esCitaPasada(cita.fecha, getHoraTexto(cita.idHora)) ? 'none' : 'auto'"
                                     [style.opacity]="!esCitaPasada(cita.fecha, getHoraTexto(cita.idHora)) ? 0.5 : 1"><i
-                                        class="fa-solid fa-video"></i>Conectarse a la cita</a> -->
+                                        class="fa-solid fa-video"></i>Conectarse a la cita</a>
 
-                                <a class="teleconsulta" (click)="navigateVideoCall(idUsuario, cita.nombre_sala)"><i
-                                        class="fa-solid fa-video"></i>Unirse a la cita</a>
+                                <!-- <a class="teleconsulta" (click)="navigateVideoCall(idUsuario, cita.nombre_sala)"><i
+                                        class="fa-solid fa-video"></i>Unirse a la cita</a> -->
                                 }
 
                                 <a class="eliminar-cita" (click)="cancelarCita(cita.id!)"><i
