@@ -132,12 +132,12 @@ export class AuthService {
     }
   }
 
-  // getTiempoRestante(): number {
-  //   const token = this.localStorageService.getToken();
-  //   if (!token) return 0;
+  getTiempoRestante(): number {
+    const token = this.localStorageService.getToken();
+    if (!token) return 0;
 
-  //   const decoded: any = jwtDecode(token);
-  //   const now = Math.floor(Date.now() / 1000);
-  //   return decoded.exp - now;
-  // }
+    const decoded: any = jwtDecode(token);
+    const now = Math.floor(Date.now() / 1000);
+    return decoded.exp - now;
+  }
 }

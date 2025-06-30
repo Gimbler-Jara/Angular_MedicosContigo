@@ -52,7 +52,6 @@ export class MenuComponent {
     this.authService.logOut().then(() => {
       this.localStorageService.logOut();
     });
-    this.router.navigate(['/login']);
   }
 
   get isLoggedIn(): boolean {

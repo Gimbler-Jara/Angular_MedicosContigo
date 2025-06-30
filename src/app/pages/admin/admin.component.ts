@@ -150,7 +150,7 @@ export class AdminComponent {
       this.pacienteService
         .listarPacientes()
         .then((data) => {
-          console.log(data);
+          // console.log(data);
           this.pacientes = data.pacientes;
           resolve();
         })
@@ -226,7 +226,7 @@ export class AdminComponent {
     const datosFormulario = payload.datos;
     const archivo = payload.archivo;
 
-    console.log(datosFormulario.birthDate);
+    // console.log(datosFormulario.birthDate);
 
     const birthDate = new Date(datosFormulario.birthDate);
     const edad = validarEdad(birthDate);
@@ -239,7 +239,7 @@ export class AdminComponent {
         idUsuario: this.pacienteEditado.idUsuario,
         ...datosFormulario,
       };
-      console.log(datos);
+      // console.log(datos);
 
       this.pacienteService
         .actualizarPaciente(datos.idUsuario, datos)

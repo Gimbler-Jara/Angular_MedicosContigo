@@ -1,6 +1,8 @@
 import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { LocalStorageService } from '../services/local-storage.service';
 
 const PUBLIC_ROUTES = [
   '/api/usuarios/login',
@@ -9,7 +11,8 @@ const PUBLIC_ROUTES = [
 ];
 
 export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
-  const token = localStorage.getItem('token');
+  const localStorageService = inject(LocalStorageService);
+  const token = localStorageService.getToken();
 
   let requestPath = req.url;
   try {
@@ -27,11 +30,14 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(modifiedReq).pipe(
     catchError((err) => {
-      // if ([401, 403].includes(err.status)) {
-      //   console.warn('🔐 Sesión expirada. Redirigiendo al login...');
-      //   localStorage.removeItem('token');
-      //    window.location.href = '/login';
-      // }
+      if ([401, 403].includes(err.status)) {
+        const currentPath = window.location.pathname;
+
+        if (currentPath !== '/login') {
+          localStorageService.logOut();
+          console.log('🔐 Token expirado o no autorizado. Redirigiendo al login...');
+        } 
+      }
       return throwError(() => err);
     })
   );

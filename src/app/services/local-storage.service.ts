@@ -1,11 +1,14 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { UsuarioStorage } from '../DTO/UsuarioStorage.DTO';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LocalStorageService {
+  private router = inject(Router);
+
   private usuarioSubject = new BehaviorSubject<UsuarioStorage | null>(
     this.getUsuario()
   );
@@ -25,7 +28,7 @@ export class LocalStorageService {
         middleName: usuario.middleName!,
         email: usuario.email!,
         telefono: usuario.telefono!,
-      }; 
+      };
 
       sessionStorage.setItem('usuario', JSON.stringify(u));
       this.usuarioSubject.next(u);
@@ -35,7 +38,10 @@ export class LocalStorageService {
   logOut() {
     sessionStorage.removeItem('usuario');
     localStorage.removeItem('token');
+
     this.usuarioSubject.next(null);
+
+    this.router.navigate(['/login']);
   }
 
   getToken(): string | null {
